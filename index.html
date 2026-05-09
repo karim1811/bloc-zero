@@ -3,380 +3,135 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
-<title>Bloc Zéro — Registre d'archives ineffaçables</title>
+<title>Bloc Zero</title>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
 <style>
-* { box-sizing: border-box; margin: 0; padding: 0; }
-
-:root {
-  --bg: #0d0d0b;
-  --surface: #161614;
-  --border: #2a2a25;
-  --text: #e8e6e0;
-  --muted: #888880;
-  --faint: #444440;
-  --green: #a8e6a3;
-  --green-bg: #1a2e18;
-  --green-dark: #2a7a25;
-  --yellow: #f0d060;
-  --red: #e06060;
-  --radius: 8px;
-  --radius-lg: 12px;
-  --font: 'Space Grotesk', sans-serif;
-  --mono: 'Space Mono', monospace;
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0d0d0b;--sur:#161614;--brd:#2a2a25;
+  --txt:#e8e6e0;--mut:#888880;--fnt:#444440;
+  --grn:#a8e6a3;--gbg:#1a2e18;--yel:#f0d060;
+  --r:8px;--rl:12px;
+  --f:'Space Grotesk',sans-serif;
+  --m:'Space Mono',monospace;
 }
-
-body {
-  font-family: var(--font);
-  background: var(--bg);
-  color: var(--text);
-  min-height: 100vh;
-  font-size: 16px;
-  line-height: 1.6;
-}
-
-/* NAV */
-nav {
-  position: sticky;
-  top: 0;
-  z-index: 100;
-  background: var(--bg);
-  border-bottom: 1px solid var(--border);
-  padding: 0 24px;
-  height: 56px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 16px;
-}
-.logo {
-  font-family: var(--mono);
-  font-size: 14px;
-  font-weight: 700;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  color: var(--text);
-}
-.logo svg { flex-shrink: 0; }
-.nav-links {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-}
-.nav-btn {
-  background: none;
-  border: none;
-  font-family: var(--font);
-  font-size: 14px;
-  color: var(--muted);
-  cursor: pointer;
-  padding: 6px 12px;
-  border-radius: var(--radius);
-  transition: background 0.15s, color 0.15s;
-}
-.nav-btn:hover { background: #1e1e1a; color: var(--text); }
-.nav-btn.active { background: var(--green-bg); color: var(--green); }
-.nav-cta {
-  background: var(--green);
-  color: #0d0d0b;
-  border: none;
-  font-family: var(--font);
-  font-size: 13px;
-  font-weight: 700;
-  cursor: pointer;
-  padding: 7px 14px;
-  border-radius: var(--radius);
-  transition: background 0.15s;
-  white-space: nowrap;
-}
-.nav-cta:hover { background: #c5f0c0; }
-
-/* PAGES */
-.page { display: none; }
-.page.active { display: block; }
-
-/* ACCUEIL */
-.hero {
-  max-width: 960px;
-  margin: 0 auto;
-  padding: 72px 24px 60px;
-}
-.badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  background: var(--green-bg);
-  border: 1px solid var(--green);
-  border-radius: 999px;
-  padding: 4px 12px;
-  font-family: var(--mono);
-  font-size: 12px;
-  color: var(--green);
-  margin-bottom: 32px;
-}
-.badge-dot {
-  width: 6px; height: 6px;
-  background: var(--green);
-  border-radius: 50%;
-  animation: pulse 2s infinite;
-}
-@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
-.hero h1 {
-  font-size: clamp(2rem, 5vw, 3.5rem);
-  font-weight: 700;
-  line-height: 1.1;
-  letter-spacing: -0.03em;
-  margin-bottom: 24px;
-  max-width: 14ch;
-}
-.hero h1 span { color: var(--green); }
-.hero p {
-  font-size: clamp(1rem, 2vw, 1.2rem);
-  color: var(--muted);
-  max-width: 52ch;
-  margin-bottom: 36px;
-  line-height: 1.7;
-}
-.hero-btns { display: flex; gap: 12px; flex-wrap: wrap; }
-.btn-primary {
-  background: var(--green);
-  color: #0d0d0b;
-  border: none;
-  font-family: var(--font);
-  font-size: 15px;
-  font-weight: 700;
-  cursor: pointer;
-  padding: 12px 24px;
-  border-radius: var(--radius);
-  transition: background 0.15s;
-}
-.btn-primary:hover { background: #c5f0c0; }
-.btn-secondary {
-  background: none;
-  color: var(--text);
-  border: 1px solid var(--border);
-  font-family: var(--font);
-  font-size: 15px;
-  font-weight: 600;
-  cursor: pointer;
-  padding: 12px 24px;
-  border-radius: var(--radius);
-  transition: background 0.15s, border-color 0.15s;
-}
-.btn-secondary:hover { background: #1e1e1a; border-color: var(--muted); }
-.cid-bar {
-  margin-top: 48px;
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-lg);
-  padding: 14px 20px;
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  flex-wrap: wrap;
-}
-.cid-label { font-family: var(--mono); font-size: 11px; color: var(--faint); letter-spacing: 0.08em; text-transform: uppercase; white-space: nowrap; }
-.cid-val { font-family: var(--mono); font-size: 11px; color: var(--green); flex: 1; word-break: break-all; }
-.cid-btn { background: #1e1e1a; border: 1px solid var(--border); color: var(--muted); font-family: var(--font); font-size: 12px; cursor: pointer; padding: 4px 12px; border-radius: 6px; white-space: nowrap; transition: all 0.15s; text-decoration: none; }
-.cid-btn:hover { background: #2a2a25; color: var(--text); }
-
-.steps-section {
-  max-width: 960px;
-  margin: 0 auto;
-  padding: 60px 24px;
-  border-top: 1px solid var(--border);
-}
-.section-label { font-family: var(--mono); font-size: 11px; color: var(--faint); letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 16px; }
-.steps-section h2 { font-size: clamp(1.4rem, 3vw, 2rem); font-weight: 700; letter-spacing: -0.02em; margin-bottom: 40px; }
-.cards-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; }
-.card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 24px; transition: border-color 0.15s; }
-.card:hover { border-color: var(--green); }
-.card-num { font-family: var(--mono); font-size: 11px; color: var(--green); margin-bottom: 16px; }
-.card h3 { font-size: 15px; font-weight: 600; margin-bottom: 8px; }
-.card p { font-size: 14px; color: var(--muted); line-height: 1.6; }
-
-/* ARCHIVER */
-.page-header {
-  max-width: 640px;
-  margin: 0 auto;
-  padding: 56px 24px 40px;
-}
-.page-header h1 { font-size: clamp(1.6rem, 3vw, 2.2rem); font-weight: 700; letter-spacing: -0.02em; margin-bottom: 12px; }
-.page-header p { font-size: 15px; color: var(--muted); }
-
-.form-wrap { max-width: 640px; margin: 0 auto; padding: 0 24px 80px; }
-
-.wallet-bar {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-lg);
-  padding: 16px 20px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  margin-bottom: 24px;
-  flex-wrap: wrap;
-}
-.wallet-left { display: flex; align-items: center; gap: 10px; }
-.w-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--faint); flex-shrink: 0; }
-.w-dot.on { background: #60c080; animation: pulse 2s infinite; }
-.w-text { font-size: 14px; color: var(--muted); }
-.w-addr { font-family: var(--mono); font-size: 12px; color: var(--green); display: none; }
-.btn-wallet { background: none; border: 1px solid var(--border); color: var(--text); font-family: var(--font); font-size: 13px; font-weight: 600; cursor: pointer; padding: 7px 14px; border-radius: var(--radius); transition: all 0.15s; }
-.btn-wallet:hover { background: #1e1e1a; }
-.btn-wallet:disabled { opacity: 0.5; cursor: not-allowed; }
-
-.form-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); overflow: hidden; }
-.form-block { padding: 24px; border-bottom: 1px solid var(--border); }
-.form-block:last-child { border-bottom: none; }
-.block-label { font-family: var(--mono); font-size: 11px; color: var(--faint); letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 20px; }
-.field { margin-bottom: 20px; }
-.field:last-child { margin-bottom: 0; }
-.field label { display: block; font-size: 14px; font-weight: 500; margin-bottom: 8px; }
-.opt { color: var(--faint); font-weight: 400; margin-left: 8px; font-size: 13px; }
-.input {
-  width: 100%;
-  background: var(--bg);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  padding: 10px 14px;
-  font-family: var(--font);
-  font-size: 14px;
-  color: var(--text);
-  transition: border-color 0.15s;
-  outline: none;
-}
-.input::placeholder { color: var(--faint); }
-.input:focus { border-color: var(--green); }
-textarea.input { resize: vertical; min-height: 150px; }
-
-.tabs { display: flex; background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 4px; gap: 4px; margin-bottom: 20px; }
-.tab {
-  flex: 1; padding: 8px; border-radius: 8px;
-  font-family: var(--font); font-size: 14px; font-weight: 500;
-  color: var(--muted); cursor: pointer; border: none; background: none;
-  transition: all 0.15s;
-}
-.tab.active { background: #1e1e1a; color: var(--text); }
-
-.drop {
-  border: 2px dashed var(--border);
-  border-radius: var(--radius-lg);
-  padding: 40px 24px;
-  text-align: center;
-  cursor: pointer;
-  transition: all 0.15s;
-  background: var(--bg);
-}
-.drop:hover, .drop.over { border-color: var(--green); background: var(--green-bg); }
-.drop input[type=file] { display: none; }
-.drop-icon { font-size: 2rem; margin-bottom: 12px; }
-.drop-title { font-size: 14px; font-weight: 600; margin-bottom: 4px; }
-.drop-hint { font-size: 12px; color: var(--faint); }
-
-.form-footer {
-  background: #111110;
-  border-top: 1px solid var(--border);
-  padding: 16px 24px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  flex-wrap: wrap;
-}
-.form-note { font-size: 12px; color: var(--faint); max-width: 36ch; line-height: 1.5; }
-
-.result { display: none; margin-top: 20px; background: var(--surface); border: 1px solid var(--green); border-radius: var(--radius-lg); overflow: hidden; }
-.result.show { display: block; }
-.result-head { background: var(--green-bg); padding: 14px 20px; display: flex; align-items: center; gap: 10px; }
-.result-head span { font-size: 14px; font-weight: 600; color: var(--green); }
-.result-body { padding: 20px 24px; }
-.rrow { margin-bottom: 16px; }
-.rrow:last-child { margin-bottom: 0; }
-.rkey { font-family: var(--mono); font-size: 11px; color: var(--faint); letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 6px; }
-.rval { font-family: var(--mono); font-size: 13px; color: var(--text); background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius); padding: 10px 14px; word-break: break-all; cursor: pointer; transition: border-color 0.15s; }
-.rval:hover { border-color: var(--green); }
-.rval a { color: var(--green); text-decoration: none; }
-.copy-tip { font-size: 11px; color: var(--faint); margin-top: 4px; }
-
-/* EXPLORER */
-.explorer-wrap { max-width: 960px; margin: 0 auto; padding: 56px 24px 80px; }
-.explorer-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 32px; flex-wrap: wrap; gap: 12px; }
-.explorer-count { font-family: var(--mono); font-size: 14px; color: var(--muted); }
-.explorer-count b { color: var(--green); }
-.archive-list { display: flex; flex-direction: column; gap: 12px; }
-.archive-row {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-lg);
-  padding: 18px 20px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 16px;
-  cursor: pointer;
-  transition: border-color 0.15s, background 0.15s;
-}
-.archive-row:hover { border-color: var(--green); background: #111110; }
-.archive-title { font-size: 15px; font-weight: 600; margin-bottom: 6px; }
-.archive-meta { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
-.archive-cid { font-family: var(--mono); font-size: 12px; color: var(--green); }
-.archive-date { font-size: 12px; color: var(--faint); }
-.archive-tag { font-size: 11px; color: var(--faint); background: #1e1e1a; border: 1px solid var(--border); border-radius: 999px; padding: 2px 10px; }
-.arrow { color: var(--faint); font-size: 18px; flex-shrink: 0; transition: color 0.15s; }
-.archive-row:hover .arrow { color: var(--green); }
-
-.empty { text-align: center; padding: 80px 24px; color: var(--muted); }
-.empty-icon { font-size: 3rem; opacity: 0.3; margin-bottom: 16px; }
-.empty h3 { font-size: 1.2rem; color: var(--text); margin-bottom: 8px; }
-.empty p { font-size: 14px; max-width: 32ch; margin: 0 auto; }
-
-/* PARTICIPER */
-.participer-wrap { max-width: 960px; margin: 0 auto; padding: 56px 24px 80px; }
-.levels { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; margin-bottom: 60px; }
-.level { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 28px; transition: border-color 0.15s; }
-.level:hover { border-color: var(--green); }
-.level.featured { border-color: var(--green); background: var(--green-bg); }
-.level-num { font-family: var(--mono); font-size: 11px; color: var(--faint); margin-bottom: 16px; }
-.level h3 { font-size: 1.1rem; font-weight: 700; margin-bottom: 10px; }
-.level p { font-size: 14px; color: var(--muted); line-height: 1.6; margin-bottom: 20px; }
-.tag { display: inline-block; font-family: var(--mono); font-size: 11px; padding: 3px 10px; border-radius: 999px; background: #1e1e1a; border: 1px solid var(--border); color: var(--muted); }
-.level.featured .tag { background: var(--green); border-color: var(--green); color: #0d0d0b; }
-.code-block { background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 20px 24px; font-family: var(--mono); font-size: 13px; line-height: 1.9; overflow-x: auto; }
-.c { color: var(--faint); }
-.g { color: var(--green); }
-.y { color: var(--yellow); }
-
-/* TOAST */
-.toast { position: fixed; bottom: 24px; right: 24px; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 14px 18px; font-size: 14px; box-shadow: 0 8px 32px rgba(0,0,0,0.5); opacity: 0; transform: translateY(8px); transition: all 0.2s; z-index: 999; max-width: 300px; pointer-events: none; }
-.toast.show { opacity: 1; transform: translateY(0); }
-.toast.ok { border-color: #60c080; color: #60c080; }
-.toast.err { border-color: var(--red); color: var(--red); }
-
-/* PROGRESS */
-.progress { display: flex; align-items: center; margin-bottom: 24px; overflow-x: auto; }
-.ps { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
-.ps-dot { width: 26px; height: 26px; border-radius: 50%; border: 2px solid var(--border); display: flex; align-items: center; justify-content: center; font-family: var(--mono); font-size: 11px; color: var(--faint); transition: all 0.2s; }
-.ps.active .ps-dot { border-color: var(--green); color: var(--green); }
-.ps.done .ps-dot { background: var(--green); border-color: var(--green); color: #0d0d0b; }
-.ps-label { font-size: 13px; color: var(--faint); white-space: nowrap; transition: color 0.2s; }
-.ps.active .ps-label, .ps.done .ps-label { color: var(--text); }
-.ps-line { flex: 1; min-width: 24px; height: 1px; background: var(--border); margin: 0 8px; }
-.ps.done + .ps-line { background: var(--green); }
-
-@media (max-width: 560px) {
-  .nav-links { display: none; }
-  .hero h1 { font-size: 2rem; }
-  .cards-grid { grid-template-columns: 1fr 1fr; }
-}
+body{font-family:var(--f);background:var(--bg);color:var(--txt);min-height:100vh;font-size:16px;line-height:1.6}
+nav{position:sticky;top:0;z-index:100;background:var(--bg);border-bottom:1px solid var(--brd);padding:0 24px;height:56px;display:flex;align-items:center;justify-content:space-between;gap:16px}
+.logo{font-family:var(--m);font-size:14px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:10px;color:var(--txt)}
+.nl{display:flex;align-items:center;gap:4px}
+.nb{background:none;border:none;font-family:var(--f);font-size:14px;color:var(--mut);cursor:pointer;padding:6px 12px;border-radius:var(--r);transition:all .15s}
+.nb:hover{background:#1e1e1a;color:var(--txt)}
+.nb.on{background:var(--gbg);color:var(--grn)}
+.cta{background:var(--grn);color:#0d0d0b;border:none;font-family:var(--f);font-size:13px;font-weight:700;cursor:pointer;padding:7px 14px;border-radius:var(--r);transition:background .15s}
+.cta:hover{background:#c5f0c0}
+.pg{display:none}
+.pg.on{display:block}
+.hero{max-width:960px;margin:0 auto;padding:72px 24px 60px}
+.badge{display:inline-flex;align-items:center;gap:8px;background:var(--gbg);border:1px solid var(--grn);border-radius:999px;padding:4px 12px;font-family:var(--m);font-size:12px;color:var(--grn);margin-bottom:32px}
+.dot{width:6px;height:6px;background:var(--grn);border-radius:50%;animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+h1{font-size:clamp(2rem,5vw,3.5rem);font-weight:700;line-height:1.1;letter-spacing:-.03em;margin-bottom:24px;max-width:14ch}
+h1 span{color:var(--grn)}
+.hero p{font-size:clamp(1rem,2vw,1.2rem);color:var(--mut);max-width:52ch;margin-bottom:36px;line-height:1.7}
+.hbtns{display:flex;gap:12px;flex-wrap:wrap}
+.bp{background:var(--grn);color:#0d0d0b;border:none;font-family:var(--f);font-size:15px;font-weight:700;cursor:pointer;padding:12px 24px;border-radius:var(--r);transition:background .15s}
+.bp:hover{background:#c5f0c0}
+.bs{background:none;color:var(--txt);border:1px solid var(--brd);font-family:var(--f);font-size:15px;font-weight:600;cursor:pointer;padding:12px 24px;border-radius:var(--r);transition:all .15s}
+.bs:hover{background:#1e1e1a;border-color:var(--mut)}
+.cidbar{margin-top:48px;background:var(--sur);border:1px solid var(--brd);border-radius:var(--rl);padding:14px 20px;display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.cidlbl{font-family:var(--m);font-size:11px;color:var(--fnt);letter-spacing:.08em;text-transform:uppercase;white-space:nowrap}
+.cidv{font-family:var(--m);font-size:11px;color:var(--grn);flex:1;word-break:break-all}
+.cidlink{background:#1e1e1a;border:1px solid var(--brd);color:var(--mut);font-size:12px;cursor:pointer;padding:4px 12px;border-radius:6px;white-space:nowrap;text-decoration:none;transition:all .15s}
+.cidlink:hover{background:#2a2a25;color:var(--txt)}
+.stepsec{max-width:960px;margin:0 auto;padding:60px 24px;border-top:1px solid var(--brd)}
+.slbl{font-family:var(--m);font-size:11px;color:var(--fnt);letter-spacing:.12em;text-transform:uppercase;margin-bottom:16px}
+.stepsec h2{font-size:clamp(1.4rem,3vw,2rem);font-weight:700;letter-spacing:-.02em;margin-bottom:40px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px}
+.card{background:var(--sur);border:1px solid var(--brd);border-radius:var(--rl);padding:24px;transition:border-color .15s}
+.card:hover{border-color:var(--grn)}
+.cnum{font-family:var(--m);font-size:11px;color:var(--grn);margin-bottom:16px}
+.card h3{font-size:15px;font-weight:600;margin-bottom:8px}
+.card p{font-size:14px;color:var(--mut);line-height:1.6}
+</style><style>
+.ph{max-width:640px;margin:0 auto;padding:56px 24px 40px}
+.ph h1{font-size:clamp(1.6rem,3vw,2.2rem);font-weight:700;letter-spacing:-.02em;margin-bottom:12px}
+.ph p{font-size:15px;color:var(--mut)}
+.fw{max-width:640px;margin:0 auto;padding:0 24px 80px}
+.wbar{background:var(--sur);border:1px solid var(--brd);border-radius:var(--rl);padding:16px 20px;display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:24px;flex-wrap:wrap}
+.wl{display:flex;align-items:center;gap:10px}
+.wd{width:8px;height:8px;border-radius:50%;background:var(--fnt);flex-shrink:0}
+.wd.on{background:#60c080;animation:pulse 2s infinite}
+.wt{font-size:14px;color:var(--mut)}
+.wa{font-family:var(--m);font-size:12px;color:var(--grn);display:none}
+.bw{background:none;border:1px solid var(--brd);color:var(--txt);font-family:var(--f);font-size:13px;font-weight:600;cursor:pointer;padding:7px 14px;border-radius:var(--r);transition:all .15s}
+.bw:hover{background:#1e1e1a}
+.bw:disabled{opacity:.5;cursor:not-allowed}
+.fc{background:var(--sur);border:1px solid var(--brd);border-radius:var(--rl);overflow:hidden}
+.fb{padding:24px;border-bottom:1px solid var(--brd)}
+.fb:last-child{border-bottom:none}
+.fbl{font-family:var(--m);font-size:11px;color:var(--fnt);letter-spacing:.1em;text-transform:uppercase;margin-bottom:20px}
+.field{margin-bottom:20px}
+.field:last-child{margin-bottom:0}
+.field label{display:block;font-size:14px;font-weight:500;margin-bottom:8px}
+.opt{color:var(--fnt);font-weight:400;margin-left:8px;font-size:13px}
+.inp{width:100%;background:var(--bg);border:1px solid var(--brd);border-radius:var(--r);padding:10px 14px;font-family:var(--f);font-size:14px;color:var(--txt);transition:border-color .15s;outline:none}
+.inp::placeholder{color:var(--fnt)}
+.inp:focus{border-color:var(--grn)}
+textarea.inp{resize:vertical;min-height:150px}
+.tabs{display:flex;background:var(--bg);border:1px solid var(--brd);border-radius:var(--rl);padding:4px;gap:4px;margin-bottom:20px}
+.tab{flex:1;padding:8px;border-radius:8px;font-family:var(--f);font-size:14px;font-weight:500;color:var(--mut);cursor:pointer;border:none;background:none;transition:all .15s}
+.tab.on{background:#1e1e1a;color:var(--txt)}
+.drop{border:2px dashed var(--brd);border-radius:var(--rl);padding:40px 24px;text-align:center;cursor:pointer;transition:all .15s;background:var(--bg)}
+.drop:hover,.drop.over{border-color:var(--grn);background:var(--gbg)}
+.drop input[type=file]{display:none}
+.ff{background:#111110;border-top:1px solid var(--brd);padding:16px 24px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.fn{font-size:12px;color:var(--fnt);max-width:36ch;line-height:1.5}
+.res{display:none;margin-top:20px;background:var(--sur);border:1px solid var(--grn);border-radius:var(--rl);overflow:hidden}
+.res.on{display:block}
+.rh{background:var(--gbg);padding:14px 20px;display:flex;align-items:center;gap:10px}
+.rh span{font-size:14px;font-weight:600;color:var(--grn)}
+.rb{padding:20px 24px}
+.rr{margin-bottom:16px}
+.rr:last-child{margin-bottom:0}
+.rk{font-family:var(--m);font-size:11px;color:var(--fnt);letter-spacing:.08em;text-transform:uppercase;margin-bottom:6px}
+.rv{font-family:var(--m);font-size:13px;color:var(--txt);background:var(--bg);border:1px solid var(--brd);border-radius:var(--r);padding:10px 14px;word-break:break-all;cursor:pointer;transition:border-color .15s}
+.rv:hover{border-color:var(--grn)}
+.rv a{color:var(--grn);text-decoration:none}
+.ct{font-size:11px;color:var(--fnt);margin-top:4px}
+.ew{max-width:960px;margin:0 auto;padding:56px 24px 80px}
+.etop{display:flex;align-items:center;justify-content:space-between;margin-bottom:32px;flex-wrap:wrap;gap:12px}
+.ec{font-family:var(--m);font-size:14px;color:var(--mut)}
+.ec b{color:var(--grn)}
+.al{display:flex;flex-direction:column;gap:12px}
+.ar{background:var(--sur);border:1px solid var(--brd);border-radius:var(--rl);padding:18px 20px;display:flex;align-items:center;justify-content:space-between;gap:16px;cursor:pointer;transition:all .15s}
+.ar:hover{border-color:var(--grn);background:#111110}
+.at{font-size:15px;font-weight:600;margin-bottom:6px}
+.am{display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.ac{font-family:var(--m);font-size:12px;color:var(--grn)}
+.ad{font-size:12px;color:var(--fnt)}
+.atg{font-size:11px;color:var(--fnt);background:#1e1e1a;border:1px solid var(--brd);border-radius:999px;padding:2px 10px}
+.arr{color:var(--fnt);font-size:18px;flex-shrink:0;transition:color .15s}
+.ar:hover .arr{color:var(--grn)}
+.empty{text-align:center;padding:80px 24px;color:var(--mut)}
+.pw{max-width:960px;margin:0 auto;padding:56px 24px 80px}
+.lvls{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px;margin-bottom:60px}
+.lv{background:var(--sur);border:1px solid var(--brd);border-radius:var(--rl);padding:28px;transition:border-color .15s}
+.lv:hover{border-color:var(--grn)}
+.lv.ft{border-color:var(--grn);background:var(--gbg)}
+.ln{font-family:var(--m);font-size:11px;color:var(--fnt);margin-bottom:16px}
+.lv h3{font-size:1.1rem;font-weight:700;margin-bottom:10px}
+.lv p{font-size:14px;color:var(--mut);line-height:1.6;margin-bottom:20px}
+.tag{display:inline-block;font-family:var(--m);font-size:11px;padding:3px 10px;border-radius:999px;background:#1e1e1a;border:1px solid var(--brd);color:var(--mut)}
+.lv.ft .tag{background:var(--grn);border-color:var(--grn);color:#0d0d0b}
+.cb{background:var(--bg);border:1px solid var(--brd);border-radius:var(--rl);padding:20px 24px;font-family:var(--m);font-size:13px;line-height:1.9;overflow-x:auto}
+.c{color:var(--fnt)}.g{color:var(--grn)}.y{color:var(--yel)}
+.toast{position:fixed;bottom:24px;right:24px;background:var(--sur);border:1px solid var(--brd);border-radius:var(--rl);padding:14px 18px;font-size:14px;box-shadow:0 8px 32px rgba(0,0,0,.5);opacity:0;transform:translateY(8px);transition:all .2s;z-index:999;max-width:300px;pointer-events:none}
+.toast.on{opacity:1;transform:translateY(0)}
+.toast.ok{border-color:#60c080;color:#60c080}
+.toast.err{border-color:#e06060;color:#e06060}
+@media(max-width:560px){.nl{display:none}.grid{grid-template-columns:1fr 1fr}}
 </style>
-</head>
-<body>
-
+</head><body>
 <nav>
   <div class="logo" onclick="go('home')">
     <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
@@ -386,156 +141,157 @@ textarea.input { resize: vertical; min-height: 150px; }
       <rect x="6" y="15" width="7" height="7" stroke="currentColor" stroke-width="1.5" opacity="0.5"/>
       <rect x="15" y="15" width="7" height="7" fill="currentColor" opacity="0.3"/>
     </svg>
-    BLOC ZÉRO
+    BLOC ZERO
   </div>
-  <div class="nav-links">
-    <button class="nav-btn active" id="nb-home" onclick="go('home')">Accueil</button>
-    <button class="nav-btn" id="nb-archiver" onclick="go('archiver')">Archiver</button>
-    <button class="nav-btn" id="nb-explorer" onclick="go('explorer')">Explorer</button>
-    <button class="nav-btn" id="nb-participer" onclick="go('participer')">Participer</button>
+  <div class="nl">
+    <button class="nb on" id="nb-home" onclick="go('home')">Accueil</button>
+    <button class="nb" id="nb-archiver" onclick="go('archiver')">Archiver</button>
+    <button class="nb" id="nb-explorer" onclick="go('explorer')">Explorer</button>
+    <button class="nb" id="nb-participer" onclick="go('participer')">Participer</button>
   </div>
-  <button class="nav-cta" onclick="go('archiver')">+ Archiver</button>
+  <button class="cta" onclick="go('archiver')">+ Archiver</button>
 </nav>
-
 <div class="toast" id="toast"></div>
 
-<!-- ACCUEIL -->
-<div class="page active" id="page-home">
+<div class="pg on" id="pg-home">
   <div class="hero">
-    <div class="badge"><div class="badge-dot"></div>v0.1 — Réseau actif</div>
-    <h1>Ce qui est gravé <span>ne s'efface pas.</span></h1>
-    <p>Bloc Zéro est un registre décentralisé. Chaque texte publié ici est ancré sur IPFS et Ethereum — hors de portée de toute suppression, censure ou oubli organisé.</p>
-    <div class="hero-btns">
-      <button class="btn-primary" onclick="go('archiver')">Archiver un texte →</button>
-      <button class="btn-secondary" onclick="go('explorer')">Explorer les archives</button>
+    <div class="badge"><div class="dot"></div>v0.1 — Reseau actif</div>
+    <h1>Ce qui est grave <span>ne s'efface pas.</span></h1>
+    <p>Bloc Zero est un registre decentralise. Chaque texte publie ici est ancre sur IPFS et Ethereum — hors de portee de toute suppression, censure ou oubli organise.</p>
+    <div class="hbtns">
+      <button class="bp" onclick="go('archiver')">Archiver un texte →</button>
+      <button class="bs" onclick="go('explorer')">Explorer les archives</button>
     </div>
-    <div class="cid-bar">
-      <span class="cid-label">Manifeste · CID IPFS</span>
-      <span class="cid-val">bafkreidvauqcjvdespva2umndhdja3hdl3zyvcca2fx5n6okwrsooxpqse</span>
-      <a class="cid-btn" href="https://gateway.pinata.cloud/ipfs/bafkreidvauqcjvdespva2umndhdja3hdl3zyvcca2fx5n6okwrsooxpqse" target="_blank">Lire →</a>
-    </div>
-  </div>
-  <div class="steps-section">
-    <p class="section-label">Comment ça marche</p>
-    <h2>Trois étapes, une archive permanente.</h2>
-    <div class="cards-grid">
-      <div class="card"><div class="card-num">01</div><h3>Tu envoies ton texte</h3><p>Un document, un témoignage, un manifeste. N'importe quel texte que tu veux préserver.</p></div>
-      <div class="card"><div class="card-num">02</div><h3>Il est ancré sur IPFS</h3><p>Ton fichier reçoit un identifiant unique (CID) et est distribué sur un réseau décentralisé mondial.</p></div>
-      <div class="card"><div class="card-num">03</div><h3>Il est gravé sur Ethereum</h3><p>Le CID est enregistré dans dmap — un registre immuable. Plus personne ne peut l'effacer.</p></div>
-      <div class="card"><div class="card-num">04</div><h3>Tu as la preuve</h3><p>Un lien permanent, un CID vérifiable, une trace que tu peux partager partout dans le monde.</p></div>
+    <div class="cidbar">
+      <span class="cidlbl">Manifeste · CID IPFS</span>
+      <span class="cidv">bafkreidvauqcjvdespva2umndhdja3hdl3zyvcca2fx5n6okwrsooxpqse</span>
+      <a class="cidlink" href="https://gateway.pinata.cloud/ipfs/bafkreidvauqcjvdespva2umndhdja3hdl3zyvcca2fx5n6okwrsooxpqse" target="_blank">Lire →</a>
     </div>
   </div>
-</div>
-
-<!-- ARCHIVER -->
-<div class="page" id="page-archiver">
-  <div class="page-header">
-    <p class="section-label">Archiver</p>
+  <div class="stepsec">
+    <p class="slbl">Comment ca marche</p>
+    <h2>Trois etapes, une archive permanente.</h2>
+    <div class="grid">
+      <div class="card"><div class="cnum">01</div><h3>Tu envoies ton texte</h3><p>Un document, un temoignage, un manifeste. N'importe quel texte que tu veux preserver.</p></div>
+      <div class="card"><div class="cnum">02</div><h3>Il est ancre sur IPFS</h3><p>Ton fichier recoit un identifiant unique (CID) et est distribue sur un reseau decentralise mondial.</p></div>
+      <div class="card"><div class="cnum">03</div><h3>Il est grave sur Ethereum</h3><p>Le CID est enregistre dans dmap — un registre immuable. Plus personne ne peut l'effacer.</p></div>
+      <div class="card"><div class="cnum">04</div><h3>Tu as la preuve</h3><p>Un lien permanent, un CID verifiable, une trace que tu peux partager partout dans le monde.</p></div>
+    </div>
+  </div>
+</div><div class="pg" id="pg-archiver">
+  <div class="ph">
+    <p class="slbl">Archiver</p>
     <h1>Publier un document</h1>
     <p>Soumets un texte ou un fichier. Il sera envoyé sur IPFS et tu recevras ton CID permanent.</p>
   </div>
-  <div class="form-wrap">
+
+  <div class="fw">
     <div class="progress">
-      <div class="ps active" id="ps1"><div class="ps-dot">1</div><span class="ps-label">Contenu</span></div>
+      <div class="ps on" id="ps1"><div class="ps-dot">1</div><span class="ps-label">Contenu</span></div>
       <div class="ps-line"></div>
       <div class="ps" id="ps2"><div class="ps-dot">2</div><span class="ps-label">IPFS</span></div>
       <div class="ps-line"></div>
       <div class="ps" id="ps3"><div class="ps-dot">3</div><span class="ps-label">Ethereum</span></div>
     </div>
-    <div class="wallet-bar">
-      <div class="wallet-left">
-        <div class="w-dot" id="wdot"></div>
+
+    <div class="wbar">
+      <div class="wl">
+        <div class="wd" id="wd"></div>
         <div>
-          <div class="w-text" id="wtext">Wallet non connecté</div>
-          <div class="w-addr" id="waddr"></div>
+          <div class="wt" id="wt">Wallet non connecte</div>
+          <div class="wa" id="wa"></div>
         </div>
       </div>
-      <button class="btn-wallet" id="wbtn" onclick="connectWallet()">Connecter MetaMask</button>
+      <button class="bw" id="wb" onclick="connectWallet()">Connecter MetaMask</button>
     </div>
-    <div class="form-card">
-      <div class="form-block">
-        <div class="block-label">Informations</div>
+
+    <div class="fc">
+      <div class="fb">
+        <div class="fbl">Informations</div>
         <div class="field">
           <label for="title">Titre du document</label>
-          <input class="input" type="text" id="title" placeholder="ex: Rapport sur les eaux de l'Oise, mai 2026" maxlength="120">
+          <input class="inp" type="text" id="title" placeholder="ex: Rapport sur les eaux de l'Oise, mai 2026" maxlength="120">
         </div>
         <div class="field">
           <label for="author">Auteur / Pseudo <span class="opt">(optionnel)</span></label>
-          <input class="input" type="text" id="author" placeholder="ex: krim1811 ou anonyme" maxlength="60">
+          <input class="inp" type="text" id="author" placeholder="ex: krim1811 ou anonyme" maxlength="60">
         </div>
       </div>
-      <div class="form-block">
-        <div class="block-label">Contenu</div>
+
+      <div class="fb">
+        <div class="fbl">Contenu</div>
         <div class="tabs">
-          <button class="tab active" id="tab-text" onclick="switchTab('text')">Coller du texte</button>
+          <button class="tab on" id="tab-text" onclick="switchTab('text')">Coller du texte</button>
           <button class="tab" id="tab-file" onclick="switchTab('file')">Envoyer un fichier</button>
         </div>
+
         <div id="zone-text">
-          <textarea class="input" id="doctext" placeholder="Colle ici le texte que tu veux archiver..."></textarea>
+          <textarea class="inp" id="doctext" placeholder="Colle ici le texte que tu veux archiver..."></textarea>
         </div>
+
         <div id="zone-file" style="display:none">
           <div class="drop" id="dropzone" onclick="document.getElementById('fileinput').click()">
             <input type="file" id="fileinput" accept=".txt,.md,.pdf,.html,.json" onchange="onFile(event)">
-            <div class="drop-icon">📄</div>
-            <div class="drop-title">Clique ou glisse un fichier ici</div>
-            <div class="drop-hint">.txt · .md · .pdf · .html · .json — max 10 MB</div>
+            <div style="font-size:2rem;margin-bottom:12px">📄</div>
+            <div style="font-size:14px;font-weight:600;margin-bottom:4px">Clique ou glisse un fichier ici</div>
+            <div style="font-size:12px;color:var(--fnt)">.txt · .md · .pdf · .html · .json — max 10 MB</div>
           </div>
         </div>
       </div>
-      <div class="form-footer">
-        <p class="form-note">Aucun fichier stocké sur nos serveurs. Tout passe vers le réseau IPFS décentralisé.</p>
-        <button class="btn-primary" id="submitbtn" onclick="submit()">Publier sur IPFS →</button>
+
+      <div class="ff">
+        <p class="fn">Aucun fichier stocke sur nos serveurs. Tout passe vers le reseau IPFS decentralise.</p>
+        <button class="bp" id="submitbtn" onclick="submitArchive()">Publier sur IPFS →</button>
       </div>
     </div>
-    <div class="result" id="result">
-      <div class="result-head">
+
+    <div class="res" id="result">
+      <div class="rh">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
-        <span>Archive publiée avec succès</span>
+        <span>Archive publiee avec succes</span>
       </div>
-      <div class="result-body">
-        <div class="rrow"><div class="rkey">Titre</div><div class="rval" id="r-title">—</div></div>
-        <div class="rrow"><div class="rkey">CID IPFS</div><div class="rval" id="r-cid" onclick="copyCid()">—</div><div class="copy-tip">Clique pour copier</div></div>
-        <div class="rrow"><div class="rkey">URL Permanente</div><div class="rval" id="r-url">—</div></div>
-        <div class="rrow"><div class="rkey">Ancrage Ethereum</div><div class="rval" id="r-eth" style="color:var(--faint)">En attente — connecte MetaMask pour ancrer</div></div>
+      <div class="rb">
+        <div class="rr"><div class="rk">Titre</div><div class="rv" id="r-title">—</div></div>
+        <div class="rr"><div class="rk">CID IPFS</div><div class="rv" id="r-cid" onclick="copyCid()">—</div><div class="ct">Clique pour copier</div></div>
+        <div class="rr"><div class="rk">URL Permanente</div><div class="rv" id="r-url">—</div></div>
+        <div class="rr"><div class="rk">Ancrage Ethereum</div><div class="rv" id="r-eth" style="color:var(--fnt)">En attente — connecte MetaMask pour ancrer</div></div>
         <div style="margin-top:16px">
-          <button class="btn-primary" id="anchorbtn" style="display:none" onclick="anchorEth()">Ancrer sur Ethereum →</button>
+          <button class="bp" id="anchorbtn" style="display:none" onclick="anchorEth()">Ancrer sur Ethereum →</button>
         </div>
       </div>
     </div>
   </div>
 </div>
 
-<!-- EXPLORER -->
-<div class="page" id="page-explorer">
-  <div class="explorer-wrap">
-    <div class="page-header" style="padding:0 0 32px">
-      <p class="section-label">Explorer</p>
+<div class="pg" id="pg-explorer">
+  <div class="ew">
+    <div class="ph" style="padding:0 0 32px">
+      <p class="slbl">Explorer</p>
       <h1>Registre des archives</h1>
-      <p style="color:var(--muted);font-size:15px;margin-top:8px">Tous les documents publiés via Bloc Zéro. Chaque CID est vérifiable sur le réseau IPFS.</p>
+      <p style="color:var(--mut);font-size:15px;margin-top:8px">Tous les documents publies via Bloc Zero. Chaque CID est verifiable sur le reseau IPFS.</p>
     </div>
-    <div class="explorer-top">
-      <div class="explorer-count"><b id="archcount">1</b> archive(s) publique(s)</div>
+    <div class="etop">
+      <div class="ec"><b id="archcount">1</b> archive(s) publique(s)</div>
     </div>
-    <div class="archive-list" id="archlist"></div>
+    <div class="al" id="archlist"></div>
   </div>
 </div>
 
-<!-- PARTICIPER -->
-<div class="page" id="page-participer">
-  <div class="participer-wrap">
-    <div class="page-header" style="padding:0 0 40px">
-      <p class="section-label">Participer</p>
-      <h1>Rejoindre le réseau</h1>
-      <p style="color:var(--muted);font-size:15px;margin-top:8px">Plus le réseau est distribué, plus les archives sont indestructibles.</p>
+<div class="pg" id="pg-participer">
+  <div class="pw">
+    <div class="ph" style="padding:0 0 40px">
+      <p class="slbl">Participer</p>
+      <h1>Rejoindre le reseau</h1>
+      <p style="color:var(--mut);font-size:15px;margin-top:8px">Plus le reseau est distribue, plus les archives sont indestructibles.</p>
     </div>
-    <div class="levels">
-      <div class="level"><div class="level-num">NIVEAU 01</div><h3>Utilisateur</h3><p>Publie tes propres archives via l'interface. Aucune configuration nécessaire.</p><span class="tag">Gratuit · Zéro config</span></div>
-      <div class="level featured"><div class="level-num">NIVEAU 02</div><h3>Pinner</h3><p>Épingle les archives de Bloc Zéro via Pinata. Tes copies renforcent la disponibilité du réseau.</p><span class="tag">★ Recommandé</span></div>
-      <div class="level"><div class="level-num">NIVEAU 03</div><h3>Nœud complet</h3><p>Lance ton propre nœud IPFS sur PC ou serveur. Tu deviens un point de distribution indépendant.</p><span class="tag">Technique · PC allumé</span></div>
+    <div class="lvls">
+      <div class="lv"><div class="ln">NIVEAU 01</div><h3>Utilisateur</h3><p>Publie tes propres archives via l'interface. Aucune configuration necessaire.</p><span class="tag">Gratuit · Zero config</span></div>
+      <div class="lv ft"><div class="ln">NIVEAU 02</div><h3>Pinner</h3><p>Epingler les archives de Bloc Zero via Pinata. Tes copies renforcent la disponibilite du reseau.</p><span class="tag">★ Recommande</span></div>
+      <div class="lv"><div class="ln">NIVEAU 03</div><h3>Noeud complet</h3><p>Lance ton propre noeud IPFS sur PC ou serveur. Tu deviens un point de distribution independant.</p><span class="tag">Technique · PC allume</span></div>
     </div>
-    <p class="section-label">Lancer un nœud IPFS</p>
-    <h2 style="font-size:1.5rem;font-weight:700;margin-bottom:20px;letter-spacing:-0.02em">3 commandes suffisent.</h2>
-    <div class="code-block">
+    <p class="slbl">Lancer un noeud IPFS</p>
+    <h2 style="font-size:1.5rem;font-weight:700;margin-bottom:20px;letter-spacing:-.02em">3 commandes suffisent.</h2>
+    <div class="cb">
       <div><span class="c"># 1. Installer IPFS</span></div>
       <div><span class="g">npm</span> <span class="y">install -g ipfs</span></div>
       <br>
@@ -545,149 +301,126 @@ textarea.input { resize: vertical; min-height: 150px; }
       <div><span class="c"># 3. Lancer</span></div>
       <div><span class="g">ipfs</span> <span class="y">daemon</span></div>
       <br>
-      <div><span class="c"># 4. Épingler le manifeste Bloc Zéro</span></div>
+      <div><span class="c"># 4. Epingler le manifeste Bloc Zero</span></div>
       <div><span class="g">ipfs</span> <span class="y">pin add bafkreidvauqcjvdespva2umndhdja3hdl3zyvcca2fx5n6okwrsooxpqse</span></div>
     </div>
   </div>
 </div>
 
 <script>
-var archives = [
-  { title: 'Manifeste Bloc Zéro', author: 'krim1811', cid: 'bafkreidvauqcjvdespva2umndhdja3hdl3zyvcca2fx5n6okwrsooxpqse', date: '8 mai 2026', type: 'Manifeste' }
-];
-var wallet = null;
-var mode = 'text';
-var file = null;
-var lastCid = null;
+var archives=[{title:'Manifeste Bloc Zero',author:'krim1811',cid:'bafkreidvauqcjvdespva2umndhdja3hdl3zyvcca2fx5n6okwrsooxpqse',date:'8 mai 2026',type:'Manifeste'}];
+var wallet=null,mode='text',file=null,lastCid=null;
 
-function go(id) {
-  document.querySelectorAll('.page').forEach(function(p) { p.classList.remove('active'); });
-  document.querySelectorAll('.nav-btn').forEach(function(b) { b.classList.remove('active'); });
-  document.getElementById('page-' + id).classList.add('active');
-  var nb = document.getElementById('nb-' + id);
-  if (nb) nb.classList.add('active');
-  if (id === 'explorer') renderArchives();
-  window.scrollTo(0, 0);
+function go(id){
+  document.querySelectorAll('.pg').forEach(function(p){p.classList.remove('on')});
+  document.querySelectorAll('.nb').forEach(function(b){b.classList.remove('on')});
+  document.getElementById('pg-'+id).classList.add('on');
+  var n=document.getElementById('nb-'+id);
+  if(n) n.classList.add('on');
+  if(id==='explorer') renderArchives();
+  window.scrollTo(0,0);
 }
-
-function toast(msg, type) {
-  var t = document.getElementById('toast');
-  t.textContent = msg;
-  t.className = 'toast show ' + (type || '');
-  setTimeout(function() { t.className = 'toast'; }, 3500);
+function toast(msg,type){
+  var t=document.getElementById('toast');
+  t.textContent=msg;
+  t.className='toast on '+(type||'');
+  setTimeout(function(){t.className='toast'},3500);
 }
-
-function switchTab(t) {
-  mode = t;
-  document.getElementById('tab-text').className = 'tab' + (t === 'text' ? ' active' : '');
-  document.getElementById('tab-file').className = 'tab' + (t === 'file' ? ' active' : '');
-  document.getElementById('zone-text').style.display = t === 'text' ? 'block' : 'none';
-  document.getElementById('zone-file').style.display = t === 'file' ? 'block' : 'none';
+function switchTab(t){
+  mode=t;
+  document.getElementById('tab-text').className='tab'+(t==='text'?' on':'');
+  document.getElementById('tab-file').className='tab'+(t==='file'?' on':'');
+  document.getElementById('zone-text').style.display=t==='text'?'block':'none';
+  document.getElementById('zone-file').style.display=t==='file'?'block':'none';
 }
-
-function onFile(e) {
-  var f = e.target.files[0];
-  if (!f) return;
-  if (f.size > 10 * 1024 * 1024) { toast('Fichier trop lourd (max 10 MB)', 'err'); return; }
-  file = f;
-  var dz = document.getElementById('dropzone');
-  dz.innerHTML = '<div style="padding:16px;display:flex;align-items:center;gap:12px"><span>📄</span><span style="font-family:var(--mono);font-size:13px;color:var(--green)">' + f.name + '</span><span style="font-size:12px;color:var(--faint)">' + (f.size/1024).toFixed(1) + ' KB</span></div>';
+function onFile(e){
+  var f=e.target.files[0];
+  if(!f) return;
+  if(f.size>10*1024*1024){toast('Fichier trop lourd (max 10 MB)','err');return}
+  file=f;
+  var dz=document.getElementById('dropzone');
+  dz.innerHTML='<div style="padding:16px;display:flex;align-items:center;gap:12px"><span>📄</span><span style="font-family:var(--m);font-size:13px;color:var(--grn)">'+f.name+'</span><span style="font-size:12px;color:var(--fnt)">'+(f.size/1024).toFixed(1)+' KB</span></div>';
 }
-
-var dz = document.getElementById('dropzone');
-dz.addEventListener('dragover', function(e) { e.preventDefault(); dz.classList.add('over'); });
-dz.addEventListener('dragleave', function() { dz.classList.remove('over'); });
-dz.addEventListener('drop', function(e) {
-  e.preventDefault(); dz.classList.remove('over');
-  var f = e.dataTransfer.files[0];
-  if (f) { document.getElementById('fileinput').files = e.dataTransfer.files; onFile({ target: { files: [f] } }); }
-});
-
-async function connectWallet() {
-  if (!window.ethereum) { toast('MetaMask non détecté. Installe l'extension.', 'err'); return; }
-  var btn = document.getElementById('wbtn');
-  btn.textContent = 'Connexion...';
-  btn.disabled = true;
-  try {
-    var accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
-    wallet = accounts[0];
-    document.getElementById('wdot').className = 'w-dot on';
-    document.getElementById('wtext').textContent = 'Wallet connecté';
-    document.getElementById('waddr').style.display = 'block';
-    document.getElementById('waddr').textContent = wallet.slice(0,6) + '...' + wallet.slice(-4);
-    btn.textContent = 'Connecté ✓';
-    if (lastCid) document.getElementById('anchorbtn').style.display = 'inline-block';
-    toast('Wallet connecté : ' + wallet.slice(0,6) + '...' + wallet.slice(-4), 'ok');
-  } catch(e) {
-    btn.textContent = 'Connecter MetaMask';
-    btn.disabled = false;
-    toast('Connexion annulée.', 'err');
+var dz=document.getElementById('dropzone');
+if(dz){
+  dz.addEventListener('dragover',function(e){e.preventDefault();dz.classList.add('over')});
+  dz.addEventListener('dragleave',function(){dz.classList.remove('over')});
+  dz.addEventListener('drop',function(e){
+    e.preventDefault();dz.classList.remove('over');
+    var f=e.dataTransfer.files[0];
+    if(f){document.getElementById('fileinput').files=e.dataTransfer.files;onFile({target:{files:[f]}})}
+  });
+}
+async function connectWallet(){
+  if(!window.ethereum){toast('MetaMask non detecte. Installe l\'extension.','err');return}
+  var btn=document.getElementById('wb');
+  btn.textContent='Connexion...';
+  btn.disabled=true;
+  try{
+    var accounts=await window.ethereum.request({method:'eth_requestAccounts'});
+    wallet=accounts[0];
+    document.getElementById('wd').className='wd on';
+    document.getElementById('wt').textContent='Wallet connecte';
+    var a=document.getElementById('wa'); a.style.display='block'; a.textContent=wallet.slice(0,6)+'...'+wallet.slice(-4);
+    btn.textContent='Connecte ✓';
+    if(lastCid) document.getElementById('anchorbtn').style.display='inline-block';
+    toast('Wallet connecte : '+wallet.slice(0,6)+'...'+wallet.slice(-4),'ok');
+  }catch(e){
+    btn.textContent='Connecter MetaMask';
+    btn.disabled=false;
+    toast('Connexion annulee.','err');
   }
 }
-
-async function submit() {
-  var title = document.getElementById('title').value.trim();
-  var author = document.getElementById('author').value.trim() || 'anonyme';
-  var text = document.getElementById('doctext').value.trim();
-  if (!title) { toast('Ajoute un titre.', 'err'); return; }
-  if (mode === 'text' && !text) { toast('Le contenu est vide.', 'err'); return; }
-  if (mode === 'file' && !file) { toast('Sélectionne un fichier.', 'err'); return; }
-  var btn = document.getElementById('submitbtn');
-  btn.textContent = 'Publication...';
-  btn.disabled = true;
-  document.getElementById('ps1').className = 'ps done';
-  document.getElementById('ps1').querySelector('.ps-dot').textContent = '✓';
-  document.getElementById('ps2').className = 'ps active';
-  await new Promise(function(r) { setTimeout(r, 1600); });
-  var cid = 'bafkrei' + Math.random().toString(36).slice(2,10) + Math.random().toString(36).slice(2,28);
-  lastCid = cid;
-  var url = 'https://gateway.pinata.cloud/ipfs/' + cid;
-  var today = new Date().toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' });
-  document.getElementById('ps2').className = 'ps done';
-  document.getElementById('ps2').querySelector('.ps-dot').textContent = '✓';
-  document.getElementById('ps3').className = 'ps active';
-  archives.unshift({ title: title, author: author, cid: cid, date: today, type: mode === 'file' ? 'Fichier' : 'Texte' });
-  document.getElementById('r-title').textContent = title;
-  document.getElementById('r-cid').textContent = cid;
-  document.getElementById('r-url').innerHTML = '<a href="' + url + '" target="_blank">' + url + '</a>';
-  document.getElementById('result').className = 'result show';
-  if (wallet) document.getElementById('anchorbtn').style.display = 'inline-block';
-  btn.textContent = 'Publier sur IPFS →';
-  btn.disabled = false;
-  toast('Archive publiée ! CID généré.', 'ok');
-  document.getElementById('result').scrollIntoView({ behavior: 'smooth' });
+async function submitArchive(){
+  var title=document.getElementById('title').value.trim();
+  var author=document.getElementById('author').value.trim()||'anonyme';
+  var text=document.getElementById('doctext').value.trim();
+  if(!title){toast('Ajoute un titre.','err');return}
+  if(mode==='text'&&!text){toast('Le contenu est vide.','err');return}
+  if(mode==='file'&&!file){toast('Selectionne un fichier.','err');return}
+  var btn=document.getElementById('submitbtn');
+  btn.textContent='Publication...';
+  btn.disabled=true;
+  document.getElementById('ps1').className='ps done';
+  document.getElementById('ps1').querySelector('.ps-dot').textContent='✓';
+  document.getElementById('ps2').className='ps on';
+  await new Promise(function(r){setTimeout(r,1600)});
+  var cid='bafkrei'+Math.random().toString(36).slice(2,10)+Math.random().toString(36).slice(2,28);
+  lastCid=cid;
+  var url='https://gateway.pinata.cloud/ipfs/'+cid;
+  var today=new Date().toLocaleDateString('fr-FR',{day:'numeric',month:'long',year:'numeric'});
+  document.getElementById('ps2').className='ps done';
+  document.getElementById('ps2').querySelector('.ps-dot').textContent='✓';
+  document.getElementById('ps3').className='ps on';
+  archives.unshift({title:title,author:author,cid:cid,date:today,type:mode==='file'?'Fichier':'Texte'});
+  document.getElementById('r-title').textContent=title;
+  document.getElementById('r-cid').textContent=cid;
+  document.getElementById('r-url').innerHTML='<a href="'+url+'" target="_blank">'+url+'</a>';
+  document.getElementById('result').className='res on';
+  if(wallet) document.getElementById('anchorbtn').style.display='inline-block';
+  btn.textContent='Publier sur IPFS →';
+  btn.disabled=false;
+  toast('Archive publiee ! CID genere.','ok');
+  document.getElementById('result').scrollIntoView({behavior:'smooth'});
 }
-
-function copyCid() {
-  if (!lastCid) return;
-  navigator.clipboard.writeText(lastCid).then(function() { toast('CID copié !', 'ok'); });
+function copyCid(){
+  if(!lastCid) return;
+  navigator.clipboard.writeText(lastCid).then(function(){toast('CID copie !','ok')});
 }
-
-function anchorEth() {
-  if (!wallet) { toast('Connecte ton wallet.', 'err'); return; }
-  toast('Ancrage Ethereum bientôt disponible (~5€ ETH requis)', 'err');
+function anchorEth(){
+  if(!wallet){toast('Connecte ton wallet.','err');return}
+  toast('Ancrage Ethereum bientot disponible (~5€ ETH requis)','err');
 }
-
-function renderArchives() {
-  var list = document.getElementById('archlist');
-  document.getElementById('archcount').textContent = archives.length;
-  if (!archives.length) {
-    list.innerHTML = '<div class="empty"><div class="empty-icon">📭</div><h3>Aucune archive</h3><p>Sois le premier à publier un document sur Bloc Zéro.</p></div>';
+function renderArchives(){
+  var list=document.getElementById('archlist');
+  document.getElementById('archcount').textContent=archives.length;
+  if(!archives.length){
+    list.innerHTML='<div class="empty"><div class="empty-icon">📭</div><h3>Aucune archive</h3><p>Sois le premier a publier un document sur Bloc Zero.</p></div>';
     return;
   }
-  list.innerHTML = archives.map(function(a) {
-    return '<div class="archive-row" onclick="window.open('https://gateway.pinata.cloud/ipfs/' + '' + a.cid + '','_blank')">' +
-      '<div>' +
-        '<div class="archive-title">' + a.title + '</div>' +
-        '<div class="archive-meta">' +
-          '<span class="archive-cid">' + a.cid.slice(0,22) + '...</span>' +
-          '<span class="archive-date">' + a.date + '</span>' +
-          (a.author ? '<span class="archive-date">par ' + a.author + '</span>' : '') +
-          '<span class="archive-tag">' + a.type + '</span>' +
-        '</div>' +
-      '</div>' +
-      '<span class="arrow">→</span>' +
-    '</div>';
+  list.innerHTML=archives.map(function(a){
+    return '<div class="ar" onclick="window.open(\\'https://gateway.pinata.cloud/ipfs/'+a.cid+'\\',\\'_blank\\')">'+
+      '<div><div class="at">'+a.title+'</div><div class="am"><span class="ac">'+a.cid.slice(0,22)+'...</span><span class="ad">'+a.date+'</span>'+(a.author?'<span class="ad">par '+a.author+'</span>':'')+'<span class="atg">'+a.type+'</span></div></div><span class="arr">→</span></div>';
   }).join('');
 }
 </script>
