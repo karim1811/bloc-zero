@@ -1,1398 +1,694 @@
 <!DOCTYPE html>
-<html lang="fr" data-theme="dark">
+<html lang="fr">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <title>Bloc Zéro — Registre d'archives ineffaçables</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300..700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
 <style>
-/* ===== DESIGN TOKENS ===== */
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
 :root {
-  --text-xs:   clamp(0.75rem, 0.7rem + 0.25vw, 0.875rem);
-  --text-sm:   clamp(0.875rem, 0.8rem + 0.35vw, 1rem);
-  --text-base: clamp(1rem, 0.95rem + 0.25vw, 1.125rem);
-  --text-lg:   clamp(1.125rem, 1rem + 0.75vw, 1.5rem);
-  --text-xl:   clamp(1.5rem, 1.2rem + 1.25vw, 2.25rem);
-  --text-2xl:  clamp(2rem, 1.2rem + 2.5vw, 3.5rem);
-
-  --space-1: 0.25rem; --space-2: 0.5rem; --space-3: 0.75rem;
-  --space-4: 1rem;    --space-5: 1.25rem; --space-6: 1.5rem;
-  --space-8: 2rem;    --space-10: 2.5rem; --space-12: 3rem;
-  --space-16: 4rem;   --space-20: 5rem;  --space-24: 6rem;
-
-  --radius-sm: 0.375rem; --radius-md: 0.5rem;
-  --radius-lg: 0.75rem;  --radius-xl: 1rem;
-  --radius-full: 9999px;
-  --transition: 180ms cubic-bezier(0.16, 1, 0.3, 1);
-
-  --content-narrow: 640px;
-  --content-default: 960px;
-  --font-display: 'Space Grotesk', sans-serif;
-  --font-mono: 'Space Mono', monospace;
+  --bg: #0d0d0b;
+  --surface: #161614;
+  --border: #2a2a25;
+  --text: #e8e6e0;
+  --muted: #888880;
+  --faint: #444440;
+  --green: #a8e6a3;
+  --green-bg: #1a2e18;
+  --green-dark: #2a7a25;
+  --yellow: #f0d060;
+  --red: #e06060;
+  --radius: 8px;
+  --radius-lg: 12px;
+  --font: 'Space Grotesk', sans-serif;
+  --mono: 'Space Mono', monospace;
 }
 
-/* DARK MODE (default) */
-:root, [data-theme="dark"] {
-  --color-bg:              #0d0d0b;
-  --color-surface:         #131310;
-  --color-surface-2:       #181815;
-  --color-surface-offset:  #1e1e1a;
-  --color-surface-dynamic: #252520;
-  --color-divider:         #2a2a25;
-  --color-border:          #303030;
-  --color-text:            #e8e6e0;
-  --color-text-muted:      #888880;
-  --color-text-faint:      #4a4a45;
-  --color-primary:         #a8e6a3;
-  --color-primary-hover:   #c5f0c0;
-  --color-primary-active:  #7acc75;
-  --color-primary-highlight: #1a2e18;
-  --color-accent:          #f0d060;
-  --color-accent-hover:    #f5e080;
-  --color-error:           #e06060;
-  --color-success:         #60c080;
-  --shadow-sm: 0 1px 2px oklch(0 0 0 / 0.3);
-  --shadow-md: 0 4px 12px oklch(0 0 0 / 0.4);
-  --shadow-lg: 0 12px 32px oklch(0 0 0 / 0.5);
-}
-
-/* LIGHT MODE */
-[data-theme="light"] {
-  --color-bg:              #f7f6f2;
-  --color-surface:         #f9f8f5;
-  --color-surface-2:       #ffffff;
-  --color-surface-offset:  #f0ede8;
-  --color-surface-dynamic: #e8e5e0;
-  --color-divider:         #dcd9d5;
-  --color-border:          #d0cdc8;
-  --color-text:            #1a1a16;
-  --color-text-muted:      #6a6a60;
-  --color-text-faint:      #b0ada8;
-  --color-primary:         #2a7a25;
-  --color-primary-hover:   #1e5c1a;
-  --color-primary-active:  #155015;
-  --color-primary-highlight: #e0f0dc;
-  --color-accent:          #8a6800;
-  --color-accent-hover:    #6a5000;
-  --color-error:           #a02020;
-  --color-success:         #2a7a45;
-  --shadow-sm: 0 1px 2px oklch(0.2 0.01 80 / 0.06);
-  --shadow-md: 0 4px 12px oklch(0.2 0.01 80 / 0.08);
-  --shadow-lg: 0 12px 32px oklch(0.2 0.01 80 / 0.12);
-}
-
-/* ===== BASE ===== */
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-html {
-  -webkit-font-smoothing: antialiased;
-  text-rendering: optimizeLegibility;
-  scroll-behavior: smooth;
-  scroll-padding-top: var(--space-16);
-}
 body {
-  min-height: 100dvh;
-  font-family: var(--font-display);
-  font-size: var(--text-base);
-  color: var(--color-text);
-  background-color: var(--color-bg);
+  font-family: var(--font);
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  font-size: 16px;
   line-height: 1.6;
 }
-img { display: block; max-width: 100%; }
-ul { list-style: none; }
-button { cursor: pointer; background: none; border: none; font: inherit; color: inherit; }
-a { color: inherit; text-decoration: none; transition: color var(--transition); }
-input, textarea, select { font: inherit; color: inherit; }
-:focus-visible { outline: 2px solid var(--color-primary); outline-offset: 3px; border-radius: var(--radius-sm); }
-::selection { background: var(--color-primary-highlight); color: var(--color-text); }
 
-/* ===== LAYOUT ===== */
-.container {
-  max-width: var(--content-default);
-  margin-inline: auto;
-  padding-inline: var(--space-6);
-}
-.container-narrow {
-  max-width: var(--content-narrow);
-  margin-inline: auto;
-  padding-inline: var(--space-6);
-}
-
-/* ===== HEADER / NAV ===== */
-.site-header {
+/* NAV */
+nav {
   position: sticky;
   top: 0;
   z-index: 100;
-  background: var(--color-bg);
-  border-bottom: 1px solid var(--color-divider);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-}
-.nav-inner {
+  background: var(--bg);
+  border-bottom: 1px solid var(--border);
+  padding: 0 24px;
+  height: 56px;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  height: 60px;
-  gap: var(--space-6);
+  gap: 16px;
 }
 .logo {
+  font-family: var(--mono);
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
   display: flex;
   align-items: center;
-  gap: var(--space-3);
-  font-family: var(--font-mono);
-  font-size: var(--text-sm);
-  font-weight: 700;
-  letter-spacing: -0.02em;
-  color: var(--color-text);
-  cursor: pointer;
-  transition: opacity var(--transition);
+  gap: 10px;
+  color: var(--text);
 }
-.logo:hover { opacity: 0.7; }
-.logo-icon {
-  width: 32px; height: 32px;
-  display: flex; align-items: center; justify-content: center;
-}
+.logo svg { flex-shrink: 0; }
 .nav-links {
   display: flex;
   align-items: center;
-  gap: var(--space-1);
+  gap: 4px;
 }
-.nav-link {
-  padding: var(--space-2) var(--space-3);
-  border-radius: var(--radius-md);
-  font-size: var(--text-sm);
-  color: var(--color-text-muted);
-  transition: color var(--transition), background var(--transition);
-  cursor: pointer;
+.nav-btn {
   background: none;
   border: none;
-  font-family: var(--font-display);
+  font-family: var(--font);
+  font-size: 14px;
+  color: var(--muted);
+  cursor: pointer;
+  padding: 6px 12px;
+  border-radius: var(--radius);
+  transition: background 0.15s, color 0.15s;
 }
-.nav-link:hover { color: var(--color-text); background: var(--color-surface-offset); }
-.nav-link.active { color: var(--color-primary); background: var(--color-primary-highlight); }
-.nav-actions {
-  display: flex;
-  align-items: center;
-  gap: var(--space-3);
+.nav-btn:hover { background: #1e1e1a; color: var(--text); }
+.nav-btn.active { background: var(--green-bg); color: var(--green); }
+.nav-cta {
+  background: var(--green);
+  color: #0d0d0b;
+  border: none;
+  font-family: var(--font);
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  padding: 7px 14px;
+  border-radius: var(--radius);
+  transition: background 0.15s;
+  white-space: nowrap;
 }
-.theme-toggle {
-  width: 36px; height: 36px;
-  border-radius: var(--radius-md);
-  display: flex; align-items: center; justify-content: center;
-  color: var(--color-text-muted);
-  transition: color var(--transition), background var(--transition);
-}
-.theme-toggle:hover { color: var(--color-text); background: var(--color-surface-offset); }
+.nav-cta:hover { background: #c5f0c0; }
 
-/* ===== SECTIONS (routing) ===== */
-.section { display: none; }
-.section.active { display: block; }
+/* PAGES */
+.page { display: none; }
+.page.active { display: block; }
 
-/* ===== HERO ===== */
+/* ACCUEIL */
 .hero {
-  padding-block: clamp(var(--space-16), 8vw, var(--space-24));
-  border-bottom: 1px solid var(--color-divider);
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 72px 24px 60px;
 }
-.hero-badge {
+.badge {
   display: inline-flex;
   align-items: center;
-  gap: var(--space-2);
-  background: var(--color-primary-highlight);
-  color: var(--color-primary);
-  border: 1px solid var(--color-primary);
-  border-radius: var(--radius-full);
-  padding: var(--space-1) var(--space-3);
-  font-size: var(--text-xs);
-  font-family: var(--font-mono);
-  margin-bottom: var(--space-8);
-  letter-spacing: 0.05em;
+  gap: 8px;
+  background: var(--green-bg);
+  border: 1px solid var(--green);
+  border-radius: 999px;
+  padding: 4px 12px;
+  font-family: var(--mono);
+  font-size: 12px;
+  color: var(--green);
+  margin-bottom: 32px;
 }
 .badge-dot {
   width: 6px; height: 6px;
-  background: var(--color-primary);
+  background: var(--green);
   border-radius: 50%;
-  animation: pulse 2s ease-in-out infinite;
+  animation: pulse 2s infinite;
 }
-@keyframes pulse {
-  0%, 100% { opacity: 1; transform: scale(1); }
-  50% { opacity: 0.5; transform: scale(0.8); }
-}
-.hero-title {
-  font-size: var(--text-2xl);
+@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
+.hero h1 {
+  font-size: clamp(2rem, 5vw, 3.5rem);
   font-weight: 700;
   line-height: 1.1;
   letter-spacing: -0.03em;
-  margin-bottom: var(--space-6);
+  margin-bottom: 24px;
   max-width: 14ch;
 }
-.hero-title .accent { color: var(--color-primary); }
-.hero-desc {
-  font-size: var(--text-lg);
-  color: var(--color-text-muted);
-  max-width: 55ch;
-  margin-bottom: var(--space-10);
+.hero h1 span { color: var(--green); }
+.hero p {
+  font-size: clamp(1rem, 2vw, 1.2rem);
+  color: var(--muted);
+  max-width: 52ch;
+  margin-bottom: 36px;
   line-height: 1.7;
 }
-.hero-actions {
-  display: flex;
-  gap: var(--space-4);
-  flex-wrap: wrap;
-  align-items: center;
-}
-.hero-cid {
-  margin-top: var(--space-12);
-  padding: var(--space-4) var(--space-5);
-  background: var(--color-surface);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-lg);
-  display: flex;
-  align-items: center;
-  gap: var(--space-4);
-  flex-wrap: wrap;
-}
-.cid-label {
-  font-size: var(--text-xs);
-  font-family: var(--font-mono);
-  color: var(--color-text-faint);
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  white-space: nowrap;
-}
-.cid-value {
-  font-size: var(--text-xs);
-  font-family: var(--font-mono);
-  color: var(--color-primary);
-  word-break: break-all;
-  flex: 1;
-}
-.cid-link {
-  font-size: var(--text-xs);
-  color: var(--color-text-muted);
-  background: var(--color-surface-offset);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-md);
-  padding: var(--space-1) var(--space-3);
-  transition: all var(--transition);
-  white-space: nowrap;
-  cursor: pointer;
-}
-.cid-link:hover { background: var(--color-surface-dynamic); color: var(--color-text); }
-
-/* ===== HOW IT WORKS ===== */
-.how-section {
-  padding-block: clamp(var(--space-12), 6vw, var(--space-20));
-  border-bottom: 1px solid var(--color-divider);
-}
-.section-label {
-  font-size: var(--text-xs);
-  font-family: var(--font-mono);
-  color: var(--color-text-faint);
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  margin-bottom: var(--space-4);
-}
-.section-title {
-  font-size: var(--text-xl);
-  font-weight: 700;
-  letter-spacing: -0.02em;
-  margin-bottom: var(--space-12);
-}
-.steps-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: var(--space-4);
-}
-.step-card {
-  background: var(--color-surface);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-xl);
-  padding: var(--space-6);
-  transition: border-color var(--transition), background var(--transition);
-}
-.step-card:hover { border-color: var(--color-primary); background: var(--color-surface-2); }
-.step-number {
-  font-family: var(--font-mono);
-  font-size: var(--text-xs);
-  color: var(--color-primary);
-  letter-spacing: 0.1em;
-  margin-bottom: var(--space-4);
-}
-.step-title {
-  font-size: var(--text-base);
-  font-weight: 600;
-  margin-bottom: var(--space-2);
-}
-.step-desc {
-  font-size: var(--text-sm);
-  color: var(--color-text-muted);
-  line-height: 1.6;
-  max-width: 100%;
-}
-
-/* ===== BUTTONS ===== */
-.btn {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--space-2);
-  padding: var(--space-3) var(--space-6);
-  border-radius: var(--radius-md);
-  font-size: var(--text-sm);
-  font-weight: 600;
-  cursor: pointer;
-  transition: all var(--transition);
-  border: 1px solid transparent;
-  white-space: nowrap;
-}
+.hero-btns { display: flex; gap: 12px; flex-wrap: wrap; }
 .btn-primary {
-  background: var(--color-primary);
-  color: var(--color-bg);
-  border-color: var(--color-primary);
-}
-.btn-primary:hover { background: var(--color-primary-hover); border-color: var(--color-primary-hover); }
-.btn-secondary {
-  background: transparent;
-  color: var(--color-text);
-  border-color: var(--color-border);
-}
-.btn-secondary:hover { background: var(--color-surface-offset); border-color: var(--color-text-muted); }
-.btn-ghost {
-  background: transparent;
-  color: var(--color-text-muted);
-  border-color: transparent;
-}
-.btn-ghost:hover { color: var(--color-text); background: var(--color-surface-offset); }
-.btn:disabled {
-  opacity: 0.4;
-  cursor: not-allowed;
-}
-.btn-sm {
-  padding: var(--space-2) var(--space-4);
-  font-size: var(--text-xs);
-}
-
-/* ===== ARCHIVER PAGE ===== */
-.page-header {
-  padding-block: clamp(var(--space-10), 5vw, var(--space-16));
-  border-bottom: 1px solid var(--color-divider);
-}
-.page-title {
-  font-size: var(--text-xl);
+  background: var(--green);
+  color: #0d0d0b;
+  border: none;
+  font-family: var(--font);
+  font-size: 15px;
   font-weight: 700;
-  letter-spacing: -0.02em;
-  margin-bottom: var(--space-3);
+  cursor: pointer;
+  padding: 12px 24px;
+  border-radius: var(--radius);
+  transition: background 0.15s;
 }
-.page-desc {
-  font-size: var(--text-base);
-  color: var(--color-text-muted);
-  max-width: 55ch;
+.btn-primary:hover { background: #c5f0c0; }
+.btn-secondary {
+  background: none;
+  color: var(--text);
+  border: 1px solid var(--border);
+  font-family: var(--font);
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 12px 24px;
+  border-radius: var(--radius);
+  transition: background 0.15s, border-color 0.15s;
 }
-.upload-area {
-  padding-block: clamp(var(--space-10), 5vw, var(--space-16));
+.btn-secondary:hover { background: #1e1e1a; border-color: var(--muted); }
+.cid-bar {
+  margin-top: 48px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 14px 20px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
 }
+.cid-label { font-family: var(--mono); font-size: 11px; color: var(--faint); letter-spacing: 0.08em; text-transform: uppercase; white-space: nowrap; }
+.cid-val { font-family: var(--mono); font-size: 11px; color: var(--green); flex: 1; word-break: break-all; }
+.cid-btn { background: #1e1e1a; border: 1px solid var(--border); color: var(--muted); font-family: var(--font); font-size: 12px; cursor: pointer; padding: 4px 12px; border-radius: 6px; white-space: nowrap; transition: all 0.15s; text-decoration: none; }
+.cid-btn:hover { background: #2a2a25; color: var(--text); }
 
-/* Wallet Banner */
-.wallet-banner {
-  background: var(--color-surface);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-xl);
-  padding: var(--space-5) var(--space-6);
+.steps-section {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 60px 24px;
+  border-top: 1px solid var(--border);
+}
+.section-label { font-family: var(--mono); font-size: 11px; color: var(--faint); letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 16px; }
+.steps-section h2 { font-size: clamp(1.4rem, 3vw, 2rem); font-weight: 700; letter-spacing: -0.02em; margin-bottom: 40px; }
+.cards-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; }
+.card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 24px; transition: border-color 0.15s; }
+.card:hover { border-color: var(--green); }
+.card-num { font-family: var(--mono); font-size: 11px; color: var(--green); margin-bottom: 16px; }
+.card h3 { font-size: 15px; font-weight: 600; margin-bottom: 8px; }
+.card p { font-size: 14px; color: var(--muted); line-height: 1.6; }
+
+/* ARCHIVER */
+.page-header {
+  max-width: 640px;
+  margin: 0 auto;
+  padding: 56px 24px 40px;
+}
+.page-header h1 { font-size: clamp(1.6rem, 3vw, 2.2rem); font-weight: 700; letter-spacing: -0.02em; margin-bottom: 12px; }
+.page-header p { font-size: 15px; color: var(--muted); }
+
+.form-wrap { max-width: 640px; margin: 0 auto; padding: 0 24px 80px; }
+
+.wallet-bar {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 16px 20px;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: var(--space-4);
-  margin-bottom: var(--space-8);
+  gap: 12px;
+  margin-bottom: 24px;
   flex-wrap: wrap;
 }
-.wallet-info { display: flex; align-items: center; gap: var(--space-3); }
-.wallet-status-dot {
-  width: 8px; height: 8px;
-  border-radius: 50%;
-  background: var(--color-text-faint);
-  flex-shrink: 0;
-}
-.wallet-status-dot.connected { background: var(--color-success); animation: pulse 2s ease-in-out infinite; }
-.wallet-text { font-size: var(--text-sm); color: var(--color-text-muted); }
-.wallet-address { font-family: var(--font-mono); font-size: var(--text-xs); color: var(--color-primary); }
+.wallet-left { display: flex; align-items: center; gap: 10px; }
+.w-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--faint); flex-shrink: 0; }
+.w-dot.on { background: #60c080; animation: pulse 2s infinite; }
+.w-text { font-size: 14px; color: var(--muted); }
+.w-addr { font-family: var(--mono); font-size: 12px; color: var(--green); display: none; }
+.btn-wallet { background: none; border: 1px solid var(--border); color: var(--text); font-family: var(--font); font-size: 13px; font-weight: 600; cursor: pointer; padding: 7px 14px; border-radius: var(--radius); transition: all 0.15s; }
+.btn-wallet:hover { background: #1e1e1a; }
+.btn-wallet:disabled { opacity: 0.5; cursor: not-allowed; }
 
-/* Form */
-.form-card {
-  background: var(--color-surface);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-xl);
-  overflow: hidden;
-}
-.form-section {
-  padding: var(--space-6) var(--space-8);
-  border-bottom: 1px solid var(--color-divider);
-}
-.form-section:last-child { border-bottom: none; }
-.form-section-label {
-  font-size: var(--text-xs);
-  font-family: var(--font-mono);
-  color: var(--color-text-faint);
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  margin-bottom: var(--space-5);
-}
-.field { margin-bottom: var(--space-5); }
+.form-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); overflow: hidden; }
+.form-block { padding: 24px; border-bottom: 1px solid var(--border); }
+.form-block:last-child { border-bottom: none; }
+.block-label { font-family: var(--mono); font-size: 11px; color: var(--faint); letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 20px; }
+.field { margin-bottom: 20px; }
 .field:last-child { margin-bottom: 0; }
-.field label {
-  display: block;
-  font-size: var(--text-sm);
-  font-weight: 500;
-  color: var(--color-text);
-  margin-bottom: var(--space-2);
-}
-.field label .optional {
-  color: var(--color-text-faint);
-  font-weight: 400;
-  margin-left: var(--space-2);
-}
+.field label { display: block; font-size: 14px; font-weight: 500; margin-bottom: 8px; }
+.opt { color: var(--faint); font-weight: 400; margin-left: 8px; font-size: 13px; }
 .input {
   width: 100%;
-  background: var(--color-bg);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-md);
-  padding: var(--space-3) var(--space-4);
-  font-size: var(--text-sm);
-  color: var(--color-text);
-  transition: border-color var(--transition), box-shadow var(--transition);
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 10px 14px;
+  font-family: var(--font);
+  font-size: 14px;
+  color: var(--text);
+  transition: border-color 0.15s;
+  outline: none;
 }
-.input::placeholder { color: var(--color-text-faint); }
-.input:focus { outline: none; border-color: var(--color-primary); box-shadow: 0 0 0 3px var(--color-primary-highlight); }
-textarea.input { resize: vertical; min-height: 160px; line-height: 1.6; }
+.input::placeholder { color: var(--faint); }
+.input:focus { border-color: var(--green); }
+textarea.input { resize: vertical; min-height: 150px; }
 
-/* Tab Toggle */
-.input-toggle {
-  display: flex;
-  background: var(--color-bg);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-lg);
-  padding: var(--space-1);
-  gap: var(--space-1);
-  margin-bottom: var(--space-5);
+.tabs { display: flex; background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 4px; gap: 4px; margin-bottom: 20px; }
+.tab {
+  flex: 1; padding: 8px; border-radius: 8px;
+  font-family: var(--font); font-size: 14px; font-weight: 500;
+  color: var(--muted); cursor: pointer; border: none; background: none;
+  transition: all 0.15s;
 }
-.toggle-btn {
-  flex: 1;
-  padding: var(--space-2) var(--space-4);
-  border-radius: calc(var(--radius-lg) - 2px);
-  font-size: var(--text-sm);
-  font-weight: 500;
-  color: var(--color-text-muted);
-  cursor: pointer;
-  border: none;
-  background: transparent;
-  transition: all var(--transition);
-}
-.toggle-btn.active {
-  background: var(--color-surface-2);
-  color: var(--color-text);
-  box-shadow: var(--shadow-sm);
-}
+.tab.active { background: #1e1e1a; color: var(--text); }
 
-/* Drop Zone */
-.drop-zone {
-  border: 2px dashed var(--color-border);
+.drop {
+  border: 2px dashed var(--border);
   border-radius: var(--radius-lg);
-  padding: var(--space-10) var(--space-6);
+  padding: 40px 24px;
   text-align: center;
   cursor: pointer;
-  transition: all var(--transition);
-  background: var(--color-bg);
+  transition: all 0.15s;
+  background: var(--bg);
 }
-.drop-zone:hover, .drop-zone.drag-over {
-  border-color: var(--color-primary);
-  background: var(--color-primary-highlight);
-}
-.drop-zone input[type="file"] { display: none; }
-.drop-icon { font-size: 2rem; margin-bottom: var(--space-3); }
-.drop-title { font-size: var(--text-sm); font-weight: 600; margin-bottom: var(--space-1); }
-.drop-hint { font-size: var(--text-xs); color: var(--color-text-faint); }
-.file-selected {
-  display: flex; align-items: center; gap: var(--space-3);
-  background: var(--color-primary-highlight);
-  border-color: var(--color-primary);
-  padding: var(--space-4) var(--space-5);
-}
-.file-name { font-size: var(--text-sm); color: var(--color-primary); font-family: var(--font-mono); }
+.drop:hover, .drop.over { border-color: var(--green); background: var(--green-bg); }
+.drop input[type=file] { display: none; }
+.drop-icon { font-size: 2rem; margin-bottom: 12px; }
+.drop-title { font-size: 14px; font-weight: 600; margin-bottom: 4px; }
+.drop-hint { font-size: 12px; color: var(--faint); }
 
-/* Form footer */
 .form-footer {
+  background: #111110;
+  border-top: 1px solid var(--border);
+  padding: 16px 24px;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: var(--space-4);
+  gap: 12px;
   flex-wrap: wrap;
-  padding: var(--space-5) var(--space-8);
-  background: var(--color-surface-offset);
-  border-top: 1px solid var(--color-divider);
 }
-.form-note { font-size: var(--text-xs); color: var(--color-text-faint); max-width: 40ch; line-height: 1.5; }
+.form-note { font-size: 12px; color: var(--faint); max-width: 36ch; line-height: 1.5; }
 
-/* Result Card */
-.result-card {
-  display: none;
-  margin-top: var(--space-6);
-  background: var(--color-surface);
-  border: 1px solid var(--color-primary);
-  border-radius: var(--radius-xl);
-  overflow: hidden;
-}
-.result-card.visible { display: block; }
-.result-header {
-  background: var(--color-primary-highlight);
-  padding: var(--space-4) var(--space-6);
-  display: flex;
-  align-items: center;
-  gap: var(--space-3);
-}
-.result-header-text { font-size: var(--text-sm); font-weight: 600; color: var(--color-primary); }
-.result-body { padding: var(--space-6) var(--space-8); }
-.result-row {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-1);
-  margin-bottom: var(--space-5);
-}
-.result-row:last-child { margin-bottom: 0; }
-.result-key {
-  font-size: var(--text-xs);
-  font-family: var(--font-mono);
-  color: var(--color-text-faint);
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-}
-.result-val {
-  font-size: var(--text-sm);
-  font-family: var(--font-mono);
-  color: var(--color-text);
-  word-break: break-all;
-  background: var(--color-bg);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-md);
-  padding: var(--space-3) var(--space-4);
-  cursor: pointer;
-  transition: border-color var(--transition);
-}
-.result-val:hover { border-color: var(--color-primary); }
-.result-val a { color: var(--color-primary); }
-.copy-hint { font-size: var(--text-xs); color: var(--color-text-faint); margin-top: var(--space-1); }
+.result { display: none; margin-top: 20px; background: var(--surface); border: 1px solid var(--green); border-radius: var(--radius-lg); overflow: hidden; }
+.result.show { display: block; }
+.result-head { background: var(--green-bg); padding: 14px 20px; display: flex; align-items: center; gap: 10px; }
+.result-head span { font-size: 14px; font-weight: 600; color: var(--green); }
+.result-body { padding: 20px 24px; }
+.rrow { margin-bottom: 16px; }
+.rrow:last-child { margin-bottom: 0; }
+.rkey { font-family: var(--mono); font-size: 11px; color: var(--faint); letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 6px; }
+.rval { font-family: var(--mono); font-size: 13px; color: var(--text); background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius); padding: 10px 14px; word-break: break-all; cursor: pointer; transition: border-color 0.15s; }
+.rval:hover { border-color: var(--green); }
+.rval a { color: var(--green); text-decoration: none; }
+.copy-tip { font-size: 11px; color: var(--faint); margin-top: 4px; }
 
-/* ===== EXPLORER PAGE ===== */
-.explorer-section {
-  padding-block: clamp(var(--space-10), 5vw, var(--space-16));
-}
-.explorer-toolbar {
+/* EXPLORER */
+.explorer-wrap { max-width: 960px; margin: 0 auto; padding: 56px 24px 80px; }
+.explorer-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 32px; flex-wrap: wrap; gap: 12px; }
+.explorer-count { font-family: var(--mono); font-size: 14px; color: var(--muted); }
+.explorer-count b { color: var(--green); }
+.archive-list { display: flex; flex-direction: column; gap: 12px; }
+.archive-row {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 18px 20px;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: var(--space-4);
-  margin-bottom: var(--space-8);
-  flex-wrap: wrap;
-}
-.explorer-count {
-  font-size: var(--text-sm);
-  color: var(--color-text-muted);
-  font-family: var(--font-mono);
-}
-.explorer-count span { color: var(--color-primary); font-weight: 700; }
-.archives-list {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-3);
-}
-.archive-item {
-  background: var(--color-surface);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-lg);
-  padding: var(--space-5) var(--space-6);
-  display: grid;
-  grid-template-columns: 1fr auto;
-  align-items: center;
-  gap: var(--space-4);
-  transition: all var(--transition);
+  gap: 16px;
   cursor: pointer;
+  transition: border-color 0.15s, background 0.15s;
 }
-.archive-item:hover { border-color: var(--color-primary); background: var(--color-surface-2); }
-.archive-title-text {
-  font-size: var(--text-base);
-  font-weight: 600;
-  margin-bottom: var(--space-1);
-}
-.archive-meta {
-  display: flex;
-  align-items: center;
-  gap: var(--space-4);
-  flex-wrap: wrap;
-}
-.archive-cid {
-  font-size: var(--text-xs);
-  font-family: var(--font-mono);
-  color: var(--color-primary);
-}
-.archive-date {
-  font-size: var(--text-xs);
-  color: var(--color-text-faint);
-}
-.archive-type {
-  font-size: var(--text-xs);
-  color: var(--color-text-faint);
-  background: var(--color-surface-offset);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-full);
-  padding: var(--space-1) var(--space-3);
-}
-.archive-arrow { color: var(--color-text-faint); transition: color var(--transition); }
-.archive-item:hover .archive-arrow { color: var(--color-primary); }
+.archive-row:hover { border-color: var(--green); background: #111110; }
+.archive-title { font-size: 15px; font-weight: 600; margin-bottom: 6px; }
+.archive-meta { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
+.archive-cid { font-family: var(--mono); font-size: 12px; color: var(--green); }
+.archive-date { font-size: 12px; color: var(--faint); }
+.archive-tag { font-size: 11px; color: var(--faint); background: #1e1e1a; border: 1px solid var(--border); border-radius: 999px; padding: 2px 10px; }
+.arrow { color: var(--faint); font-size: 18px; flex-shrink: 0; transition: color 0.15s; }
+.archive-row:hover .arrow { color: var(--green); }
 
-.empty-state {
-  display: flex; flex-direction: column; align-items: center;
-  text-align: center; padding: var(--space-20) var(--space-8);
-  color: var(--color-text-muted);
-}
-.empty-icon { font-size: 3rem; margin-bottom: var(--space-4); opacity: 0.4; }
-.empty-title { font-size: var(--text-lg); font-weight: 600; color: var(--color-text); margin-bottom: var(--space-2); }
-.empty-desc { font-size: var(--text-sm); max-width: 36ch; line-height: 1.6; }
+.empty { text-align: center; padding: 80px 24px; color: var(--muted); }
+.empty-icon { font-size: 3rem; opacity: 0.3; margin-bottom: 16px; }
+.empty h3 { font-size: 1.2rem; color: var(--text); margin-bottom: 8px; }
+.empty p { font-size: 14px; max-width: 32ch; margin: 0 auto; }
 
-/* ===== PARTICIPER PAGE ===== */
-.participer-section {
-  padding-block: clamp(var(--space-10), 5vw, var(--space-16));
-}
-.levels-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-  gap: var(--space-5);
-  margin-bottom: var(--space-16);
-}
-.level-card {
-  background: var(--color-surface);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-xl);
-  padding: var(--space-8);
-  position: relative;
-  transition: all var(--transition);
-}
-.level-card:hover { border-color: var(--color-primary); }
-.level-card.featured {
-  border-color: var(--color-primary);
-  background: var(--color-primary-highlight);
-}
-.level-num {
-  font-family: var(--font-mono);
-  font-size: var(--text-xs);
-  color: var(--color-text-faint);
-  letter-spacing: 0.1em;
-  margin-bottom: var(--space-4);
-}
-.level-title {
-  font-size: var(--text-lg);
-  font-weight: 700;
-  margin-bottom: var(--space-3);
-}
-.level-desc {
-  font-size: var(--text-sm);
-  color: var(--color-text-muted);
-  line-height: 1.6;
-  margin-bottom: var(--space-6);
-}
-.level-tag {
-  display: inline-flex;
-  align-items: center;
-  font-size: var(--text-xs);
-  font-family: var(--font-mono);
-  padding: var(--space-1) var(--space-3);
-  border-radius: var(--radius-full);
-  background: var(--color-surface-offset);
-  border: 1px solid var(--color-border);
-  color: var(--color-text-muted);
-}
-.level-card.featured .level-tag {
-  background: var(--color-primary);
-  border-color: var(--color-primary);
-  color: var(--color-bg);
-}
+/* PARTICIPER */
+.participer-wrap { max-width: 960px; margin: 0 auto; padding: 56px 24px 80px; }
+.levels { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; margin-bottom: 60px; }
+.level { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 28px; transition: border-color 0.15s; }
+.level:hover { border-color: var(--green); }
+.level.featured { border-color: var(--green); background: var(--green-bg); }
+.level-num { font-family: var(--mono); font-size: 11px; color: var(--faint); margin-bottom: 16px; }
+.level h3 { font-size: 1.1rem; font-weight: 700; margin-bottom: 10px; }
+.level p { font-size: 14px; color: var(--muted); line-height: 1.6; margin-bottom: 20px; }
+.tag { display: inline-block; font-family: var(--mono); font-size: 11px; padding: 3px 10px; border-radius: 999px; background: #1e1e1a; border: 1px solid var(--border); color: var(--muted); }
+.level.featured .tag { background: var(--green); border-color: var(--green); color: #0d0d0b; }
+.code-block { background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 20px 24px; font-family: var(--mono); font-size: 13px; line-height: 1.9; overflow-x: auto; }
+.c { color: var(--faint); }
+.g { color: var(--green); }
+.y { color: var(--yellow); }
 
-.code-block {
-  background: var(--color-bg);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-lg);
-  padding: var(--space-5) var(--space-6);
-  font-family: var(--font-mono);
-  font-size: var(--text-xs);
-  color: var(--color-text-muted);
-  line-height: 1.8;
-  overflow-x: auto;
-}
-.code-block .comment { color: var(--color-text-faint); }
-.code-block .cmd { color: var(--color-primary); }
-.code-block .arg { color: var(--color-accent); }
-
-/* ===== FOOTER ===== */
-.site-footer {
-  border-top: 1px solid var(--color-divider);
-  padding-block: var(--space-8);
-  margin-top: var(--space-16);
-}
-.footer-inner {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: var(--space-4);
-  flex-wrap: wrap;
-}
-.footer-text {
-  font-size: var(--text-xs);
-  color: var(--color-text-faint);
-  font-family: var(--font-mono);
-}
-.footer-links {
-  display: flex;
-  gap: var(--space-4);
-}
-.footer-link {
-  font-size: var(--text-xs);
-  color: var(--color-text-faint);
-  transition: color var(--transition);
-  cursor: pointer;
-}
-.footer-link:hover { color: var(--color-primary); }
-
-/* ===== LOADING STATE ===== */
-.btn-loading {
-  position: relative;
-  pointer-events: none;
-  opacity: 0.7;
-}
-.spinner {
-  width: 14px; height: 14px;
-  border: 2px solid currentColor;
-  border-right-color: transparent;
-  border-radius: 50%;
-  animation: spin 0.6s linear infinite;
-  flex-shrink: 0;
-}
-@keyframes spin { to { transform: rotate(360deg); } }
-
-/* Toast */
-.toast {
-  position: fixed;
-  bottom: var(--space-6);
-  right: var(--space-6);
-  background: var(--color-surface-2);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-lg);
-  padding: var(--space-4) var(--space-5);
-  font-size: var(--text-sm);
-  box-shadow: var(--shadow-lg);
-  opacity: 0;
-  transform: translateY(8px);
-  transition: all 0.2s ease;
-  z-index: 1000;
-  max-width: 320px;
-}
+/* TOAST */
+.toast { position: fixed; bottom: 24px; right: 24px; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 14px 18px; font-size: 14px; box-shadow: 0 8px 32px rgba(0,0,0,0.5); opacity: 0; transform: translateY(8px); transition: all 0.2s; z-index: 999; max-width: 300px; pointer-events: none; }
 .toast.show { opacity: 1; transform: translateY(0); }
-.toast.success { border-color: var(--color-success); color: var(--color-success); }
-.toast.error { border-color: var(--color-error); color: var(--color-error); }
+.toast.ok { border-color: #60c080; color: #60c080; }
+.toast.err { border-color: var(--red); color: var(--red); }
 
-/* ===== PROGRESS STEPS ===== */
-.progress-steps {
-  display: flex;
-  align-items: center;
-  gap: 0;
-  margin-bottom: var(--space-8);
-  overflow-x: auto;
-}
-.progress-step {
-  display: flex;
-  align-items: center;
-  gap: var(--space-2);
-  flex-shrink: 0;
-}
-.step-dot {
-  width: 28px; height: 28px;
-  border-radius: 50%;
-  border: 2px solid var(--color-border);
-  display: flex; align-items: center; justify-content: center;
-  font-size: var(--text-xs);
-  font-family: var(--font-mono);
-  font-weight: 700;
-  color: var(--color-text-faint);
-  transition: all var(--transition);
-  flex-shrink: 0;
-}
-.progress-step.done .step-dot {
-  background: var(--color-primary);
-  border-color: var(--color-primary);
-  color: var(--color-bg);
-}
-.progress-step.active .step-dot {
-  border-color: var(--color-primary);
-  color: var(--color-primary);
-}
-.step-label {
-  font-size: var(--text-xs);
-  color: var(--color-text-faint);
-  white-space: nowrap;
-  transition: color var(--transition);
-}
-.progress-step.active .step-label,
-.progress-step.done .step-label { color: var(--color-text); }
-.step-line {
-  flex: 1;
-  height: 1px;
-  background: var(--color-border);
-  margin: 0 var(--space-3);
-  min-width: var(--space-6);
-}
-.progress-step.done + .step-line { background: var(--color-primary); }
+/* PROGRESS */
+.progress { display: flex; align-items: center; margin-bottom: 24px; overflow-x: auto; }
+.ps { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
+.ps-dot { width: 26px; height: 26px; border-radius: 50%; border: 2px solid var(--border); display: flex; align-items: center; justify-content: center; font-family: var(--mono); font-size: 11px; color: var(--faint); transition: all 0.2s; }
+.ps.active .ps-dot { border-color: var(--green); color: var(--green); }
+.ps.done .ps-dot { background: var(--green); border-color: var(--green); color: #0d0d0b; }
+.ps-label { font-size: 13px; color: var(--faint); white-space: nowrap; transition: color 0.2s; }
+.ps.active .ps-label, .ps.done .ps-label { color: var(--text); }
+.ps-line { flex: 1; min-width: 24px; height: 1px; background: var(--border); margin: 0 8px; }
+.ps.done + .ps-line { background: var(--green); }
 
-/* ===== RESPONSIVE ===== */
-@media (max-width: 600px) {
+@media (max-width: 560px) {
   .nav-links { display: none; }
-  .hero-title { max-width: 100%; }
-  .wallet-banner { flex-direction: column; align-items: flex-start; }
-  .form-footer { flex-direction: column; align-items: flex-start; }
-  .form-section { padding: var(--space-5) var(--space-5); }
-  .result-body { padding: var(--space-5) var(--space-5); }
-  .archive-item { grid-template-columns: 1fr; }
-  .levels-grid { grid-template-columns: 1fr; }
+  .hero h1 { font-size: 2rem; }
+  .cards-grid { grid-template-columns: 1fr 1fr; }
 }
 </style>
 </head>
 <body>
 
-<!-- ===== HEADER ===== -->
-<header class="site-header">
-  <nav class="container nav-inner">
-    <div class="logo" onclick="showSection('home')">
-      <div class="logo-icon">
-        <svg width="32" height="32" viewBox="0 0 32 32" fill="none" aria-label="Bloc Zéro">
-          <rect x="2" y="2" width="28" height="28" rx="4" stroke="currentColor" stroke-width="1.5"/>
-          <rect x="8" y="8" width="8" height="8" fill="currentColor" opacity="0.8"/>
-          <rect x="16" y="8" width="8" height="8" stroke="currentColor" stroke-width="1.5" opacity="0.5"/>
-          <rect x="8" y="16" width="8" height="8" stroke="currentColor" stroke-width="1.5" opacity="0.5"/>
-          <rect x="16" y="16" width="8" height="8" fill="currentColor" opacity="0.3"/>
-        </svg>
-      </div>
-      BLOC ZÉRO
-    </div>
-    <div class="nav-links">
-      <span class="nav-link active" id="nav-home" onclick="showSection('home')">Accueil</span>
-      <span class="nav-link" id="nav-archiver" onclick="showSection('archiver')">Archiver</span>
-      <span class="nav-link" id="nav-explorer" onclick="showSection('explorer')">Explorer</span>
-      <span class="nav-link" id="nav-participer" onclick="showSection('participer')">Participer</span>
-    </div>
-    <div class="nav-actions">
-      <button class="theme-toggle" data-theme-toggle aria-label="Changer de thème" onclick="toggleTheme()">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
-      </button>
-      <button class="btn btn-primary btn-sm" onclick="showSection('archiver')">
-        + Archiver
-      </button>
-    </div>
-  </nav>
-</header>
+<nav>
+  <div class="logo" onclick="go('home')">
+    <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
+      <rect x="1" y="1" width="26" height="26" rx="4" stroke="currentColor" stroke-width="1.5"/>
+      <rect x="6" y="6" width="7" height="7" fill="currentColor" opacity="0.9"/>
+      <rect x="15" y="6" width="7" height="7" stroke="currentColor" stroke-width="1.5" opacity="0.5"/>
+      <rect x="6" y="15" width="7" height="7" stroke="currentColor" stroke-width="1.5" opacity="0.5"/>
+      <rect x="15" y="15" width="7" height="7" fill="currentColor" opacity="0.3"/>
+    </svg>
+    BLOC ZÉRO
+  </div>
+  <div class="nav-links">
+    <button class="nav-btn active" id="nb-home" onclick="go('home')">Accueil</button>
+    <button class="nav-btn" id="nb-archiver" onclick="go('archiver')">Archiver</button>
+    <button class="nav-btn" id="nb-explorer" onclick="go('explorer')">Explorer</button>
+    <button class="nav-btn" id="nb-participer" onclick="go('participer')">Participer</button>
+  </div>
+  <button class="nav-cta" onclick="go('archiver')">+ Archiver</button>
+</nav>
 
-<!-- ===== TOAST ===== -->
 <div class="toast" id="toast"></div>
 
-<!-- ===== HOME ===== -->
-<main>
-<section class="section active" id="section-home">
+<!-- ACCUEIL -->
+<div class="page active" id="page-home">
   <div class="hero">
-    <div class="container">
-      <div class="hero-badge">
-        <div class="badge-dot"></div>
-        v0.1 — Réseau actif
-      </div>
-      <h1 class="hero-title">
-        Ce qui est gravé <span class="accent">ne s'efface pas.</span>
-      </h1>
-      <p class="hero-desc">
-        Bloc Zéro est un registre décentralisé. Chaque texte publié ici est ancré sur IPFS et Ethereum — hors de portée de toute suppression, censure ou oubli organisé.
-      </p>
-      <div class="hero-actions">
-        <button class="btn btn-primary" onclick="showSection('archiver')">
-          Archiver un texte →
-        </button>
-        <button class="btn btn-secondary" onclick="showSection('explorer')">
-          Explorer les archives
-        </button>
-      </div>
-      <div class="hero-cid">
-        <span class="cid-label">Manifeste · CID IPFS</span>
-        <span class="cid-value">bafkreidvauqcjvdespva2umndhdja3hdl3zyvcca2fx5n6okwrsooxpqse</span>
-        <a class="cid-link" href="https://gateway.pinata.cloud/ipfs/bafkreidvauqcjvdespva2umndhdja3hdl3zyvcca2fx5n6okwrsooxpqse" target="_blank" rel="noopener noreferrer">Lire →</a>
-      </div>
+    <div class="badge"><div class="badge-dot"></div>v0.1 — Réseau actif</div>
+    <h1>Ce qui est gravé <span>ne s'efface pas.</span></h1>
+    <p>Bloc Zéro est un registre décentralisé. Chaque texte publié ici est ancré sur IPFS et Ethereum — hors de portée de toute suppression, censure ou oubli organisé.</p>
+    <div class="hero-btns">
+      <button class="btn-primary" onclick="go('archiver')">Archiver un texte →</button>
+      <button class="btn-secondary" onclick="go('explorer')">Explorer les archives</button>
+    </div>
+    <div class="cid-bar">
+      <span class="cid-label">Manifeste · CID IPFS</span>
+      <span class="cid-val">bafkreidvauqcjvdespva2umndhdja3hdl3zyvcca2fx5n6okwrsooxpqse</span>
+      <a class="cid-btn" href="https://gateway.pinata.cloud/ipfs/bafkreidvauqcjvdespva2umndhdja3hdl3zyvcca2fx5n6okwrsooxpqse" target="_blank">Lire →</a>
     </div>
   </div>
-
-  <div class="how-section">
-    <div class="container">
-      <p class="section-label">Comment ça marche</p>
-      <h2 class="section-title">Trois étapes, une archive permanente.</h2>
-      <div class="steps-grid">
-        <div class="step-card">
-          <div class="step-number">01</div>
-          <div class="step-title">Tu envoies ton texte</div>
-          <p class="step-desc">Un document, un témoignage, un manifeste. N'importe quel texte que tu veux préserver.</p>
-        </div>
-        <div class="step-card">
-          <div class="step-number">02</div>
-          <div class="step-title">Il est ancré sur IPFS</div>
-          <p class="step-desc">Ton fichier reçoit un identifiant unique (CID) et est distribué sur un réseau décentralisé mondial.</p>
-        </div>
-        <div class="step-card">
-          <div class="step-number">03</div>
-          <div class="step-title">Il est gravé sur Ethereum</div>
-          <p class="step-desc">Le CID est enregistré dans dmap — un registre immuable sur la blockchain. Plus personne ne peut l'effacer.</p>
-        </div>
-        <div class="step-card">
-          <div class="step-number">04</div>
-          <div class="step-title">Tu as la preuve</div>
-          <p class="step-desc">Un lien permanent, un CID vérifiable, une trace que tu peux partager n'importe où dans le monde.</p>
-        </div>
-      </div>
+  <div class="steps-section">
+    <p class="section-label">Comment ça marche</p>
+    <h2>Trois étapes, une archive permanente.</h2>
+    <div class="cards-grid">
+      <div class="card"><div class="card-num">01</div><h3>Tu envoies ton texte</h3><p>Un document, un témoignage, un manifeste. N'importe quel texte que tu veux préserver.</p></div>
+      <div class="card"><div class="card-num">02</div><h3>Il est ancré sur IPFS</h3><p>Ton fichier reçoit un identifiant unique (CID) et est distribué sur un réseau décentralisé mondial.</p></div>
+      <div class="card"><div class="card-num">03</div><h3>Il est gravé sur Ethereum</h3><p>Le CID est enregistré dans dmap — un registre immuable. Plus personne ne peut l'effacer.</p></div>
+      <div class="card"><div class="card-num">04</div><h3>Tu as la preuve</h3><p>Un lien permanent, un CID vérifiable, une trace que tu peux partager partout dans le monde.</p></div>
     </div>
   </div>
-</section>
+</div>
 
-<!-- ===== ARCHIVER ===== -->
-<section class="section" id="section-archiver">
+<!-- ARCHIVER -->
+<div class="page" id="page-archiver">
   <div class="page-header">
-    <div class="container-narrow">
-      <p class="section-label">Archiver</p>
-      <h1 class="page-title">Publier un document</h1>
-      <p class="page-desc">Soumets un texte ou un fichier. Il sera envoyé sur IPFS et tu recevras ton CID permanent.</p>
+    <p class="section-label">Archiver</p>
+    <h1>Publier un document</h1>
+    <p>Soumets un texte ou un fichier. Il sera envoyé sur IPFS et tu recevras ton CID permanent.</p>
+  </div>
+  <div class="form-wrap">
+    <div class="progress">
+      <div class="ps active" id="ps1"><div class="ps-dot">1</div><span class="ps-label">Contenu</span></div>
+      <div class="ps-line"></div>
+      <div class="ps" id="ps2"><div class="ps-dot">2</div><span class="ps-label">IPFS</span></div>
+      <div class="ps-line"></div>
+      <div class="ps" id="ps3"><div class="ps-dot">3</div><span class="ps-label">Ethereum</span></div>
+    </div>
+    <div class="wallet-bar">
+      <div class="wallet-left">
+        <div class="w-dot" id="wdot"></div>
+        <div>
+          <div class="w-text" id="wtext">Wallet non connecté</div>
+          <div class="w-addr" id="waddr"></div>
+        </div>
+      </div>
+      <button class="btn-wallet" id="wbtn" onclick="connectWallet()">Connecter MetaMask</button>
+    </div>
+    <div class="form-card">
+      <div class="form-block">
+        <div class="block-label">Informations</div>
+        <div class="field">
+          <label for="title">Titre du document</label>
+          <input class="input" type="text" id="title" placeholder="ex: Rapport sur les eaux de l'Oise, mai 2026" maxlength="120">
+        </div>
+        <div class="field">
+          <label for="author">Auteur / Pseudo <span class="opt">(optionnel)</span></label>
+          <input class="input" type="text" id="author" placeholder="ex: krim1811 ou anonyme" maxlength="60">
+        </div>
+      </div>
+      <div class="form-block">
+        <div class="block-label">Contenu</div>
+        <div class="tabs">
+          <button class="tab active" id="tab-text" onclick="switchTab('text')">Coller du texte</button>
+          <button class="tab" id="tab-file" onclick="switchTab('file')">Envoyer un fichier</button>
+        </div>
+        <div id="zone-text">
+          <textarea class="input" id="doctext" placeholder="Colle ici le texte que tu veux archiver..."></textarea>
+        </div>
+        <div id="zone-file" style="display:none">
+          <div class="drop" id="dropzone" onclick="document.getElementById('fileinput').click()">
+            <input type="file" id="fileinput" accept=".txt,.md,.pdf,.html,.json" onchange="onFile(event)">
+            <div class="drop-icon">📄</div>
+            <div class="drop-title">Clique ou glisse un fichier ici</div>
+            <div class="drop-hint">.txt · .md · .pdf · .html · .json — max 10 MB</div>
+          </div>
+        </div>
+      </div>
+      <div class="form-footer">
+        <p class="form-note">Aucun fichier stocké sur nos serveurs. Tout passe vers le réseau IPFS décentralisé.</p>
+        <button class="btn-primary" id="submitbtn" onclick="submit()">Publier sur IPFS →</button>
+      </div>
+    </div>
+    <div class="result" id="result">
+      <div class="result-head">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+        <span>Archive publiée avec succès</span>
+      </div>
+      <div class="result-body">
+        <div class="rrow"><div class="rkey">Titre</div><div class="rval" id="r-title">—</div></div>
+        <div class="rrow"><div class="rkey">CID IPFS</div><div class="rval" id="r-cid" onclick="copyCid()">—</div><div class="copy-tip">Clique pour copier</div></div>
+        <div class="rrow"><div class="rkey">URL Permanente</div><div class="rval" id="r-url">—</div></div>
+        <div class="rrow"><div class="rkey">Ancrage Ethereum</div><div class="rval" id="r-eth" style="color:var(--faint)">En attente — connecte MetaMask pour ancrer</div></div>
+        <div style="margin-top:16px">
+          <button class="btn-primary" id="anchorbtn" style="display:none" onclick="anchorEth()">Ancrer sur Ethereum →</button>
+        </div>
+      </div>
     </div>
   </div>
-  <div class="upload-area">
-    <div class="container-narrow">
+</div>
 
-      <!-- Progress -->
-      <div class="progress-steps" id="progressSteps">
-        <div class="progress-step active" id="ps1">
-          <div class="step-dot">1</div>
-          <span class="step-label">Contenu</span>
-        </div>
-        <div class="step-line"></div>
-        <div class="progress-step" id="ps2">
-          <div class="step-dot">2</div>
-          <span class="step-label">Publication IPFS</span>
-        </div>
-        <div class="step-line"></div>
-        <div class="progress-step" id="ps3">
-          <div class="step-dot">3</div>
-          <span class="step-label">Ancrage Ethereum</span>
-        </div>
-      </div>
-
-      <!-- Wallet -->
-      <div class="wallet-banner">
-        <div class="wallet-info">
-          <div class="wallet-status-dot" id="walletDot"></div>
-          <div>
-            <div class="wallet-text" id="walletText">Wallet non connecté</div>
-            <div class="wallet-address" id="walletAddress" style="display:none"></div>
-          </div>
-        </div>
-        <button class="btn btn-secondary btn-sm" id="connectBtn" onclick="connectWallet()">
-          Connecter MetaMask
-        </button>
-      </div>
-
-      <!-- Form -->
-      <div class="form-card">
-        <div class="form-section">
-          <div class="form-section-label">Informations</div>
-          <div class="field">
-            <label for="docTitle">Titre du document</label>
-            <input type="text" id="docTitle" class="input" placeholder="ex: Rapport sur les eaux de l'Oise, mai 2026" maxlength="120">
-          </div>
-          <div class="field">
-            <label for="docAuthor">Auteur / Pseudo <span class="optional">(optionnel)</span></label>
-            <input type="text" id="docAuthor" class="input" placeholder="ex: krim1811 ou anonyme" maxlength="60">
-          </div>
-        </div>
-
-        <div class="form-section">
-          <div class="form-section-label">Contenu</div>
-          <div class="input-toggle">
-            <button class="toggle-btn active" id="tabText" onclick="switchTab('text')">Coller du texte</button>
-            <button class="toggle-btn" id="tabFile" onclick="switchTab('file')">Envoyer un fichier</button>
-          </div>
-
-          <!-- Text input -->
-          <div id="inputText">
-            <textarea id="docText" class="input" placeholder="Colle ici le texte que tu veux archiver..."></textarea>
-          </div>
-
-          <!-- File input -->
-          <div id="inputFile" style="display:none">
-            <div class="drop-zone" id="dropZone" onclick="document.getElementById('fileInput').click()">
-              <input type="file" id="fileInput" accept=".txt,.md,.pdf,.html,.json" onchange="handleFile(event)">
-              <div class="drop-icon">📄</div>
-              <div class="drop-title">Clique ou glisse un fichier ici</div>
-              <div class="drop-hint">.txt · .md · .pdf · .html · .json — max 10 MB</div>
-            </div>
-          </div>
-        </div>
-
-        <div class="form-footer">
-          <p class="form-note">Aucun fichier n'est stocké sur nos serveurs. Tout passe directement vers le réseau IPFS décentralisé.</p>
-          <button class="btn btn-primary" id="submitBtn" onclick="submitArchive()">
-            Publier sur IPFS →
-          </button>
-        </div>
-      </div>
-
-      <!-- Result -->
-      <div class="result-card" id="resultCard">
-        <div class="result-header">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
-          <span class="result-header-text">Archive publiée avec succès</span>
-        </div>
-        <div class="result-body">
-          <div class="result-row">
-            <span class="result-key">Titre</span>
-            <div class="result-val" id="resTitre">—</div>
-          </div>
-          <div class="result-row">
-            <span class="result-key">CID IPFS</span>
-            <div class="result-val" id="resCid" onclick="copyCid()">—</div>
-            <span class="copy-hint">Clique pour copier</span>
-          </div>
-          <div class="result-row">
-            <span class="result-key">URL Permanente</span>
-            <div class="result-val" id="resUrl">—</div>
-          </div>
-          <div class="result-row">
-            <span class="result-key">Ancrage Ethereum</span>
-            <div class="result-val" id="resEth" style="color: var(--color-text-faint);">En attente — connecte MetaMask pour ancrer</div>
-          </div>
-          <div style="margin-top: var(--space-6)">
-            <button class="btn btn-primary" id="anchorBtn" onclick="anchorOnEthereum()" style="display:none">
-              Ancrer sur Ethereum →
-            </button>
-          </div>
-        </div>
-      </div>
-
-    </div>
-  </div>
-</section>
-
-<!-- ===== EXPLORER ===== -->
-<section class="section" id="section-explorer">
-  <div class="page-header">
-    <div class="container">
+<!-- EXPLORER -->
+<div class="page" id="page-explorer">
+  <div class="explorer-wrap">
+    <div class="page-header" style="padding:0 0 32px">
       <p class="section-label">Explorer</p>
-      <h1 class="page-title">Registre des archives</h1>
-      <p class="page-desc">Tous les documents publiés via Bloc Zéro. Chaque CID est vérifiable indépendamment sur le réseau IPFS.</p>
+      <h1>Registre des archives</h1>
+      <p style="color:var(--muted);font-size:15px;margin-top:8px">Tous les documents publiés via Bloc Zéro. Chaque CID est vérifiable sur le réseau IPFS.</p>
     </div>
-  </div>
-  <div class="explorer-section">
-    <div class="container">
-      <div class="explorer-toolbar">
-        <div class="explorer-count">
-          <span id="archiveCount">1</span> archive(s) publique(s)
-        </div>
-      </div>
-      <div class="archives-list" id="archivesList">
-        <!-- Rempli par JS -->
-      </div>
+    <div class="explorer-top">
+      <div class="explorer-count"><b id="archcount">1</b> archive(s) publique(s)</div>
     </div>
+    <div class="archive-list" id="archlist"></div>
   </div>
-</section>
+</div>
 
-<!-- ===== PARTICIPER ===== -->
-<section class="section" id="section-participer">
-  <div class="page-header">
-    <div class="container">
+<!-- PARTICIPER -->
+<div class="page" id="page-participer">
+  <div class="participer-wrap">
+    <div class="page-header" style="padding:0 0 40px">
       <p class="section-label">Participer</p>
-      <h1 class="page-title">Rejoindre le réseau</h1>
-      <p class="page-desc">Plus le réseau est distribué, plus les archives sont indestructibles. Voici comment contribuer.</p>
+      <h1>Rejoindre le réseau</h1>
+      <p style="color:var(--muted);font-size:15px;margin-top:8px">Plus le réseau est distribué, plus les archives sont indestructibles.</p>
+    </div>
+    <div class="levels">
+      <div class="level"><div class="level-num">NIVEAU 01</div><h3>Utilisateur</h3><p>Publie tes propres archives via l'interface. Aucune configuration nécessaire.</p><span class="tag">Gratuit · Zéro config</span></div>
+      <div class="level featured"><div class="level-num">NIVEAU 02</div><h3>Pinner</h3><p>Épingle les archives de Bloc Zéro via Pinata. Tes copies renforcent la disponibilité du réseau.</p><span class="tag">★ Recommandé</span></div>
+      <div class="level"><div class="level-num">NIVEAU 03</div><h3>Nœud complet</h3><p>Lance ton propre nœud IPFS sur PC ou serveur. Tu deviens un point de distribution indépendant.</p><span class="tag">Technique · PC allumé</span></div>
+    </div>
+    <p class="section-label">Lancer un nœud IPFS</p>
+    <h2 style="font-size:1.5rem;font-weight:700;margin-bottom:20px;letter-spacing:-0.02em">3 commandes suffisent.</h2>
+    <div class="code-block">
+      <div><span class="c"># 1. Installer IPFS</span></div>
+      <div><span class="g">npm</span> <span class="y">install -g ipfs</span></div>
+      <br>
+      <div><span class="c"># 2. Initialiser</span></div>
+      <div><span class="g">ipfs</span> <span class="y">init</span></div>
+      <br>
+      <div><span class="c"># 3. Lancer</span></div>
+      <div><span class="g">ipfs</span> <span class="y">daemon</span></div>
+      <br>
+      <div><span class="c"># 4. Épingler le manifeste Bloc Zéro</span></div>
+      <div><span class="g">ipfs</span> <span class="y">pin add bafkreidvauqcjvdespva2umndhdja3hdl3zyvcca2fx5n6okwrsooxpqse</span></div>
     </div>
   </div>
-  <div class="participer-section">
-    <div class="container">
-      <div class="levels-grid">
-        <div class="level-card">
-          <div class="level-num">NIVEAU 01</div>
-          <div class="level-title">Utilisateur</div>
-          <p class="level-desc">Publie tes propres archives via l'interface. Aucune configuration nécessaire.</p>
-          <span class="level-tag">Gratuit · Zéro config</span>
-        </div>
-        <div class="level-card featured">
-          <div class="level-num">NIVEAU 02</div>
-          <div class="level-title">Pinner</div>
-          <p class="level-desc">Épingle les archives de Bloc Zéro via Pinata ou un autre service IPFS. Tes copies renforcent la disponibilité.</p>
-          <span class="level-tag">★ Recommandé</span>
-        </div>
-        <div class="level-card">
-          <div class="level-num">NIVEAU 03</div>
-          <div class="level-title">Nœud complet</div>
-          <p class="level-desc">Lance ton propre nœud IPFS sur PC ou serveur. Tu deviens un point de distribution indépendant.</p>
-          <span class="level-tag">Technique · PC allumé</span>
-        </div>
-      </div>
-
-      <p class="section-label">Lancer un nœud IPFS</p>
-      <h2 class="section-title" style="margin-bottom: var(--space-6)">3 commandes suffit.</h2>
-      <div class="code-block">
-        <div><span class="comment"># 1. Installer IPFS (Node.js requis)</span></div>
-        <div><span class="cmd">npm</span> <span class="arg">install -g ipfs</span></div>
-        <div>&nbsp;</div>
-        <div><span class="comment"># 2. Initialiser</span></div>
-        <div><span class="cmd">ipfs</span> <span class="arg">init</span></div>
-        <div>&nbsp;</div>
-        <div><span class="comment"># 3. Lancer le nœud</span></div>
-        <div><span class="cmd">ipfs</span> <span class="arg">daemon</span></div>
-        <div>&nbsp;</div>
-        <div><span class="comment"># 4. Épingler les archives Bloc Zéro</span></div>
-        <div><span class="cmd">ipfs</span> <span class="arg">pin add bafkreidvauqcjvdespva2umndhdja3hdl3zyvcca2fx5n6okwrsooxpqse</span></div>
-      </div>
-    </div>
-  </div>
-</section>
-</main>
-
-<!-- ===== FOOTER ===== -->
-<footer class="site-footer">
-  <div class="container footer-inner">
-    <span class="footer-text">BLOC ZÉRO · v0.1 · 2026</span>
-    <div class="footer-links">
-      <a class="footer-link" href="https://github.com/karim1811/bloc-zero" target="_blank" rel="noopener noreferrer">GitHub →</a>
-      <a class="footer-link" href="https://gateway.pinata.cloud/ipfs/bafkreidvauqcjvdespva2umndhdja3hdl3zyvcca2fx5n6okwrsooxpqse" target="_blank" rel="noopener noreferrer">Manifeste →</a>
-    </div>
-  </div>
-</footer>
+</div>
 
 <script>
-// ===== STATE =====
-let currentSection = 'home';
-let walletAddress = null;
-let selectedFile = null;
-let currentMode = 'text';
-let lastCid = null;
-
-// Local archives (in-memory, remplacé par Pinata + dmap plus tard)
-let archives = [
-  {
-    title: 'Manifeste Bloc Zéro',
-    author: 'krim1811',
-    cid: 'bafkreidvauqcjvdespva2umndhdja3hdl3zyvcca2fx5n6okwrsooxpqse',
-    date: '8 mai 2026',
-    type: 'Manifeste',
-    anchored: false
-  }
+var archives = [
+  { title: 'Manifeste Bloc Zéro', author: 'krim1811', cid: 'bafkreidvauqcjvdespva2umndhdja3hdl3zyvcca2fx5n6okwrsooxpqse', date: '8 mai 2026', type: 'Manifeste' }
 ];
+var wallet = null;
+var mode = 'text';
+var file = null;
+var lastCid = null;
 
-// ===== THEME =====
-(function() {
-  const stored = null; // no localStorage in sandboxed iframe
-  const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-  document.documentElement.setAttribute('data-theme', prefersDark ? 'dark' : 'light');
-})();
-
-function toggleTheme() {
-  const html = document.documentElement;
-  const current = html.getAttribute('data-theme');
-  const next = current === 'dark' ? 'light' : 'dark';
-  html.setAttribute('data-theme', next);
-  const btn = document.querySelector('[data-theme-toggle]');
-  if (next === 'light') {
-    btn.innerHTML = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>';
-  } else {
-    btn.innerHTML = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>';
-  }
-}
-
-// ===== NAVIGATION =====
-function showSection(id) {
-  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
-  document.querySelectorAll('.nav-link').forEach(n => n.classList.remove('active'));
-  document.getElementById('section-' + id).classList.add('active');
-  const navEl = document.getElementById('nav-' + id);
-  if (navEl) navEl.classList.add('active');
-  currentSection = id;
+function go(id) {
+  document.querySelectorAll('.page').forEach(function(p) { p.classList.remove('active'); });
+  document.querySelectorAll('.nav-btn').forEach(function(b) { b.classList.remove('active'); });
+  document.getElementById('page-' + id).classList.add('active');
+  var nb = document.getElementById('nb-' + id);
+  if (nb) nb.classList.add('active');
   if (id === 'explorer') renderArchives();
-  window.scrollTo({ top: 0, behavior: 'smooth' });
+  window.scrollTo(0, 0);
 }
 
-// ===== WALLET =====
-async function connectWallet() {
-  if (typeof window.ethereum === 'undefined') {
-    showToast('MetaMask non détecté. Installe l'extension MetaMask.', 'error');
-    return;
-  }
-  const btn = document.getElementById('connectBtn');
-  btn.innerHTML = '<span class="spinner"></span> Connexion...';
-  btn.disabled = true;
-  try {
-    const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
-    walletAddress = accounts[0];
-    document.getElementById('walletDot').classList.add('connected');
-    document.getElementById('walletText').textContent = 'Wallet connecté';
-    document.getElementById('walletAddress').style.display = 'block';
-    document.getElementById('walletAddress').textContent = walletAddress.slice(0, 6) + '...' + walletAddress.slice(-4);
-    btn.textContent = 'Connecté ✓';
-    btn.disabled = true;
-    showToast('Wallet connecté : ' + walletAddress.slice(0,6) + '...' + walletAddress.slice(-4), 'success');
-    if (lastCid) {
-      document.getElementById('anchorBtn').style.display = 'inline-flex';
-    }
-    window.ethereum.on('accountsChanged', (accounts) => {
-      walletAddress = accounts[0] || null;
-      if (!walletAddress) {
-        document.getElementById('walletDot').classList.remove('connected');
-        document.getElementById('walletText').textContent = 'Wallet déconnecté';
-        document.getElementById('walletAddress').style.display = 'none';
-        btn.textContent = 'Connecter MetaMask';
-        btn.disabled = false;
-      }
-    });
-  } catch (err) {
-    btn.innerHTML = 'Connecter MetaMask';
-    btn.disabled = false;
-    showToast('Connexion annulée.', 'error');
-  }
+function toast(msg, type) {
+  var t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'toast show ' + (type || '');
+  setTimeout(function() { t.className = 'toast'; }, 3500);
 }
 
-// ===== TAB TOGGLE =====
-function switchTab(mode) {
-  currentMode = mode;
-  document.getElementById('tabText').classList.toggle('active', mode === 'text');
-  document.getElementById('tabFile').classList.toggle('active', mode === 'file');
-  document.getElementById('inputText').style.display = mode === 'text' ? 'block' : 'none';
-  document.getElementById('inputFile').style.display = mode === 'file' ? 'block' : 'none';
+function switchTab(t) {
+  mode = t;
+  document.getElementById('tab-text').className = 'tab' + (t === 'text' ? ' active' : '');
+  document.getElementById('tab-file').className = 'tab' + (t === 'file' ? ' active' : '');
+  document.getElementById('zone-text').style.display = t === 'text' ? 'block' : 'none';
+  document.getElementById('zone-file').style.display = t === 'file' ? 'block' : 'none';
 }
 
-// ===== FILE DROP =====
-function handleFile(event) {
-  const file = event.target.files[0];
-  if (!file) return;
-  if (file.size > 10 * 1024 * 1024) {
-    showToast('Fichier trop lourd (max 10 MB)', 'error');
-    return;
-  }
-  selectedFile = file;
-  const dz = document.getElementById('dropZone');
-  dz.innerHTML = '<div class="file-selected"><span>📄</span><span class="file-name">' + file.name + '</span><span style="color:var(--color-text-faint);font-size:var(--text-xs)">' + (file.size / 1024).toFixed(1) + ' KB</span></div>';
+function onFile(e) {
+  var f = e.target.files[0];
+  if (!f) return;
+  if (f.size > 10 * 1024 * 1024) { toast('Fichier trop lourd (max 10 MB)', 'err'); return; }
+  file = f;
+  var dz = document.getElementById('dropzone');
+  dz.innerHTML = '<div style="padding:16px;display:flex;align-items:center;gap:12px"><span>📄</span><span style="font-family:var(--mono);font-size:13px;color:var(--green)">' + f.name + '</span><span style="font-size:12px;color:var(--faint)">' + (f.size/1024).toFixed(1) + ' KB</span></div>';
 }
 
-// Drag & Drop
-const dz = document.getElementById('dropZone');
-dz.addEventListener('dragover', e => { e.preventDefault(); dz.classList.add('drag-over'); });
-dz.addEventListener('dragleave', () => dz.classList.remove('drag-over'));
-dz.addEventListener('drop', e => {
-  e.preventDefault();
-  dz.classList.remove('drag-over');
-  const f = e.dataTransfer.files[0];
-  if (f) { document.getElementById('fileInput').files = e.dataTransfer.files; handleFile({ target: { files: [f] } }); }
+var dz = document.getElementById('dropzone');
+dz.addEventListener('dragover', function(e) { e.preventDefault(); dz.classList.add('over'); });
+dz.addEventListener('dragleave', function() { dz.classList.remove('over'); });
+dz.addEventListener('drop', function(e) {
+  e.preventDefault(); dz.classList.remove('over');
+  var f = e.dataTransfer.files[0];
+  if (f) { document.getElementById('fileinput').files = e.dataTransfer.files; onFile({ target: { files: [f] } }); }
 });
 
-// ===== SUBMIT =====
-async function submitArchive() {
-  const title = document.getElementById('docTitle').value.trim();
-  const author = document.getElementById('docAuthor').value.trim() || 'anonyme';
-  const text = document.getElementById('docText').value.trim();
-
-  if (!title) { showToast('Ajoute un titre à ton document.', 'error'); return; }
-  if (currentMode === 'text' && !text) { showToast('Le contenu est vide.', 'error'); return; }
-  if (currentMode === 'file' && !selectedFile) { showToast('Sélectionne un fichier.', 'error'); return; }
-
-  const btn = document.getElementById('submitBtn');
-  btn.innerHTML = '<span class="spinner"></span> Publication en cours...';
+async function connectWallet() {
+  if (!window.ethereum) { toast('MetaMask non détecté. Installe l'extension.', 'err'); return; }
+  var btn = document.getElementById('wbtn');
+  btn.textContent = 'Connexion...';
   btn.disabled = true;
-
-  // Progress: step 1 done, step 2 active
-  document.getElementById('ps1').classList.remove('active');
-  document.getElementById('ps1').classList.add('done');
-  document.getElementById('ps1').querySelector('.step-dot').innerHTML = '✓';
-  document.getElementById('ps2').classList.add('active');
-
-  // === ICI on appellera l'API Pinata ===
-  // Pour l'instant : simulation avec un délai
-  await new Promise(r => setTimeout(r, 1800));
-
-  // Simuler un CID (sera remplacé par le vrai CID Pinata)
-  const fakeCid = 'bafkrei' + Math.random().toString(36).slice(2, 10) + Math.random().toString(36).slice(2, 30);
-  lastCid = fakeCid;
-  const fakeUrl = 'https://gateway.pinata.cloud/ipfs/' + fakeCid;
-  const today = new Date().toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' });
-
-  // Progress: step 2 done
-  document.getElementById('ps2').classList.remove('active');
-  document.getElementById('ps2').classList.add('done');
-  document.getElementById('ps2').querySelector('.step-dot').innerHTML = '✓';
-  document.getElementById('ps3').classList.add('active');
-
-  // Ajouter à la liste locale
-  archives.unshift({ title, author, cid: fakeCid, date: today, type: currentMode === 'file' ? 'Fichier' : 'Texte', anchored: false });
-
-  // Afficher résultat
-  document.getElementById('resTitre').textContent = title;
-  document.getElementById('resCid').textContent = fakeCid;
-  document.getElementById('resUrl').innerHTML = '<a href="' + fakeUrl + '" target="_blank" rel="noopener noreferrer">' + fakeUrl + '</a>';
-  document.getElementById('resultCard').classList.add('visible');
-
-  if (walletAddress) {
-    document.getElementById('anchorBtn').style.display = 'inline-flex';
+  try {
+    var accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+    wallet = accounts[0];
+    document.getElementById('wdot').className = 'w-dot on';
+    document.getElementById('wtext').textContent = 'Wallet connecté';
+    document.getElementById('waddr').style.display = 'block';
+    document.getElementById('waddr').textContent = wallet.slice(0,6) + '...' + wallet.slice(-4);
+    btn.textContent = 'Connecté ✓';
+    if (lastCid) document.getElementById('anchorbtn').style.display = 'inline-block';
+    toast('Wallet connecté : ' + wallet.slice(0,6) + '...' + wallet.slice(-4), 'ok');
+  } catch(e) {
+    btn.textContent = 'Connecter MetaMask';
+    btn.disabled = false;
+    toast('Connexion annulée.', 'err');
   }
+}
 
-  btn.innerHTML = 'Publier sur IPFS →';
+async function submit() {
+  var title = document.getElementById('title').value.trim();
+  var author = document.getElementById('author').value.trim() || 'anonyme';
+  var text = document.getElementById('doctext').value.trim();
+  if (!title) { toast('Ajoute un titre.', 'err'); return; }
+  if (mode === 'text' && !text) { toast('Le contenu est vide.', 'err'); return; }
+  if (mode === 'file' && !file) { toast('Sélectionne un fichier.', 'err'); return; }
+  var btn = document.getElementById('submitbtn');
+  btn.textContent = 'Publication...';
+  btn.disabled = true;
+  document.getElementById('ps1').className = 'ps done';
+  document.getElementById('ps1').querySelector('.ps-dot').textContent = '✓';
+  document.getElementById('ps2').className = 'ps active';
+  await new Promise(function(r) { setTimeout(r, 1600); });
+  var cid = 'bafkrei' + Math.random().toString(36).slice(2,10) + Math.random().toString(36).slice(2,28);
+  lastCid = cid;
+  var url = 'https://gateway.pinata.cloud/ipfs/' + cid;
+  var today = new Date().toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' });
+  document.getElementById('ps2').className = 'ps done';
+  document.getElementById('ps2').querySelector('.ps-dot').textContent = '✓';
+  document.getElementById('ps3').className = 'ps active';
+  archives.unshift({ title: title, author: author, cid: cid, date: today, type: mode === 'file' ? 'Fichier' : 'Texte' });
+  document.getElementById('r-title').textContent = title;
+  document.getElementById('r-cid').textContent = cid;
+  document.getElementById('r-url').innerHTML = '<a href="' + url + '" target="_blank">' + url + '</a>';
+  document.getElementById('result').className = 'result show';
+  if (wallet) document.getElementById('anchorbtn').style.display = 'inline-block';
+  btn.textContent = 'Publier sur IPFS →';
   btn.disabled = false;
-  showToast('Archive publiée ! CID généré.', 'success');
-  document.getElementById('resultCard').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  toast('Archive publiée ! CID généré.', 'ok');
+  document.getElementById('result').scrollIntoView({ behavior: 'smooth' });
 }
 
 function copyCid() {
   if (!lastCid) return;
-  navigator.clipboard.writeText(lastCid).then(() => showToast('CID copié dans le presse-papier !', 'success'));
+  navigator.clipboard.writeText(lastCid).then(function() { toast('CID copié !', 'ok'); });
 }
 
-// ===== ETHEREUM ANCHOR =====
-async function anchorOnEthereum() {
-  if (!walletAddress) { showToast('Connecte ton wallet d'abord.', 'error'); return; }
-  if (!lastCid) return;
-  // Placeholder — sera implémenté avec ethers.js + dmap
-  showToast('Ancrage Ethereum bientôt disponible (besoin d'ETH pour le gas)', 'error');
-  document.getElementById('resEth').textContent = 'En attente d'ETH pour les frais de gas (~5€)';
+function anchorEth() {
+  if (!wallet) { toast('Connecte ton wallet.', 'err'); return; }
+  toast('Ancrage Ethereum bientôt disponible (~5€ ETH requis)', 'err');
 }
 
-// ===== EXPLORER =====
 function renderArchives() {
-  const list = document.getElementById('archivesList');
-  document.getElementById('archiveCount').textContent = archives.length;
-  if (archives.length === 0) {
-    list.innerHTML = '<div class="empty-state"><div class="empty-icon">📭</div><h3 class="empty-title">Aucune archive</h3><p class="empty-desc">Sois le premier à publier un document sur Bloc Zéro.</p></div>';
+  var list = document.getElementById('archlist');
+  document.getElementById('archcount').textContent = archives.length;
+  if (!archives.length) {
+    list.innerHTML = '<div class="empty"><div class="empty-icon">📭</div><h3>Aucune archive</h3><p>Sois le premier à publier un document sur Bloc Zéro.</p></div>';
     return;
   }
-  list.innerHTML = archives.map(a => `
-    <div class="archive-item" onclick="window.open('https://gateway.pinata.cloud/ipfs/${a.cid}','_blank')">
-      <div>
-        <div class="archive-title-text">${a.title}</div>
-        <div class="archive-meta">
-          <span class="archive-cid">${a.cid.slice(0, 20)}...</span>
-          <span class="archive-date">${a.date}</span>
-          ${a.author ? '<span class="archive-date">par ' + a.author + '</span>' : ''}
-          <span class="archive-type">${a.type}</span>
-          ${a.anchored ? '<span class="archive-type" style="color:var(--color-primary);border-color:var(--color-primary)">⬡ Ethereum</span>' : ''}
-        </div>
-      </div>
-      <span class="archive-arrow">→</span>
-    </div>
-  `).join('');
-}
-
-// ===== TOAST =====
-function showToast(msg, type = 'default') {
-  const t = document.getElementById('toast');
-  t.textContent = msg;
-  t.className = 'toast ' + type + ' show';
-  setTimeout(() => t.classList.remove('show'), 3500);
+  list.innerHTML = archives.map(function(a) {
+    return '<div class="archive-row" onclick="window.open('https://gateway.pinata.cloud/ipfs/' + '' + a.cid + '','_blank')">' +
+      '<div>' +
+        '<div class="archive-title">' + a.title + '</div>' +
+        '<div class="archive-meta">' +
+          '<span class="archive-cid">' + a.cid.slice(0,22) + '...</span>' +
+          '<span class="archive-date">' + a.date + '</span>' +
+          (a.author ? '<span class="archive-date">par ' + a.author + '</span>' : '') +
+          '<span class="archive-tag">' + a.type + '</span>' +
+        '</div>' +
+      '</div>' +
+      '<span class="arrow">→</span>' +
+    '</div>';
+  }).join('');
 }
 </script>
 </body>
