@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Participer — Bloc Zero</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>*{box-sizing:border-box;margin:0;padding:0}
+:root{
+--bg:#0d0d0b;--sur:#161614;--brd:#2a2a25;
+--txt:#e8e6e0;--mut:#888880;--fnt:#444440;
+--grn:#a8e6a3;--gbg:#1a2e18;--yel:#f0d060;
+--r:8px;--rl:12px;
+--f:"Space Grotesk",sans-serif;
+--m:"Space Mono",monospace;
+}
+body{font-family:var(--f);background:var(--bg);color:var(--txt);min-height:100vh;font-size:16px;line-height:1.6}
+nav{position:sticky;top:0;z-index:100;background:var(--bg);border-bottom:1px solid var(--brd);padding:0 24px;height:56px;display:flex;align-items:center;justify-content:space-between;gap:16px}
+.logo{font-family:var(--m);font-size:14px;font-weight:700;text-decoration:none;display:flex;align-items:center;gap:10px;color:var(--txt)}
+.nl{display:flex;align-items:center;gap:4px}
+.nl a{background:none;border:none;font-family:var(--f);font-size:14px;color:var(--mut);cursor:pointer;padding:6px 12px;border-radius:var(--r);transition:all .15s;text-decoration:none;display:inline-block}
+.nl a:hover{background:#1e1e1a;color:var(--txt)}
+.nl a.on{background:var(--gbg);color:var(--grn)}
+.cta{background:var(--grn);color:#0d0d0b;font-family:var(--f);font-size:13px;font-weight:700;padding:7px 14px;border-radius:var(--r);text-decoration:none;display:inline-block}
+.cta:hover{background:#c5f0c0}
+.slbl{font-family:var(--m);font-size:11px;color:var(--fnt);letter-spacing:.12em;text-transform:uppercase;margin-bottom:16px}
+.bp{background:var(--grn);color:#0d0d0b;border:none;font-family:var(--f);font-size:15px;font-weight:700;cursor:pointer;padding:12px 24px;border-radius:var(--r);text-decoration:none;display:inline-block}
+.bp:hover{background:#c5f0c0}
+.bs{background:none;color:var(--txt);border:1px solid var(--brd);font-family:var(--f);font-size:15px;font-weight:600;cursor:pointer;padding:12px 24px;border-radius:var(--r);text-decoration:none;display:inline-block}
+.bs:hover{background:#1e1e1a}
+@media(max-width:560px){.nl{display:none}}</style>
+</head>
+<body>
+<nav>
+  <a class="logo" href="index.html">BLOC ZERO</a>
+  <div class="nl">
+    <a href="index.html">Accueil</a>
+    <a href="archiver.html">Archiver</a>
+    <a href="explorer.html">Explorer</a>
+    <a href="participer.html" class="on">Participer</a>
+    
+  </div>
+  <a class="cta" href="archiver.html">+ Archiver</a>
+</nav>
+<div style="max-width:960px;margin:0 auto;padding:56px 24px 80px">
+  <p class="slbl">Participer</p>
+  <h1 style="font-size:clamp(1.6rem,3vw,2.2rem);font-weight:700;letter-spacing:-.02em;margin-bottom:12px">Rejoindre le reseau</h1>
+  <p style="font-size:15px;color:var(--mut);margin-bottom:40px">Plus le reseau est distribue, plus les archives sont indestructibles.</p>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px;margin-bottom:60px">
+    <div style="background:var(--sur);border:1px solid var(--brd);border-radius:var(--rl);padding:28px"><div style="font-family:var(--m);font-size:11px;color:var(--fnt);margin-bottom:16px">NIVEAU 01</div><h3 style="font-size:1.1rem;font-weight:700;margin-bottom:10px">Utilisateur</h3><p style="font-size:14px;color:var(--mut);line-height:1.6;margin-bottom:20px">Publie tes propres archives. Aucune configuration necessaire.</p><span style="display:inline-block;font-family:var(--m);font-size:11px;padding:3px 10px;border-radius:999px;background:#1e1e1a;border:1px solid var(--brd);color:var(--mut)">Gratuit</span></div>
+    <div style="background:var(--gbg);border:1px solid var(--grn);border-radius:var(--rl);padding:28px"><div style="font-family:var(--m);font-size:11px;color:var(--fnt);margin-bottom:16px">NIVEAU 02</div><h3 style="font-size:1.1rem;font-weight:700;margin-bottom:10px">Pinner</h3><p style="font-size:14px;color:var(--mut);line-height:1.6;margin-bottom:20px">Epingle les archives de Bloc Zero via Pinata.</p><span style="display:inline-block;font-family:var(--m);font-size:11px;padding:3px 10px;border-radius:999px;background:var(--grn);border:1px solid var(--grn);color:#0d0d0b">Recommande</span></div>
+    <div style="background:var(--sur);border:1px solid var(--brd);border-radius:var(--rl);padding:28px"><div style="font-family:var(--m);font-size:11px;color:var(--fnt);margin-bottom:16px">NIVEAU 03</div><h3 style="font-size:1.1rem;font-weight:700;margin-bottom:10px">Noeud complet</h3><p style="font-size:14px;color:var(--mut);line-height:1.6;margin-bottom:20px">Lance ton propre noeud IPFS sur PC ou serveur.</p><span style="display:inline-block;font-family:var(--m);font-size:11px;padding:3px 10px;border-radius:999px;background:#1e1e1a;border:1px solid var(--brd);color:var(--mut)">Technique</span></div>
+  </div>
+  <p class="slbl">Lancer un noeud IPFS</p>
+  <h2 style="font-size:1.5rem;font-weight:700;margin-bottom:20px;letter-spacing:-.02em">3 commandes suffisent.</h2>
+  <div style="background:var(--bg);border:1px solid var(--brd);border-radius:var(--rl);padding:20px 24px;font-family:var(--m);font-size:13px;line-height:1.9;overflow-x:auto">
+    <div><span style="color:var(--fnt)"># Installer IPFS</span></div>
+    <div><span style="color:var(--grn)">npm</span> <span style="color:var(--yel)">install -g ipfs</span></div>
+    <br>
+    <div><span style="color:var(--grn)">ipfs</span> <span style="color:var(--yel)">init</span></div>
+    <br>
+    <div><span style="color:var(--grn)">ipfs</span> <span style="color:var(--yel)">daemon</span></div>
+    <br>
+    <div><span style="color:var(--fnt)"># Epingler le manifeste</span></div>
+    <div><span style="color:var(--grn)">ipfs</span> <span style="color:var(--yel)">pin add bafkreidvauqcjvdespva2umndhdja3hdl3zyvcca2fx5n6okwrsooxpqse</span></div>
+  </div>
+</div>
+</body></html>
