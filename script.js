@@ -8,18 +8,19 @@ function toast(msg, type) {
   t.style.transform = "translateY(0)";
   t.style.borderColor = type === "ok" ? "#60c080" : "#e06060";
   t.style.color = type === "ok" ? "#60c080" : "#e06060";
-  setTimeout(function() {
+  setTimeout(function () {
     t.style.opacity = "0";
     t.style.transform = "translateY(8px)";
-  }, 3500);
+  }, 4000);
 }
 
 async function submitArchive() {
   var title = document.getElementById("title").value.trim();
   var text = document.getElementById("doctext").value.trim();
   var author = document.getElementById("author").value.trim();
-  if (!title) { toast("Ajoute un titre", "err"); return; }
-  if (!text) { toast("Le contenu est vide", "err"); return; }
+
+  if (!title) return toast("Ajoute un titre", "err");
+  if (!text) return toast("Le contenu est vide", "err");
 
   var btn = document.getElementById("submitbtn");
   btn.disabled = true;
@@ -33,32 +34,38 @@ async function submitArchive() {
       timestamp: new Date().toISOString(),
       source: "bloc-zero"
     };
-    var body = JSON.stringify({
-      pinataContent: payload,
-      pinataMeta { name: title },
-      pinataOptions: { cidVersion: 1 }
-    });
+
     var res = await fetch("https://api.pinata.cloud/pinning/pinJSONToIPFS", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
         "Authorization": "Bearer " + JWT
       },
-      body: body
+      body: JSON.stringify({
+        pinataContent: payload,
+        pinataMeta { name: title },
+        pinataOptions: { cidVersion: 1 }
+      })
     });
+
     if (!res.ok) {
-      var err = await res.text();
-      throw new Error("Erreur " + res.status + ": " + err);
+      var errText = await res.text();
+      throw new Error("HTTP " + res.status + " - " + errText);
     }
+
     var data = await res.json();
     lastCid = data.IpfsHash;
+
     var url = "https://gateway.pinata.cloud/ipfs/" + lastCid;
     document.getElementById("r-title").textContent = title;
     document.getElementById("r-cid").textContent = lastCid;
-    document.getElementById("r-url").innerHTML = '<a href="' + url + '" target="_blank" style="color:#a8e6a3">' + url + '</a>';
+    document.getElementById("r-url").innerHTML =
+      '<a href="' + url + '" target="_blank" style="color:#a8e6a3">' + url + "</a>";
+
     document.getElementById("result").style.display = "block";
     toast("Archive publiee sur IPFS !", "ok");
-  } catch(e) {
+  } catch (e) {
+    console.error(e);
     toast("Erreur: " + e.message, "err");
   } finally {
     btn.disabled = false;
@@ -68,7 +75,7 @@ async function submitArchive() {
 
 function copyCid() {
   if (!lastCid) return;
-  navigator.clipboard.writeText(lastCid).then(function() {
+  navigator.clipboard.writeText(lastCid).then(function () {
     toast("CID copie !", "ok");
   });
 }
