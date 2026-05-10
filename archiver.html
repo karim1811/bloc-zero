@@ -7,23 +7,15 @@
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
-:root{
---bg:#0d0d0b;--sur:#161614;--brd:#2a2a25;
---txt:#e8e6e0;--mut:#888880;--fnt:#444440;
---grn:#a8e6a3;--gbg:#1a2e18;--yel:#f0d060;
---r:8px;--rl:12px;
---f:"Space Grotesk",sans-serif;
---m:"Space Mono",monospace;
-}
+:root{--bg:#0d0d0b;--sur:#161614;--brd:#2a2a25;--txt:#e8e6e0;--mut:#888880;--fnt:#444440;--grn:#a8e6a3;--gbg:#1a2e18;--r:8px;--rl:12px;--f:"Space Grotesk",sans-serif;--m:"Space Mono",monospace}
 body{font-family:var(--f);background:var(--bg);color:var(--txt);min-height:100vh;font-size:16px;line-height:1.6}
 nav{position:sticky;top:0;z-index:100;background:var(--bg);border-bottom:1px solid var(--brd);padding:0 24px;height:56px;display:flex;align-items:center;justify-content:space-between;gap:16px}
-.logo{font-family:var(--m);font-size:14px;font-weight:700;text-decoration:none;display:flex;align-items:center;gap:10px;color:var(--txt)}
+.logo{font-family:var(--m);font-size:14px;font-weight:700;text-decoration:none;color:var(--txt)}
 .nl{display:flex;align-items:center;gap:4px}
-.nl a{background:none;border:none;font-family:var(--f);font-size:14px;color:var(--mut);cursor:pointer;padding:6px 12px;border-radius:var(--r);transition:all .15s;text-decoration:none;display:inline-block}
+.nl a{font-family:var(--f);font-size:14px;color:var(--mut);padding:6px 12px;border-radius:var(--r);text-decoration:none;display:inline-block}
 .nl a:hover{background:#1e1e1a;color:var(--txt)}
 .nl a.on{background:var(--gbg);color:var(--grn)}
 .cta{background:var(--grn);color:#0d0d0b;font-family:var(--f);font-size:13px;font-weight:700;padding:7px 14px;border-radius:var(--r);text-decoration:none;display:inline-block}
-.cta:hover{background:#c5f0c0}
 .slbl{font-family:var(--m);font-size:11px;color:var(--fnt);letter-spacing:.12em;text-transform:uppercase;margin-bottom:16px}
 @media(max-width:560px){.nl{display:none}}
 </style>
@@ -39,12 +31,10 @@ nav{position:sticky;top:0;z-index:100;background:var(--bg);border-bottom:1px sol
   </div>
   <a class="cta" href="archiver.html">+ Archiver</a>
 </nav>
-
 <div style="max-width:640px;margin:0 auto;padding:56px 24px 80px">
   <p class="slbl">Archiver</p>
   <h1 style="font-size:clamp(1.6rem,3vw,2.2rem);font-weight:700;letter-spacing:-.02em;margin-bottom:12px">Publier un document</h1>
   <p style="font-size:15px;color:var(--mut);margin-bottom:32px">Soumets un texte. Il sera ancre sur IPFS via Pinata.</p>
-
   <div style="background:var(--sur);border:1px solid var(--brd);border-radius:var(--rl);overflow:hidden">
     <div style="padding:24px;border-bottom:1px solid var(--brd)">
       <div style="font-family:var(--m);font-size:11px;color:var(--fnt);text-transform:uppercase;letter-spacing:.1em;margin-bottom:20px">Informations</div>
@@ -66,11 +56,9 @@ nav{position:sticky;top:0;z-index:100;background:var(--bg);border-bottom:1px sol
       <button onclick="submitArchive()" id="submitbtn" style="background:var(--grn);color:#0d0d0b;border:none;font-family:var(--f);font-size:15px;font-weight:700;cursor:pointer;padding:12px 24px;border-radius:var(--r)">Publier sur IPFS</button>
     </div>
   </div>
-
   <div id="result" style="display:none;margin-top:20px;background:var(--sur);border:1px solid var(--grn);border-radius:var(--rl);overflow:hidden">
-    <div style="background:var(--gbg);padding:14px 20px;display:flex;align-items:center;justify-content:space-between">
+    <div style="background:var(--gbg);padding:14px 20px">
       <span style="font-size:14px;font-weight:600;color:var(--grn)">Archive publiee avec succes</span>
-      <div style="width:8px;height:8px;border-radius:50%;background:var(--grn)"></div>
     </div>
     <div style="padding:20px 24px">
       <div style="margin-bottom:16px">
@@ -79,7 +67,7 @@ nav{position:sticky;top:0;z-index:100;background:var(--bg);border-bottom:1px sol
       </div>
       <div style="margin-bottom:16px">
         <div style="font-family:var(--m);font-size:11px;color:var(--fnt);text-transform:uppercase;margin-bottom:6px">CID IPFS (clique pour copier)</div>
-        <div id="r-cid" onclick="copyCid()" style="font-family:var(--m);font-size:13px;background:var(--bg);border:1px solid var(--brd);border-radius:var(--r);padding:10px 14px;word-break:break-all;cursor:pointer" title="Cliquer pour copier"></div>
+        <div id="r-cid" onclick="copyCid()" style="font-family:var(--m);font-size:13px;background:var(--bg);border:1px solid var(--brd);border-radius:var(--r);padding:10px 14px;word-break:break-all;cursor:pointer"></div>
       </div>
       <div>
         <div style="font-family:var(--m);font-size:11px;color:var(--fnt);text-transform:uppercase;margin-bottom:6px">Lien permanent</div>
@@ -88,11 +76,9 @@ nav{position:sticky;top:0;z-index:100;background:var(--bg);border-bottom:1px sol
     </div>
   </div>
 </div>
-
 <div id="toast" style="position:fixed;bottom:24px;right:24px;background:var(--sur);border:1px solid var(--brd);border-radius:var(--rl);padding:14px 18px;font-size:14px;opacity:0;transform:translateY(8px);transition:all .2s;z-index:999;max-width:300px;pointer-events:none"></div>
-
 <script>
-var PINATA_JWT = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySW5mb3JtYXRpb24iOnsiaWQiOiJhYjZkZmFkZi01OTcwLTRiNmYtODMyMy02MDA5OTk5NmRlNmUiLCJlbWFpbCI6Imthcmlta29uZHVhQGdtYWlsLmNvbSIsImVtYWlsX3ZlcmlmaWVkIjp0cnVlLCJwaW5fcG9saWN5Ijp7InJlZ2lvbnMiOlt7ImRlc2lyZWRSZXBsaWNhdGlvbkNvdW50IjoxLCJpZCI6IkZSQTEifSx7ImRlc2lyZWRSZXBsaWNhdGlvbkNvdW50IjoxLCJpZCI6Ik5ZQzEifV0sInZlcnNpb24iOjF9LCJtZmFfZW5hYmxlZCI6ZmFsc2UsInN0YXR1cyI6IkFDVElWRSJ9LCJhdXRoZW50aWNhdGlvblR5cGUiOiJzY29wZWRLZXkiLCJzY29wZWRLZXlLZXkiOiJlODBkZjA5OWQzYWU2NzA1OGMzYSIsInNjb3BlZEtleVNlY3JldCI6IjkyOTJkYWYyYzcwNDA2MzBmN2E2ZTczYjY1YTU5MmM2YzUxMTE5ZWU3YzQyNzg3MmRjMTI5NmFjMDhjNDA3YTgiLCJleHAiOjE4MDk5MDQ2MjR9.3nvPsbENJPwgr-oTMX4EFbZCQIzPBxNMimRYaCQ-Xns";
+var JWT = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySW5mb3JtYXRpb24iOnsiaWQiOiJhYjZkZmFkZi01OTcwLTRiNmYtODMyMy02MDA5OTk5NmRlNmUiLCJlbWFpbCI6Imthcmlta29uZHVhQGdtYWlsLmNvbSIsImVtYWlsX3ZlcmlmaWVkIjp0cnVlLCJwaW5fcG9saWN5Ijp7InJlZ2lvbnMiOlt7ImRlc2lyZWRSZXBsaWNhdGlvbkNvdW50IjoxLCJpZCI6IkZSQTEifSx7ImRlc2lyZWRSZXBsaWNhdGlvbkNvdW50IjoxLCJpZCI6Ik5ZQzEifV0sInZlcnNpb24iOjF9LCJtZmFfZW5hYmxlZCI6ZmFsc2UsInN0YXR1cyI6IkFDVElWRSJ9LCJhdXRoZW50aWNhdGlvblR5cGUiOiJzY29wZWRLZXkiLCJzY29wZWRLZXlLZXkiOiJlODBkZjA5OWQzYWU2NzA1OGMzYSIsInNjb3BlZEtleVNlY3JldCI6IjkyOTJkYWYyYzcwNDA2MzBmN2E2ZTczYjY1YTU5MmM2YzUxMTE5ZWU3YzQyNzg3MmRjMTI5NmFjMDhjNDA3YTgiLCJleHAiOjE4MDk5MDQ2MjR9.3nvPsbENJPwgr-oTMX4EFbZCQIzPBxNMimRYaCQ-Xns";
 var lastCid = null;
 
 function toast(msg, type) {
@@ -102,21 +88,21 @@ function toast(msg, type) {
   t.style.transform = "translateY(0)";
   t.style.borderColor = type === "ok" ? "#60c080" : "#e06060";
   t.style.color = type === "ok" ? "#60c080" : "#e06060";
-  setTimeout(function() { t.style.opacity = "0"; t.style.transform = "translateY(8px)"; }, 4000);
+  setTimeout(function() {
+    t.style.opacity = "0";
+    t.style.transform = "translateY(8px)";
+  }, 4000);
 }
 
 async function submitArchive() {
   var title = document.getElementById("title").value.trim();
   var text = document.getElementById("doctext").value.trim();
   var author = document.getElementById("author").value.trim();
-
   if (!title) { toast("Ajoute un titre", "err"); return; }
   if (!text) { toast("Le contenu est vide", "err"); return; }
-
   var btn = document.getElementById("submitbtn");
   btn.textContent = "Envoi en cours...";
   btn.disabled = true;
-
   try {
     var payload = {
       title: title,
@@ -125,41 +111,34 @@ async function submitArchive() {
       timestamp: new Date().toISOString(),
       source: "bloc-zero"
     };
-
     var body = JSON.stringify({
       pinataContent: payload,
       pinataMeta { name: title },
       pinataOptions: { cidVersion: 1 }
     });
-
     var res = await fetch("https://api.pinata.cloud/pinning/pinJSONToIPFS", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "Authorization": "Bearer " + PINATA_JWT
+        "Authorization": "Bearer " + JWT
       },
       body: body
     });
-
     if (!res.ok) {
       var err = await res.text();
-      throw new Error("Pinata erreur " + res.status + ": " + err);
+      throw new Error("Erreur " + res.status + ": " + err);
     }
-
     var data = await res.json();
     lastCid = data.IpfsHash;
     var url = "https://gateway.pinata.cloud/ipfs/" + lastCid;
-
     document.getElementById("r-title").textContent = title;
     document.getElementById("r-cid").textContent = lastCid;
     document.getElementById("r-url").innerHTML = '<a href="' + url + '" target="_blank" style="color:var(--grn)">' + url + "</a>";
     document.getElementById("result").style.display = "block";
-    document.getElementById("result").scrollIntoView({ behavior: "smooth", block: "nearest" });
     toast("Archive publiee sur IPFS !", "ok");
-
   } catch(e) {
     console.error(e);
-    toast("Erreur : " + e.message, "err");
+    toast("Erreur: " + e.message, "err");
   } finally {
     btn.textContent = "Publier sur IPFS";
     btn.disabled = false;
@@ -173,4 +152,5 @@ function copyCid() {
   });
 }
 </script>
-</body></html>
+</body>
+</html>
