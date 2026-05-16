@@ -2,96 +2,43 @@
 <html lang="fr">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Archiver — Bloc Zero</title>
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
-<style>
-*{box-sizing:border-box;margin:0;padding:0}
-:root{
-  --bg:#0d0d0b;--sur:#161614;--brd:#2a2a25;
-  --txt:#e8e6e0;--mut:#888880;--fnt:#444440;
-  --grn:#a8e6a3;--gbg:#1a2e18;
-  --r:8px;--rl:12px;
-  --f:"Space Grotesk",sans-serif;
-  --m:"Space Mono",monospace;
-}
-body{font-family:var(--f);background:var(--bg);color:var(--txt);min-height:100vh;font-size:16px;line-height:1.6}
-nav{position:sticky;top:0;z-index:100;background:var(--bg);border-bottom:1px solid var(--brd);padding:0 24px;height:56px;display:flex;align-items:center;justify-content:space-between;gap:16px}
-.logo{font-family:var(--m);font-size:14px;font-weight:700;text-decoration:none;color:var(--txt)}
-.nl{display:flex;align-items:center;gap:4px}
-.nl a{font-family:var(--f);font-size:14px;color:var(--mut);padding:6px 12px;border-radius:var(--r);text-decoration:none;display:inline-block}
-.nl a:hover{background:#1e1e1a;color:var(--txt)}
-.nl a.on{background:var(--gbg);color:var(--grn)}
-.cta{background:var(--grn);color:#0d0d0b;font-family:var(--f);font-size:13px;font-weight:700;padding:7px 14px;border-radius:var(--r);text-decoration:none;display:inline-block}
-.slbl{font-family:var(--m);font-size:11px;color:var(--fnt);letter-spacing:.12em;text-transform:uppercase;margin-bottom:16px}
-@media(max-width:560px){.nl{display:none}}
-</style>
+<title>Archiver – Bloc Zéro</title>
 </head>
-<body>
-
-<nav>
-  <a class="logo" href="index.html">BLOC ZERO</a>
-  <div class="nl">
-    <a href="index.html">Accueil</a>
-    <a href="archiver.html" class="on">Archiver</a>
-    <a href="explorer.html">Explorer</a>
-    <a href="participer.html">Participer</a>
-  </div>
-  <a class="cta" href="archiver.html">+ Archiver</a>
-</nav>
-
-<div style="max-width:640px;margin:0 auto;padding:56px 24px 80px">
-  <p class="slbl">Archiver</p>
-  <h1 style="font-size:clamp(1.6rem,3vw,2.2rem);font-weight:700;letter-spacing:-.02em;margin-bottom:12px">Publier un document</h1>
-  <p style="font-size:15px;color:var(--mut);margin-bottom:32px">Soumets un texte. Il sera ancre sur IPFS via Pinata.</p>
-
-  <div style="background:var(--sur);border:1px solid var(--brd);border-radius:var(--rl);overflow:hidden">
-    <div style="padding:24px;border-bottom:1px solid var(--brd)">
-      <div style="font-family:var(--m);font-size:11px;color:var(--fnt);text-transform:uppercase;letter-spacing:.1em;margin-bottom:20px">Informations</div>
-      <div style="margin-bottom:20px">
-        <label style="display:block;font-size:14px;font-weight:500;margin-bottom:8px">Titre du document</label>
-        <input id="title" type="text" placeholder="ex: Rapport sur les eaux de l Oise" style="width:100%;background:var(--bg);border:1px solid var(--brd);border-radius:var(--r);padding:10px 14px;font-family:var(--f);font-size:14px;color:var(--txt);outline:none">
-      </div>
-      <div>
-        <label style="display:block;font-size:14px;font-weight:500;margin-bottom:8px">Auteur <span style="color:var(--fnt);font-size:13px">(optionnel)</span></label>
-        <input id="author" type="text" placeholder="ex: krim1811" style="width:100%;background:var(--bg);border:1px solid var(--brd);border-radius:var(--r);padding:10px 14px;font-family:var(--f);font-size:14px;color:var(--txt);outline:none">
-      </div>
-    </div>
-
-    <div style="padding:24px;border-bottom:1px solid var(--brd)">
-      <div style="font-family:var(--m);font-size:11px;color:var(--fnt);text-transform:uppercase;letter-spacing:.1em;margin-bottom:20px">Contenu</div>
-      <textarea id="doctext" placeholder="Colle ici le texte que tu veux archiver..." style="width:100%;background:var(--bg);border:1px solid var(--brd);border-radius:var(--r);padding:10px 14px;font-family:var(--f);font-size:14px;color:var(--txt);outline:none;resize:vertical;min-height:150px"></textarea>
-    </div>
-
-    <div style="background:#111110;border-top:1px solid var(--brd);padding:16px 24px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap">
-      <p style="font-size:12px;color:var(--fnt);max-width:36ch;line-height:1.5">Envoye directement sur IPFS via Pinata.</p>
-      <button onclick="submitArchive()" id="submitbtn" style="background:var(--grn);color:#0d0d0b;border:none;font-family:var(--f);font-size:15px;font-weight:700;cursor:pointer;padding:12px 24px;border-radius:var(--r)">Publier sur IPFS</button>
-    </div>
-  </div>
-
-  <div id="result" style="display:none;margin-top:20px;background:var(--sur);border:1px solid var(--grn);border-radius:var(--rl);overflow:hidden">
-    <div style="background:var(--gbg);padding:14px 20px">
-      <span style="font-size:14px;font-weight:600;color:var(--grn)">Archive publiee avec succes</span>
-    </div>
-    <div style="padding:20px 24px">
-      <div style="margin-bottom:16px">
-        <div style="font-family:var(--m);font-size:11px;color:var(--fnt);text-transform:uppercase;margin-bottom:6px">Titre</div>
-        <div id="r-title" style="font-family:var(--m);font-size:13px;background:var(--bg);border:1px solid var(--brd);border-radius:var(--r);padding:10px 14px;word-break:break-all"></div>
-      </div>
-      <div style="margin-bottom:16px">
-        <div style="font-family:var(--m);font-size:11px;color:var(--fnt);text-transform:uppercase;margin-bottom:6px">CID IPFS (clique pour copier)</div>
-        <div id="r-cid" onclick="copyCid()" style="font-family:var(--m);font-size:13px;background:var(--bg);border:1px solid var(--brd);border-radius:var(--r);padding:10px 14px;word-break:break-all;cursor:pointer"></div>
-      </div>
-      <div>
-        <div style="font-family:var(--m);font-size:11px;color:var(--fnt);text-transform:uppercase;margin-bottom:6px">Lien permanent</div>
-        <div id="r-url" style="font-family:var(--m);font-size:13px;background:var(--bg);border:1px solid var(--brd);border-radius:var(--r);padding:10px 14px;word-break:break-all"></div>
-      </div>
-    </div>
+<body style="background:#111;color:#fff;font-family:sans-serif;display:flex;justify-content:center;align-items:center;height:100vh;margin:0">
+<div style="text-align:center;width:400px">
+  <h2>Archiver une URL sur IPFS</h2>
+  <input id="urlInput" type="text" placeholder="https://..." style="width:100%;padding:10px;margin:10px 0;border-radius:6px;border:none;font-size:14px">
+  <button onclick="submitArchive()" id="archiveBtn" style="padding:10px 24px;background:#6c63ff;color:#fff;border:none;border-radius:6px;font-size:15px;cursor:pointer">Publier sur IPFS</button>
+  <div id="result" style="display:none;margin-top:20px">
+    <p>CID : <span id="cidValue"></span></p>
+    <a id="ipfsLink" href="#" target="_blank">Voir sur IPFS</a>
   </div>
 </div>
-
-<div id="toast" style="position:fixed;bottom:24px;right:24px;background:var(--sur);border:1px solid var(--brd);border-radius:var(--rl);padding:14px 18px;font-size:14px;opacity:0;transform:translateY(8px);transition:all .2s;z-index:999;max-width:300px;pointer-events:none"></div>
-
-<script src="script.js"></script>
+<script>
+const JWT = "TON_NOUVEAU_JWT";
+async function submitArchive() {
+  const url = document.getElementById("urlInput").value.trim();
+  if (!url) { alert("Entre une URL"); return; }
+  const btn = document.getElementById("archiveBtn");
+  btn.disabled = true; btn.textContent = "En cours...";
+  try {
+    const blob = new Blob([url], { type: "text/plain" });
+    const form = new FormData();
+    form.append("file", blob, "url.txt");
+    const res = await fetch("https://api.pinata.cloud/pinning/pinFileToIPFS", {
+      method: "POST",
+      headers: { Authorization: `Bearer ${JWT}` },
+      body: form
+    });
+    const data = await res.json();
+    const cid = data.IpfsHash;
+    document.getElementById("result").style.display = "block";
+    document.getElementById("cidValue").textContent = cid;
+    document.getElementById("ipfsLink").href = `https://gateway.pinata.cloud/ipfs/${cid}`;
+    document.getElementById("ipfsLink").textContent = `gateway.pinata.cloud/ipfs/${cid}`;
+  } catch(e) { alert("Erreur : " + e.message); }
+  finally { btn.disabled = false; btn.textContent = "Publier sur IPFS"; }
+}
+</script>
 </body>
 </html>
