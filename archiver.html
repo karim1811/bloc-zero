@@ -1,40 +1,81 @@
-<script>
-const WORKER_URL = "https://workers-playground-mute-haze-0834.karimkondua.workers.dev/";
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Archiver – Bloc Zéro</title>
+  <style>
+    body { font-family: sans-serif; max-width: 600px; margin: 60px auto; padding: 0 20px; background: #0d1117; color: #c9d1d9; }
+    h1 { font-size: 1.5rem; margin-bottom: 24px; }
+    input { width: 100%; padding: 10px; border-radius: 6px; border: 1px solid #30363d; background: #161b22; color: #c9d1d9; font-size: 1rem; box-sizing: border-box; }
+    button { margin-top: 12px; padding: 10px 24px; background: #238636; color: #fff; border: none; border-radius: 6px; font-size: 1rem; cursor: pointer; }
+    button:disabled { background: #444; cursor: not-allowed; }
+    #result { display: none; margin-top: 24px; background: #161b22; border: 1px solid #30363d; border-radius: 8px; padding: 16px; }
+    #result h2 { font-size: 1rem; margin-bottom: 8px; }
+    #cidValue { font-family: monospace; word-break: break-all; font-size: 0.85rem; color: #58a6ff; }
+    a { color: #58a6ff; }
+    #toast { display: none; position: fixed; bottom: 24px; right: 24px; padding: 12px 20px; border-radius: 8px; font-size: 0.9rem; z-index: 999; }
+  </style>
+</head>
+<body>
+  <h1>🗃️ Archiver une page sur IPFS</h1>
+  <input type="url" id="urlInput" placeholder="https://exemple.com/article" />
+  <br/>
+  <button id="archiveBtn" onclick="submitArchive()">Publier sur IPFS</button>
 
-async function submitArchive() {
-  const url = document.getElementById("urlInput").value.trim();
-  if (!url) {
-    alert("Entre une URL");
-    return;
-  }
+  <div id="result">
+    <h2>✅ Archivé avec succès</h2>
+    <p>CID : <span id="cidValue"></span></p>
+    <p><a id="ipfsLink" href="#" target="_blank">Voir sur IPFS</a></p>
+  </div>
 
-  const btn = document.getElementById("archiveBtn");
-  btn.disabled = true;
-  btn.textContent = "En cours...";
+  <div id="toast"></div>
 
-  try {
-    const res = await fetch(WORKER_URL, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ url })
-    });
+  <script>
+    const WORKER_URL = "https://workers-playground-mute-haze-0834.karimkondua.workers.dev";
+    let lastCid = null;
 
-    const data = await res.json();
-
-    if (!res.ok) {
-      throw new Error(data.error || data.message || "Erreur upload");
+    function toast(msg, type) {
+      const t = document.getElementById("toast");
+      t.textContent = msg;
+      t.style.display = "block";
+      t.style.background = type === "err" ? "#7f1d1d" : "#14532d";
+      t.style.color = "#fff";
+      setTimeout(() => { t.style.display = "none"; }, 3000);
     }
 
-    const cid = data.IpfsHash;
-    document.getElementById("result").style.display = "block";
-    document.getElementById("cidValue").textContent = cid;
-    document.getElementById("ipfsLink").href = `https://gateway.pinata.cloud/ipfs/${cid}`;
-    document.getElementById("ipfsLink").textContent = `gateway.pinata.cloud/ipfs/${cid}`;
-  } catch (e) {
-    alert("Erreur : " + e.message);
-  } finally {
-    btn.disabled = false;
-    btn.textContent = "Publier sur IPFS";
-  }
-}
-</script>
+    async function submitArchive() {
+      const url = document.getElementById("urlInput").value.trim();
+      if (!url) { toast("Entre une URL", "err"); return; }
+
+      const btn = document.getElementById("archiveBtn");
+      btn.disabled = true;
+      btn.textContent = "En cours...";
+
+      try {
+        const res = await fetch(WORKER_URL, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ url })
+        });
+
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error || data.message || "Erreur upload");
+
+        const cid = data.IpfsHash;
+        lastCid = cid;
+        document.getElementById("result").style.display = "block";
+        document.getElementById("cidValue").textContent = cid;
+        document.getElementById("ipfsLink").href = `https://gateway.pinata.cloud/ipfs/${cid}`;
+        document.getElementById("ipfsLink").textContent = `gateway.pinata.cloud/ipfs/${cid}`;
+        toast("Archive publiée sur IPFS !", "ok");
+      } catch (e) {
+        toast("Erreur : " + e.message, "err");
+      } finally {
+        btn.disabled = false;
+        btn.textContent = "Publier sur IPFS";
+      }
+    }
+  </script>
+</body>
+</html>
