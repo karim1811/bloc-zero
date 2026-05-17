@@ -33,18 +33,14 @@
     .btn-sec{padding:10px 20px;background:#1e1e1a;color:var(--txt);border:1px solid var(--brd);border-radius:var(--r);font-size:0.9rem;font-weight:600;cursor:pointer;font-family:var(--f);transition:all .15s}
     .btn-sec:hover:not(:disabled){background:var(--brd)}
     .btn-sec:disabled{opacity:0.4;cursor:not-allowed}
-
-    /* Wallet bar */
-    #wallet-bar{background:var(--sur);border:1px solid var(--brd);border-radius:var(--rl);padding:16px 20px;margin-bottom:32px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px}
+    #wallet-bar{background:var(--sur);border:1px solid var(--brd);border-radius:var(--rl);padding:16px 20px;margin-bottom:24px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px}
     #wallet-bar .left{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
     #wallet-status{font-size:0.85rem;color:var(--mut)}
     #wallet-status.connected{color:var(--grn)}
     #wallet-addr{font-family:var(--m);font-size:0.78rem;color:var(--fnt)}
     #connect-btn{padding:8px 16px;background:var(--gbg);border:1px solid var(--grn);border-radius:var(--r);color:var(--grn);font-size:0.85rem;font-weight:600;cursor:pointer;font-family:var(--f)}
     #connect-btn:hover{background:#243d22}
-
-    /* Chain selector */
-    #chain-selector{display:none;margin-bottom:0}
+    #chain-selector{display:none;background:var(--sur);border:1px solid var(--brd);border-radius:var(--rl);padding:16px 20px;margin-bottom:24px}
     #chain-selector label{font-size:0.8rem;color:var(--mut);margin-bottom:8px;display:block}
     .chains{display:flex;gap:8px;flex-wrap:wrap}
     .chain-btn{padding:6px 14px;border-radius:999px;border:1px solid var(--brd);background:none;color:var(--mut);font-size:0.8rem;cursor:pointer;font-family:var(--m);transition:all .15s;display:flex;align-items:center;gap:6px}
@@ -52,16 +48,12 @@
     .chain-btn.active{background:var(--gbg);border-color:var(--grn);color:var(--grn)}
     .chain-btn .fee{font-size:0.7rem;color:var(--fnt)}
     .chain-btn.active .fee{color:#6dbf6a}
-
-    /* IPFS result */
     #result{display:none;margin-top:24px;background:var(--sur);border:1px solid var(--brd);border-radius:var(--rl);padding:20px}
     #result h2{font-size:1rem;margin-bottom:10px;color:var(--grn)}
     .cid-row{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:12px}
     #cidValue{font-family:var(--m);font-size:0.8rem;color:#58a6ff;word-break:break-all}
     .btn-copy{padding:4px 10px;background:#1e1e1a;border:1px solid var(--brd);border-radius:4px;color:var(--txt);font-size:0.78rem;cursor:pointer;font-family:var(--f)}
     .btn-copy:hover{background:var(--brd)}
-
-    /* Blockchain anchor */
     #anchor-section{display:none;margin-top:20px;border-top:1px solid var(--brd);padding-top:20px}
     #anchor-section h3{font-size:0.95rem;font-weight:700;margin-bottom:6px}
     #anchor-section p{font-size:0.83rem;color:var(--mut);margin-bottom:16px}
@@ -70,9 +62,6 @@
     #anchor-status.error{background:#2a1010;border:1px solid #7f1d1d;color:#f87171}
     #anchor-status.pending{background:#1a1a10;border:1px solid #555;color:var(--mut)}
     #tx-link{color:#58a6ff;text-decoration:none;font-family:var(--m);font-size:0.78rem}
-    #tx-link:hover{text-decoration:underline}
-
-    /* History */
     #history-section{margin-top:48px}
     #history-section h2{font-size:0.95rem;font-family:var(--m);color:var(--mut);text-transform:uppercase;letter-spacing:.1em;margin-bottom:16px;padding-bottom:10px;border-bottom:1px solid var(--brd)}
     #history-list{display:flex;flex-direction:column;gap:10px}
@@ -108,7 +97,6 @@
   <h1 style="font-size:clamp(1.5rem,3vw,2rem);font-weight:700;letter-spacing:-.02em;margin-bottom:8px">Publier sur IPFS + Blockchain</h1>
   <p style="color:var(--mut);font-size:0.9rem;margin-bottom:32px">Archive une page web sur IPFS, puis ancre son empreinte cryptographique dans la blockchain pour une preuve permanente.</p>
 
-  <!-- Wallet Bar -->
   <div id="wallet-bar">
     <div class="left">
       <span id="wallet-status">⬡ Wallet non connecté</span>
@@ -117,33 +105,20 @@
     <button id="connect-btn" onclick="connectWallet()">Connecter un wallet</button>
   </div>
 
-  <!-- Chain Selector (visible après connexion) -->
-  <div id="chain-selector" style="background:var(--sur);border:1px solid var(--brd);border-radius:var(--rl);padding:16px 20px;margin-bottom:24px">
+  <div id="chain-selector">
     <label>Choisir la blockchain pour l'ancrage :</label>
     <div class="chains">
-      <button class="chain-btn active" data-chain="polygon" onclick="selectChain('polygon',this)">
-        🟣 Polygon <span class="fee">~0.001€</span>
-      </button>
-      <button class="chain-btn" data-chain="base" onclick="selectChain('base',this)">
-        🔵 Base <span class="fee">~0.01€</span>
-      </button>
-      <button class="chain-btn" data-chain="arbitrum" onclick="selectChain('arbitrum',this)">
-        🔷 Arbitrum <span class="fee">~0.05€</span>
-      </button>
-      <button class="chain-btn" data-chain="bnb" onclick="selectChain('bnb',this)">
-        🟡 BNB Chain <span class="fee">~0.05€</span>
-      </button>
-      <button class="chain-btn" data-chain="ethereum" onclick="selectChain('ethereum',this)">
-        ⬡ Ethereum <span class="fee">~1-2€</span>
-      </button>
+      <button class="chain-btn active" data-chain="polygon" onclick="selectChain('polygon',this)">🟣 Polygon <span class="fee">~0.001€</span></button>
+      <button class="chain-btn" data-chain="base" onclick="selectChain('base',this)">🔵 Base <span class="fee">~0.01€</span></button>
+      <button class="chain-btn" data-chain="arbitrum" onclick="selectChain('arbitrum',this)">🔷 Arbitrum <span class="fee">~0.05€</span></button>
+      <button class="chain-btn" data-chain="bnb" onclick="selectChain('bnb',this)">🟡 BNB Chain <span class="fee">~0.05€</span></button>
+      <button class="chain-btn" data-chain="ethereum" onclick="selectChain('ethereum',this)">⬡ Ethereum <span class="fee">~1-2€</span></button>
     </div>
   </div>
 
-  <!-- URL Input -->
   <input type="url" id="urlInput" placeholder="https://exemple.com/article" style="margin-bottom:12px"/>
   <button class="btn-primary" id="archiveBtn" onclick="submitArchive()">Publier sur IPFS</button>
 
-  <!-- IPFS Result -->
   <div id="result">
     <h2>✅ Archivé sur IPFS</h2>
     <p style="font-size:0.82rem;color:var(--mut);margin-bottom:8px" id="resultUrl"></p>
@@ -152,8 +127,6 @@
       <button class="btn-copy" onclick="copyText(document.getElementById('cidValue').textContent)">Copier CID</button>
     </div>
     <a id="ipfsLink" href="#" target="_blank" style="color:#58a6ff;font-size:0.83rem">Voir sur IPFS ↗</a>
-
-    <!-- Blockchain Anchor -->
     <div id="anchor-section">
       <h3>⛓️ Ancrer sur la blockchain</h3>
       <p id="anchor-desc">Grave l'empreinte de cette archive dans la blockchain pour une preuve permanente et vérifiable.</p>
@@ -162,7 +135,6 @@
     </div>
   </div>
 
-  <!-- History -->
   <div id="history-section">
     <h2>Archives de cette session</h2>
     <div id="history-list">
@@ -178,17 +150,23 @@
   const GATEWAY = "https://gateway.pinata.cloud/ipfs/";
 
   const CHAINS = {
-    polygon:  { name:"Polygon",  chainId:"0x89",   rpc:"https://polygon-rpc.com", explorer:"https://polygonscan.com/tx/", symbol:"MATIC" },
-    base:     { name:"Base",     chainId:"0x2105",  rpc:"https://mainnet.base.org", explorer:"https://basescan.org/tx/", symbol:"ETH" },
-    arbitrum: { name:"Arbitrum", chainId:"0xa4b1",  rpc:"https://arb1.arbitrum.io/rpc", explorer:"https://arbiscan.io/tx/", symbol:"ETH" },
-    bnb:      { name:"BNB Chain",chainId:"0x38",    rpc:"https://bsc-dataseed.binance.org", explorer:"https://bscscan.com/tx/", symbol:"BNB" },
-    ethereum: { name:"Ethereum", chainId:"0x1",     rpc:"https://cloudflare-eth.com", explorer:"https://etherscan.io/tx/", symbol:"ETH" },
+    polygon:  { name:"Polygon",   chainId:"0x89",   rpc:"https://polygon-rpc.com",             explorer:"https://polygonscan.com/tx/",  symbol:"MATIC" },
+    base:     { name:"Base",      chainId:"0x2105",  rpc:"https://mainnet.base.org",            explorer:"https://basescan.org/tx/",     symbol:"ETH" },
+    arbitrum: { name:"Arbitrum",  chainId:"0xa4b1",  rpc:"https://arb1.arbitrum.io/rpc",        explorer:"https://arbiscan.io/tx/",      symbol:"ETH" },
+    bnb:      { name:"BNB Chain", chainId:"0x38",    rpc:"https://bsc-dataseed.binance.org",    explorer:"https://bscscan.com/tx/",      symbol:"BNB" },
+    ethereum: { name:"Ethereum",  chainId:"0x1",     rpc:"https://cloudflare-eth.com",          explorer:"https://etherscan.io/tx/",     symbol:"ETH" },
+  };
+
+  const CHAIN_CONFIGS = {
+    polygon:  { chainName:"Polygon Mainnet",  nativeCurrency:{name:"MATIC",symbol:"MATIC",decimals:18}, rpcUrls:["https://polygon-rpc.com"],          blockExplorerUrls:["https://polygonscan.com"] },
+    base:     { chainName:"Base",             nativeCurrency:{name:"Ethereum",symbol:"ETH",decimals:18}, rpcUrls:["https://mainnet.base.org"],          blockExplorerUrls:["https://basescan.org"] },
+    arbitrum: { chainName:"Arbitrum One",     nativeCurrency:{name:"Ethereum",symbol:"ETH",decimals:18}, rpcUrls:["https://arb1.arbitrum.io/rpc"],      blockExplorerUrls:["https://arbiscan.io"] },
+    bnb:      { chainName:"BNB Smart Chain",  nativeCurrency:{name:"BNB",symbol:"BNB",decimals:18},      rpcUrls:["https://bsc-dataseed.binance.org"],  blockExplorerUrls:["https://bscscan.com"] },
   };
 
   let walletAddress = null;
   let currentChain = "polygon";
   let currentCID = null;
-  let currentArchiveUrl = null;
 
   function toast(msg, type) {
     const t = document.getElementById("toast");
@@ -212,13 +190,18 @@
   }
 
   async function connectWallet() {
-    if (!window.ethereum) {
-      toast("Aucun wallet détecté. Installe MetaMask !", "err");
+    if (typeof window.ethereum === 'undefined') {
+      toast("MetaMask non détecté. Installe MetaMask !", "err");
       window.open("https://metamask.io/download/", "_blank");
       return;
     }
     try {
-      const accounts = await window.ethereum.request({ method: "eth_requestAccounts" });
+      await window.ethereum.request({
+        method: "wallet_requestPermissions",
+        params: [{ eth_accounts: {} }]
+      });
+      const accounts = await window.ethereum.request({ method: "eth_accounts" });
+      if (!accounts || accounts.length === 0) throw new Error("Aucun compte sélectionné");
       walletAddress = accounts[0];
       const short = walletAddress.slice(0,6) + "..." + walletAddress.slice(-4);
       document.getElementById("wallet-status").textContent = "✅ Wallet connecté";
@@ -227,9 +210,14 @@
       document.getElementById("connect-btn").textContent = "Déconnecter";
       document.getElementById("connect-btn").onclick = disconnectWallet;
       document.getElementById("chain-selector").style.display = "block";
+      if (currentCID) document.getElementById("anchorBtn").disabled = false;
       toast("Wallet connecté : " + short, "ok");
     } catch(e) {
-      toast("Connexion annulée", "err");
+      if (e.code === 4001) {
+        toast("Connexion refusée", "err");
+      } else {
+        toast("Erreur : " + (e.message || "inconnue"), "err");
+      }
     }
   }
 
@@ -246,70 +234,45 @@
   async function switchToChain(chainKey) {
     const chain = CHAINS[chainKey];
     try {
-      await window.ethereum.request({
-        method: "wallet_switchEthereumChain",
-        params: [{ chainId: chain.chainId }]
-      });
+      await window.ethereum.request({ method:"wallet_switchEthereumChain", params:[{ chainId:chain.chainId }] });
     } catch(e) {
-      if (e.code === 4902) {
-        const chainConfigs = {
-          polygon:  { chainName:"Polygon Mainnet", nativeCurrency:{name:"MATIC",symbol:"MATIC",decimals:18}, rpcUrls:["https://polygon-rpc.com"], blockExplorerUrls:["https://polygonscan.com"] },
-          base:     { chainName:"Base", nativeCurrency:{name:"Ethereum",symbol:"ETH",decimals:18}, rpcUrls:["https://mainnet.base.org"], blockExplorerUrls:["https://basescan.org"] },
-          arbitrum: { chainName:"Arbitrum One", nativeCurrency:{name:"Ethereum",symbol:"ETH",decimals:18}, rpcUrls:["https://arb1.arbitrum.io/rpc"], blockExplorerUrls:["https://arbiscan.io"] },
-          bnb:      { chainName:"BNB Smart Chain", nativeCurrency:{name:"BNB",symbol:"BNB",decimals:18}, rpcUrls:["https://bsc-dataseed.binance.org"], blockExplorerUrls:["https://bscscan.com"] },
-        };
-        if (chainConfigs[chainKey]) {
-          await window.ethereum.request({
-            method: "wallet_addEthereumChain",
-            params: [{ chainId: chain.chainId, ...chainConfigs[chainKey] }]
-          });
-        }
-      } else {
-        throw e;
-      }
+      if (e.code === 4902 && CHAIN_CONFIGS[chainKey]) {
+        await window.ethereum.request({ method:"wallet_addEthereumChain", params:[{ chainId:chain.chainId, ...CHAIN_CONFIGS[chainKey] }] });
+      } else { throw e; }
     }
   }
 
   async function anchorOnChain() {
     if (!walletAddress) { toast("Connecte d'abord un wallet", "err"); return; }
     if (!currentCID) { toast("Archive d'abord une URL", "err"); return; }
-
     const btn = document.getElementById("anchorBtn");
     const status = document.getElementById("anchor-status");
     btn.disabled = true;
-    btn.textContent = "En cours...";
     status.style.display = "block";
     status.className = "pending";
     status.textContent = "⏳ Changement de réseau...";
-
     try {
       await switchToChain(currentChain);
-      status.textContent = "⏳ En attente de signature dans le wallet...";
-
+      status.textContent = "⏳ En attente de signature...";
       const data = "0x" + Array.from(new TextEncoder().encode("bloc-zero:" + currentCID))
         .map(b => b.toString(16).padStart(2,'0')).join('');
-
       const txHash = await window.ethereum.request({
         method: "eth_sendTransaction",
-        params: [{
-          from: walletAddress,
-          to: walletAddress,
-          value: "0x0",
-           data,
-        }]
+        params: [{ from:walletAddress, to:walletAddress, value:"0x0", data }]
       });
-
       const chain = CHAINS[currentChain];
       const explorerUrl = chain.explorer + txHash;
-
       status.className = "success";
       status.innerHTML = `✅ Ancré sur ${chain.name} !<br>
-        <a id="tx-link" href="${explorerUrl}" target="_blank">Voir la transaction ↗</a><br>
-        <span style="font-family:var(--m);font-size:0.75rem;color:var(--fnt);word-break:break-all">TX: ${txHash}</span>`;
-
+        <a href="${explorerUrl}" target="_blank" style="color:#58a6ff;font-family:var(--m);font-size:0.78rem">Voir la transaction ↗</a><br>
+        <span style="font-family:var(--m);font-size:0.72rem;color:var(--fnt);word-break:break-all">TX: ${txHash}</span>`;
       toast("CID ancré sur " + chain.name + " !", "ok");
-      updateHistoryWithAnchor(currentCID, txHash, chain);
-
+      document.querySelectorAll('.history-item').forEach(item => {
+        if (item.dataset.cid === currentCID) {
+          const badge = item.querySelector('.chain-badge');
+          if (badge) { badge.className = "chain-badge anchored"; badge.textContent = "⛓️ Ancré sur " + chain.name; }
+        }
+      });
     } catch(e) {
       status.className = "error";
       status.textContent = "❌ " + (e.message || "Transaction annulée");
@@ -319,64 +282,36 @@
     }
   }
 
-  function updateHistoryWithAnchor(cid, txHash, chain) {
-    const items = document.querySelectorAll('.history-item');
-    items.forEach(item => {
-      if (item.dataset.cid === cid) {
-        const badge = item.querySelector('.chain-badge');
-        if (badge) {
-          badge.className = "chain-badge anchored";
-          badge.textContent = "⛓️ Ancré sur " + chain.name;
-        }
-      }
-    });
-  }
-
   async function submitArchive() {
     const url = document.getElementById("urlInput").value.trim();
     if (!url) { toast("Entre une URL", "err"); return; }
     const btn = document.getElementById("archiveBtn");
-    btn.disabled = true;
-    btn.textContent = "En cours...";
+    btn.disabled = true; btn.textContent = "En cours...";
     try {
-      const res = await fetch(WORKER_URL, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ url })
-      });
+      const res = await fetch(WORKER_URL, { method:"POST", headers:{"Content-Type":"application/json"}, body:JSON.stringify({url}) });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || "Erreur upload");
       const cid = data.IpfsHash;
-      const ipfsUrl = GATEWAY + cid;
       currentCID = cid;
-      currentArchiveUrl = url;
-
+      const ipfsUrl = GATEWAY + cid;
       document.getElementById("result").style.display = "block";
       document.getElementById("resultUrl").textContent = url;
       document.getElementById("cidValue").textContent = cid;
       document.getElementById("ipfsLink").href = ipfsUrl;
       document.getElementById("ipfsLink").textContent = "gateway.pinata.cloud/ipfs/" + cid;
-
-      // Montrer ancrage seulement si wallet connecté
-      const anchorSection = document.getElementById("anchor-section");
-      anchorSection.style.display = "block";
-      if (!walletAddress) {
-        document.getElementById("anchor-desc").textContent = "Connecte un wallet pour ancrer cette archive dans la blockchain.";
-        document.getElementById("anchorBtn").disabled = true;
-      } else {
-        document.getElementById("anchor-desc").textContent = "Grave l'empreinte de cette archive dans la blockchain pour une preuve permanente.";
-        document.getElementById("anchorBtn").disabled = false;
-      }
+      document.getElementById("anchor-section").style.display = "block";
       document.getElementById("anchor-status").style.display = "none";
-
+      document.getElementById("anchorBtn").disabled = !walletAddress;
+      document.getElementById("anchor-desc").textContent = walletAddress
+        ? "Grave l'empreinte de cette archive dans la blockchain pour une preuve permanente."
+        : "Connecte un wallet pour ancrer cette archive dans la blockchain.";
       addToHistory(url, cid, ipfsUrl);
       toast("Archive publiée sur IPFS !", "ok");
       document.getElementById("urlInput").value = "";
     } catch(e) {
       toast("Erreur : " + e.message, "err");
     } finally {
-      btn.disabled = false;
-      btn.textContent = "Publier sur IPFS";
+      btn.disabled = false; btn.textContent = "Publier sur IPFS";
     }
   }
 
