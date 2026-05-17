@@ -1,34 +1,82 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Explorer — Bloc Zero</title>
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
-<style>*{box-sizing:border-box;margin:0;padding:0}
-:root{
---bg:#0d0d0b;--sur:#161614;--brd:#2a2a25;
---txt:#e8e6e0;--mut:#888880;--fnt:#444440;
---grn:#a8e6a3;--gbg:#1a2e18;--yel:#f0d060;
---r:8px;--rl:12px;
---f:"Space Grotesk",sans-serif;
---m:"Space Mono",monospace;
-}
-body{font-family:var(--f);background:var(--bg);color:var(--txt);min-height:100vh;font-size:16px;line-height:1.6}
-nav{position:sticky;top:0;z-index:100;background:var(--bg);border-bottom:1px solid var(--brd);padding:0 24px;height:56px;display:flex;align-items:center;justify-content:space-between;gap:16px}
-.logo{font-family:var(--m);font-size:14px;font-weight:700;text-decoration:none;display:flex;align-items:center;gap:10px;color:var(--txt)}
-.nl{display:flex;align-items:center;gap:4px}
-.nl a{background:none;border:none;font-family:var(--f);font-size:14px;color:var(--mut);cursor:pointer;padding:6px 12px;border-radius:var(--r);transition:all .15s;text-decoration:none;display:inline-block}
-.nl a:hover{background:#1e1e1a;color:var(--txt)}
-.nl a.on{background:var(--gbg);color:var(--grn)}
-.cta{background:var(--grn);color:#0d0d0b;font-family:var(--f);font-size:13px;font-weight:700;padding:7px 14px;border-radius:var(--r);text-decoration:none;display:inline-block}
-.cta:hover{background:#c5f0c0}
-.slbl{font-family:var(--m);font-size:11px;color:var(--fnt);letter-spacing:.12em;text-transform:uppercase;margin-bottom:16px}
-.bp{background:var(--grn);color:#0d0d0b;border:none;font-family:var(--f);font-size:15px;font-weight:700;cursor:pointer;padding:12px 24px;border-radius:var(--r);text-decoration:none;display:inline-block}
-.bp:hover{background:#c5f0c0}
-.bs{background:none;color:var(--txt);border:1px solid var(--brd);font-family:var(--f);font-size:15px;font-weight:600;cursor:pointer;padding:12px 24px;border-radius:var(--r);text-decoration:none;display:inline-block}
-.bs:hover{background:#1e1e1a}
-@media(max-width:560px){.nl{display:none}}</style>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Explorer — Bloc Zéro</title>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0}
+    :root{
+      --bg:#0d0d0b;--sur:#161614;--brd:#2a2a25;
+      --txt:#e8e6e0;--mut:#888880;--fnt:#444440;
+      --grn:#a8e6a3;--gbg:#1a2e18;
+      --r:8px;--rl:12px;
+      --f:"Space Grotesk",sans-serif;
+      --m:"Space Mono",monospace;
+    }
+    body{font-family:var(--f);background:var(--bg);color:var(--txt);min-height:100vh;font-size:16px;line-height:1.6}
+    nav{position:sticky;top:0;z-index:100;background:var(--bg);border-bottom:1px solid var(--brd);padding:0 24px;height:56px;display:flex;align-items:center;justify-content:space-between;gap:16px}
+    .logo{font-family:var(--m);font-size:14px;font-weight:700;text-decoration:none;color:var(--txt)}
+    .nl{display:flex;align-items:center;gap:4px}
+    .nl a{font-size:14px;color:var(--mut);padding:6px 12px;border-radius:var(--r);transition:all .15s;text-decoration:none}
+    .nl a:hover{background:#1e1e1a;color:var(--txt)}
+    .nl a.on{background:var(--gbg);color:var(--grn)}
+    .cta{background:var(--grn);color:#0d0d0b;font-size:13px;font-weight:700;padding:7px 14px;border-radius:var(--r);text-decoration:none}
+    .cta:hover{background:#c5f0c0}
+    .container{max-width:960px;margin:0 auto;padding:60px 24px}
+    .slbl{font-family:var(--m);font-size:11px;color:var(--fnt);letter-spacing:.12em;text-transform:uppercase;margin-bottom:16px}
+
+    /* Barre de recherche */
+    .search-row{display:flex;gap:10px;margin-bottom:32px;flex-wrap:wrap}
+    .search-row input{flex:1;min-width:200px;padding:11px 16px;border-radius:var(--r);border:1px solid var(--brd);background:var(--sur);color:var(--txt);font-size:0.95rem;font-family:var(--f)}
+    .search-row input:focus{outline:none;border-color:var(--grn)}
+    .search-row button{padding:11px 20px;border-radius:var(--r);border:none;background:var(--grn);color:#0d0d0b;font-weight:700;font-size:0.9rem;cursor:pointer;font-family:var(--f);white-space:nowrap}
+    .search-row button:hover{background:#c5f0c0}
+
+    /* Ouvrir un CID */
+    .cid-lookup{background:var(--sur);border:1px solid var(--brd);border-radius:var(--rl);padding:20px;margin-bottom:40px}
+    .cid-lookup p{font-size:0.85rem;color:var(--mut);margin-bottom:12px}
+    .cid-row{display:flex;gap:10px;flex-wrap:wrap}
+    .cid-row input{flex:1;min-width:200px;padding:9px 14px;border-radius:var(--r);border:1px solid var(--brd);background:var(--bg);color:var(--grn);font-family:var(--m);font-size:0.82rem}
+    .cid-row input:focus{outline:none;border-color:var(--grn)}
+    .cid-row button{padding:9px 16px;border-radius:var(--r);border:1px solid var(--brd);background:#1e1e1a;color:var(--txt);font-size:0.85rem;cursor:pointer;font-family:var(--f)}
+    .cid-row button:hover{background:var(--brd)}
+
+    /* Filtres */
+    .filters{display:flex;gap:8px;margin-bottom:24px;flex-wrap:wrap}
+    .filter-btn{padding:5px 14px;border-radius:999px;border:1px solid var(--brd);background:none;color:var(--mut);font-size:0.82rem;cursor:pointer;font-family:var(--f);transition:all .15s}
+    .filter-btn:hover{background:#1e1e1a;color:var(--txt)}
+    .filter-btn.active{background:var(--gbg);border-color:var(--grn);color:var(--grn)}
+
+    /* Liste archives */
+    #archive-list{display:flex;flex-direction:column;gap:10px}
+    .archive-card{background:var(--sur);border:1px solid var(--brd);border-radius:var(--rl);padding:16px 20px;transition:border-color .15s}
+    .archive-card:hover{border-color:#3a3a35}
+    .archive-card .top{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;flex-wrap:wrap}
+    .archive-card .url{font-size:0.88rem;color:var(--txt);word-break:break-all;flex:1}
+    .archive-card .tag{font-size:10px;padding:3px 8px;border-radius:999px;border:1px solid var(--brd);color:var(--mut);white-space:nowrap;font-family:var(--m)}
+    .archive-card .cid{font-family:var(--m);font-size:0.75rem;color:var(--fnt);margin-top:6px;word-break:break-all}
+    .archive-card .actions{display:flex;gap:8px;margin-top:12px;flex-wrap:wrap}
+    .archive-card .actions a,.archive-card .actions button{padding:4px 12px;border-radius:6px;border:1px solid var(--brd);background:#1e1e1a;color:var(--txt);font-size:0.78rem;text-decoration:none;cursor:pointer;font-family:var(--f)}
+    .archive-card .actions a{color:#58a6ff}
+    .archive-card .actions a:hover,.archive-card .actions button:hover{background:var(--brd)}
+    .archive-card .date{font-size:0.72rem;color:var(--fnt);margin-top:8px;font-family:var(--m)}
+
+    /* Empty state */
+    #empty-state{text-align:center;padding:60px 24px;color:var(--fnt)}
+    #empty-state .icon{font-size:2.5rem;margin-bottom:16px}
+    #empty-state p{font-size:0.9rem}
+
+    /* Stats */
+    .stats{display:flex;gap:24px;margin-bottom:32px;flex-wrap:wrap}
+    .stat{background:var(--sur);border:1px solid var(--brd);border-radius:var(--r);padding:14px 20px;flex:1;min-width:120px}
+    .stat .val{font-family:var(--m);font-size:1.4rem;font-weight:700;color:var(--grn)}
+    .stat .lbl{font-size:0.78rem;color:var(--mut);margin-top:2px}
+
+    #toast{display:none;position:fixed;bottom:24px;right:24px;padding:12px 20px;border-radius:var(--r);font-size:0.9rem;z-index:999}
+    @media(max-width:560px){.nl{display:none}}
+  </style>
 </head>
 <body>
 <nav>
@@ -38,27 +86,186 @@ nav{position:sticky;top:0;z-index:100;background:var(--bg);border-bottom:1px sol
     <a href="archiver.html">Archiver</a>
     <a href="explorer.html" class="on">Explorer</a>
     <a href="participer.html">Participer</a>
-    
   </div>
   <a class="cta" href="archiver.html">+ Archiver</a>
 </nav>
-<div style="max-width:960px;margin:0 auto;padding:56px 24px 80px">
-  <p class="slbl">Explorer</p>
-  <h1 style="font-size:clamp(1.6rem,3vw,2.2rem);font-weight:700;letter-spacing:-.02em;margin-bottom:12px">Registre des archives</h1>
-  <p style="font-size:15px;color:var(--mut);margin-bottom:40px">Tous les documents publies via Bloc Zero.</p>
-  <div style="display:flex;flex-direction:column;gap:12px">
-    <div onclick="window.open('https://gateway.pinata.cloud/ipfs/bafkreidvauqcjvdespva2umndhdja3hdl3zyvcca2fx5n6okwrsooxpqse','_blank')" style="background:var(--sur);border:1px solid var(--brd);border-radius:var(--rl);padding:18px 20px;display:flex;align-items:center;justify-content:space-between;gap:16px;cursor:pointer">
-      <div>
-        <div style="font-size:15px;font-weight:600;margin-bottom:6px">Manifeste Bloc Zero</div>
-        <div style="display:flex;align-items:center;gap:16px;flex-wrap:wrap">
-          <span style="font-family:var(--m);font-size:12px;color:var(--grn)">bafkreidvauqcj...</span>
-          <span style="font-size:12px;color:var(--fnt)">8 mai 2026</span>
-          <span style="font-size:12px;color:var(--fnt)">par krim1811</span>
-          <span style="font-size:11px;color:var(--fnt);background:#1e1e1a;border:1px solid var(--brd);border-radius:999px;padding:2px 10px">Manifeste</span>
-        </div>
-      </div>
-      <span style="color:var(--fnt);font-size:18px">→</span>
+
+<div class="container">
+  <p class="slbl">Explorer les archives</p>
+  <h1 style="font-size:clamp(1.6rem,3vw,2.2rem);font-weight:700;letter-spacing:-.02em;margin-bottom:8px">Registre décentralisé</h1>
+  <p style="color:var(--mut);font-size:0.95rem;max-width:52ch;margin-bottom:40px;line-height:1.7">Toutes les archives publiées sur Bloc Zéro, accessibles via IPFS.</p>
+
+  <!-- Stats -->
+  <div class="stats">
+    <div class="stat"><div class="val" id="stat-total">—</div><div class="lbl">Archives totales</div></div>
+    <div class="stat"><div class="val" id="stat-today">—</div><div class="lbl">Ajoutées aujourd'hui</div></div>
+    <div class="stat"><div class="val" style="color:#58a6ff">IPFS</div><div class="lbl">Stockage décentralisé</div></div>
+  </div>
+
+  <!-- Recherche -->
+  <div class="search-row">
+    <input type="text" id="searchInput" placeholder="Rechercher une URL ou un CID..." oninput="filterArchives()"/>
+    <button onclick="filterArchives()">Rechercher</button>
+  </div>
+
+  <!-- Ouvrir un CID directement -->
+  <div class="cid-lookup">
+    <p>🔍 Tu as un CID ? Ouvre-le directement sur IPFS.</p>
+    <div class="cid-row">
+      <input type="text" id="cidInput" placeholder="bafkrei..."/>
+      <button onclick="openCID()">Ouvrir ↗</button>
+      <button onclick="copyCID()">Copier lien</button>
     </div>
   </div>
+
+  <!-- Filtres -->
+  <div class="filters">
+    <button class="filter-btn active" onclick="setFilter('all', this)">Toutes</button>
+    <button class="filter-btn" onclick="setFilter('today', this)">Aujourd'hui</button>
+    <button class="filter-btn" onclick="setFilter('week', this)">Cette semaine</button>
+  </div>
+
+  <!-- Liste -->
+  <div id="archive-list"></div>
+  <div id="empty-state" style="display:none">
+    <div class="icon">📭</div>
+    <p>Aucune archive trouvée.<br>Sois le premier à <a href="archiver.html" style="color:var(--grn)">archiver une page</a>.</p>
+  </div>
 </div>
-</body></html>
+
+<div id="toast"></div>
+
+<script>
+  const PINATA_GATEWAY = "https://gateway.pinata.cloud/ipfs/";
+  // Remplace par ta vraie clé publique Pinata si tu veux charger les vrais fichiers
+  // Pour l'instant on charge depuis l'API publique Pinata avec ton JWT côté worker
+  // Les archives affichées ici sont celles de la session ou chargées depuis Pinata
+
+  let allArchives = [];
+  let currentFilter = 'all';
+
+  function toast(msg, type) {
+    const t = document.getElementById("toast");
+    t.textContent = msg;
+    t.style.display = "block";
+    t.style.background = type === "err" ? "#4a1010" : "#1a2e18";
+    t.style.color = type === "err" ? "#f87171" : "#a8e6a3";
+    t.style.border = "1px solid " + (type === "err" ? "#7f1d1d" : "#2a4a28");
+    setTimeout(() => { t.style.display = "none"; }, 3000);
+  }
+
+  function copyText(text) {
+    navigator.clipboard.writeText(text).then(() => toast("Copié !", "ok"));
+  }
+
+  function openCID() {
+    const cid = document.getElementById("cidInput").value.trim();
+    if (!cid) { toast("Entre un CID", "err"); return; }
+    window.open(PINATA_GATEWAY + cid, "_blank");
+  }
+
+  function copyCID() {
+    const cid = document.getElementById("cidInput").value.trim();
+    if (!cid) { toast("Entre un CID", "err"); return; }
+    copyText(PINATA_GATEWAY + cid);
+  }
+
+  function setFilter(f, btn) {
+    currentFilter = f;
+    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    renderArchives();
+  }
+
+  function filterArchives() {
+    renderArchives();
+  }
+
+  function isToday(dateStr) {
+    const d = new Date(dateStr);
+    const now = new Date();
+    return d.toDateString() === now.toDateString();
+  }
+
+  function isThisWeek(dateStr) {
+    const d = new Date(dateStr);
+    const now = new Date();
+    const diff = (now - d) / (1000 * 60 * 60 * 24);
+    return diff <= 7;
+  }
+
+  function renderArchives() {
+    const query = document.getElementById("searchInput").value.toLowerCase();
+    const list = document.getElementById("archive-list");
+    const empty = document.getElementById("empty-state");
+
+    let filtered = allArchives.filter(a => {
+      const matchQuery = !query || a.url.toLowerCase().includes(query) || a.cid.toLowerCase().includes(query);
+      const matchFilter =
+        currentFilter === 'all' ? true :
+        currentFilter === 'today' ? isToday(a.date) :
+        currentFilter === 'week' ? isThisWeek(a.date) : true;
+      return matchQuery && matchFilter;
+    });
+
+    list.innerHTML = "";
+    if (filtered.length === 0) {
+      empty.style.display = "block";
+      return;
+    }
+    empty.style.display = "none";
+
+    filtered.forEach(a => {
+      const ipfsUrl = PINATA_GATEWAY + a.cid;
+      const d = new Date(a.date);
+      const dateStr = d.toLocaleDateString("fr-FR") + " à " + d.toLocaleTimeString("fr-FR", {hour:"2-digit",minute:"2-digit"});
+      const card = document.createElement("div");
+      card.className = "archive-card";
+      card.innerHTML = `
+        <div class="top">
+          <span class="url">🔗 ${a.url}</span>
+          <span class="tag">IPFS</span>
+        </div>
+        <div class="cid">${a.cid}</div>
+        <div class="actions">
+          <a href="${ipfsUrl}" target="_blank">Voir sur IPFS ↗</a>
+          <button onclick="copyText('${a.cid}')">Copier CID</button>
+          <button onclick="copyText('${ipfsUrl}')">Copier lien</button>
+        </div>
+        <div class="date">Archivé le ${dateStr}</div>
+      `;
+      list.appendChild(card);
+    });
+  }
+
+  async function loadFromPinata() {
+    try {
+      // On charge les fichiers depuis le Worker qui retransmet Pinata
+      const res = await fetch("https://workers-playground-mute-haze-0834.karimkondua.workers.dev/list");
+      if (!res.ok) throw new Error("pas de liste");
+      const data = await res.json();
+      if (data.rows) {
+        allArchives = data.rows.map(r => ({
+          url: r.metadata?.name || "URL inconnue",
+          cid: r.ipfs_pin_hash,
+          date: r.date_pinned
+        }));
+      }
+    } catch(e) {
+      // Si le worker ne supporte pas /list encore, afficher message
+      allArchives = [];
+    }
+    updateStats();
+    renderArchives();
+  }
+
+  function updateStats() {
+    document.getElementById("stat-total").textContent = allArchives.length;
+    const today = allArchives.filter(a => isToday(a.date)).length;
+    document.getElementById("stat-today").textContent = today;
+  }
+
+  loadFromPinata();
+</script>
+</body>
+</html>
