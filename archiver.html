@@ -1,340 +1,411 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8"/>
+  <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Archiver – Bloc Zéro</title>
-  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
   <style>
-    *{box-sizing:border-box;margin:0;padding:0}
-    :root{
-      --bg:#0d0d0b;--sur:#161614;--brd:#2a2a25;
-      --txt:#e8e6e0;--mut:#888880;--fnt:#444440;
-      --grn:#a8e6a3;--gbg:#1a2e18;
-      --r:8px;--rl:12px;
-      --f:"Space Grotesk",sans-serif;
-      --m:"Space Mono",monospace;
-    }
-    body{font-family:var(--f);background:var(--bg);color:var(--txt);min-height:100vh;font-size:16px;line-height:1.6}
-    nav{position:sticky;top:0;z-index:100;background:var(--bg);border-bottom:1px solid var(--brd);padding:0 24px;height:56px;display:flex;align-items:center;justify-content:space-between;gap:16px}
-    .logo{font-family:var(--m);font-size:14px;font-weight:700;text-decoration:none;color:var(--txt)}
-    .nl{display:flex;align-items:center;gap:4px}
-    .nl a{font-size:14px;color:var(--mut);padding:6px 12px;border-radius:var(--r);transition:all .15s;text-decoration:none}
-    .nl a:hover{background:#1e1e1a;color:var(--txt)}
-    .nl a.on{background:var(--gbg);color:var(--grn)}
-    .cta{background:var(--grn);color:#0d0d0b;font-size:13px;font-weight:700;padding:7px 14px;border-radius:var(--r);text-decoration:none}
-    .cta:hover{background:#c5f0c0}
-    .container{max-width:780px;margin:0 auto;padding:60px 24px}
-    input[type=url]{width:100%;padding:12px 16px;border-radius:var(--r);border:1px solid var(--brd);background:var(--sur);color:var(--txt);font-size:1rem;font-family:var(--f)}
-    input[type=url]:focus{outline:none;border-color:var(--grn)}
-    .btn-primary{padding:12px 24px;background:var(--grn);color:#0d0d0b;border:none;border-radius:var(--r);font-size:1rem;font-weight:700;cursor:pointer;font-family:var(--f);transition:background .15s}
-    .btn-primary:disabled{background:#333;color:var(--mut);cursor:not-allowed}
-    .btn-primary:hover:not(:disabled){background:#c5f0c0}
-    .btn-sec{padding:10px 20px;background:#1e1e1a;color:var(--txt);border:1px solid var(--brd);border-radius:var(--r);font-size:0.9rem;font-weight:600;cursor:pointer;font-family:var(--f);transition:all .15s}
-    .btn-sec:hover:not(:disabled){background:var(--brd)}
-    .btn-sec:disabled{opacity:0.4;cursor:not-allowed}
-    #wallet-bar{background:var(--sur);border:1px solid var(--brd);border-radius:var(--rl);padding:16px 20px;margin-bottom:24px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px}
-    #wallet-bar .left{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
-    #wallet-status{font-size:0.85rem;color:var(--mut)}
-    #wallet-status.connected{color:var(--grn)}
-    #wallet-addr{font-family:var(--m);font-size:0.78rem;color:var(--fnt)}
-    #connect-btn{padding:8px 16px;background:var(--gbg);border:1px solid var(--grn);border-radius:var(--r);color:var(--grn);font-size:0.85rem;font-weight:600;cursor:pointer;font-family:var(--f)}
-    #connect-btn:hover{background:#243d22}
-    #chain-selector{display:none;background:var(--sur);border:1px solid var(--brd);border-radius:var(--rl);padding:16px 20px;margin-bottom:24px}
-    #chain-selector label{font-size:0.8rem;color:var(--mut);margin-bottom:8px;display:block}
-    .chains{display:flex;gap:8px;flex-wrap:wrap}
-    .chain-btn{padding:6px 14px;border-radius:999px;border:1px solid var(--brd);background:none;color:var(--mut);font-size:0.8rem;cursor:pointer;font-family:var(--m);transition:all .15s;display:flex;align-items:center;gap:6px}
-    .chain-btn:hover{background:#1e1e1a;color:var(--txt)}
-    .chain-btn.active{background:var(--gbg);border-color:var(--grn);color:var(--grn)}
-    .chain-btn .fee{font-size:0.7rem;color:var(--fnt)}
-    .chain-btn.active .fee{color:#6dbf6a}
-    #result{display:none;margin-top:24px;background:var(--sur);border:1px solid var(--brd);border-radius:var(--rl);padding:20px}
-    #result h2{font-size:1rem;margin-bottom:10px;color:var(--grn)}
-    .cid-row{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:12px}
-    #cidValue{font-family:var(--m);font-size:0.8rem;color:#58a6ff;word-break:break-all}
-    .btn-copy{padding:4px 10px;background:#1e1e1a;border:1px solid var(--brd);border-radius:4px;color:var(--txt);font-size:0.78rem;cursor:pointer;font-family:var(--f)}
-    .btn-copy:hover{background:var(--brd)}
-    #anchor-section{display:none;margin-top:20px;border-top:1px solid var(--brd);padding-top:20px}
-    #anchor-section h3{font-size:0.95rem;font-weight:700;margin-bottom:6px}
-    #anchor-section p{font-size:0.83rem;color:var(--mut);margin-bottom:16px}
-    #anchor-status{display:none;margin-top:12px;padding:12px 16px;border-radius:var(--r);font-size:0.85rem}
-    #anchor-status.success{background:var(--gbg);border:1px solid var(--grn);color:var(--grn)}
-    #anchor-status.error{background:#2a1010;border:1px solid #7f1d1d;color:#f87171}
-    #anchor-status.pending{background:#1a1a10;border:1px solid #555;color:var(--mut)}
-    #tx-link{color:#58a6ff;text-decoration:none;font-family:var(--m);font-size:0.78rem}
-    #history-section{margin-top:48px}
-    #history-section h2{font-size:0.95rem;font-family:var(--m);color:var(--mut);text-transform:uppercase;letter-spacing:.1em;margin-bottom:16px;padding-bottom:10px;border-bottom:1px solid var(--brd)}
-    #history-list{display:flex;flex-direction:column;gap:10px}
-    .history-item{background:var(--sur);border:1px solid var(--brd);border-radius:var(--rl);padding:14px 18px}
-    .history-item .orig{font-size:0.8rem;color:var(--mut);margin-bottom:6px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-    .history-item .cid-text{font-family:var(--m);font-size:0.78rem;color:#58a6ff;word-break:break-all}
-    .history-item .chain-badge{display:inline-flex;align-items:center;gap:4px;font-family:var(--m);font-size:10px;padding:2px 8px;border-radius:999px;border:1px solid var(--brd);color:var(--mut);margin-top:6px}
-    .history-item .chain-badge.anchored{border-color:var(--grn);color:var(--grn)}
-    .history-item .acts{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
-    .history-item .acts a,.history-item .acts button{padding:4px 12px;border-radius:6px;border:1px solid var(--brd);background:#1e1e1a;color:var(--txt);font-size:0.78rem;text-decoration:none;cursor:pointer;font-family:var(--f)}
-    .history-item .acts a{color:#58a6ff}
-    .history-item .acts a:hover,.history-item .acts button:hover{background:var(--brd)}
-    .history-item .date{font-size:0.72rem;color:var(--fnt);margin-top:8px;font-family:var(--m)}
-    #empty-history{color:var(--fnt);font-size:0.9rem;font-style:italic}
-    #toast{display:none;position:fixed;bottom:24px;right:24px;padding:12px 20px;border-radius:var(--r);font-size:0.9rem;z-index:999;border:1px solid}
-    @media(max-width:560px){.nl{display:none}}
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: sans-serif; max-width: 700px; margin: 60px auto; padding: 0 20px; background: #0d1117; color: #c9d1d9; }
+    h1 { font-size: 1.5rem; margin-bottom: 24px; }
+    input { width: 100%; padding: 10px; border-radius: 6px; border: 1px solid #30363d; background: #161b22; color: #c9d1d9; font-size: 1rem; }
+    button.primary { margin-top: 12px; padding: 10px 24px; background: #238636; color: #fff; border: none; border-radius: 6px; font-size: 1rem; cursor: pointer; }
+    button.primary:disabled { background: #444; cursor: not-allowed; }
+    button.primary:hover:not(:disabled) { background: #2ea043; }
+
+    #wallet-bar { margin-bottom: 24px; display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+    #wallet-bar button { padding: 8px 18px; border-radius: 6px; border: 1px solid #30363d; background: #161b22; color: #c9d1d9; font-size: 0.85rem; cursor: pointer; }
+    #wallet-bar button:hover { background: #21262d; }
+    #wallet-status { font-size: 0.82rem; color: #8b949e; }
+    #wallet-address { font-family: monospace; font-size: 0.82rem; color: #58a6ff; }
+
+    #result { display: none; margin-top: 24px; background: #161b22; border: 1px solid #30363d; border-radius: 8px; padding: 16px; }
+    #result h2 { font-size: 1rem; margin-bottom: 8px; color: #3fb950; }
+    .cid-row { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+    #cidValue { font-family: monospace; font-size: 0.85rem; color: #58a6ff; word-break: break-all; }
+    .btn-copy { padding: 4px 10px; background: #21262d; border: 1px solid #30363d; border-radius: 4px; color: #c9d1d9; font-size: 0.8rem; cursor: pointer; }
+    .btn-copy:hover { background: #30363d; }
+
+    #anchor-section { display: none; margin-top: 16px; border-top: 1px solid #21262d; padding-top: 14px; }
+    #anchor-section h3 { font-size: 0.95rem; color: #c9d1d9; margin-bottom: 6px; }
+    #anchor-section p { font-size: 0.8rem; color: #8b949e; margin-bottom: 10px; }
+    #anchor-section .chain-buttons { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 8px; }
+    #anchor-section .chain-btn { padding: 7px 16px; border-radius: 6px; border: 1px solid #30363d; background: #21262d; color: #c9d1d9; font-size: 0.85rem; cursor: pointer; }
+    #anchor-section .chain-btn:hover:not(:disabled) { background: #30363d; border-color: #58a6ff; color: #58a6ff; }
+    #anchor-section .chain-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+    #anchor-result { font-size: 0.82rem; margin-top: 8px; padding: 8px 12px; border-radius: 6px; display: none; }
+    #anchor-result.success { background: #0f2a1a; border: 1px solid #238636; color: #3fb950; }
+    #anchor-result.error { background: #2a0f0f; border: 1px solid #7f1d1d; color: #f87171; }
+
+    #history-section { margin-top: 40px; }
+    #history-section h2 { font-size: 1.1rem; margin-bottom: 16px; color: #8b949e; border-bottom: 1px solid #21262d; padding-bottom: 8px; }
+    #history-list { display: flex; flex-direction: column; gap: 10px; }
+    .history-item { background: #161b22; border: 1px solid #21262d; border-radius: 8px; padding: 12px 16px; }
+    .history-item .original-url { font-size: 0.8rem; color: #8b949e; margin-bottom: 6px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .history-item .cid-text { font-family: monospace; font-size: 0.8rem; color: #58a6ff; word-break: break-all; }
+    .history-item .actions { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 8px; }
+    .history-item .actions a { padding: 4px 10px; background: #21262d; border: 1px solid #30363d; border-radius: 4px; color: #58a6ff; font-size: 0.8rem; text-decoration: none; }
+    .history-item .actions a:hover { background: #30363d; }
+    .history-item .actions button { padding: 4px 10px; background: #21262d; border: 1px solid #30363d; border-radius: 4px; color: #c9d1d9; font-size: 0.8rem; cursor: pointer; }
+    .history-item .actions button:hover { background: #30363d; }
+    .history-item .chain-badge { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 0.72rem; font-weight: 600; margin-right: 4px; }
+    .badge-polygon { background: #2d1b6e; color: #a78bfa; border: 1px solid #6d28d9; }
+    .badge-base    { background: #0a1628; color: #60a5fa; border: 1px solid #1d4ed8; }
+    .badge-arbitrum{ background: #0c1e2e; color: #67e8f9; border: 1px solid #0e7490; }
+    .badge-bnb     { background: #2a1f00; color: #fbbf24; border: 1px solid #d97706; }
+    .badge-eth     { background: #1a1a2e; color: #a5b4fc; border: 1px solid #4f46e5; }
+    .history-item .tx-link { color: #3fb950; font-size: 0.78rem; }
+    .history-item .date { font-size: 0.75rem; color: #484f58; margin-top: 6px; }
+    #empty-history { color: #484f58; font-size: 0.9rem; font-style: italic; }
+
+    #toast { display: none; position: fixed; bottom: 24px; right: 24px; padding: 12px 20px; border-radius: 8px; font-size: 0.9rem; z-index: 999; }
   </style>
 </head>
 <body>
-<nav>
-  <a class="logo" href="index.html">BLOC ZERO</a>
-  <div class="nl">
-    <a href="index.html">Accueil</a>
-    <a href="archiver.html" class="on">Archiver</a>
-    <a href="explorer.html">Explorer</a>
-    <a href="participer.html">Participer</a>
-  </div>
-  <a class="cta" href="archiver.html">+ Archiver</a>
-</nav>
 
-<div class="container">
-  <p style="font-family:var(--m);font-size:11px;color:var(--fnt);text-transform:uppercase;letter-spacing:.12em;margin-bottom:16px">Archiver une page</p>
-  <h1 style="font-size:clamp(1.5rem,3vw,2rem);font-weight:700;letter-spacing:-.02em;margin-bottom:8px">Publier sur IPFS + Blockchain</h1>
-  <p style="color:var(--mut);font-size:0.9rem;margin-bottom:32px">Archive une page web sur IPFS, puis ancre son empreinte cryptographique dans la blockchain pour une preuve permanente.</p>
+  <h1>🗃️ Archiver une page sur IPFS</h1>
 
+  <!-- Barre wallet -->
   <div id="wallet-bar">
-    <div class="left">
-      <span id="wallet-status">⬡ Wallet non connecté</span>
-      <span id="wallet-addr"></span>
-    </div>
-    <button id="connect-btn" onclick="connectWallet()">Connecter un wallet</button>
+    <button id="connectBtn" onclick="connectWallet()">🦊 Connecter un wallet</button>
+    <span id="wallet-status">Non connecté</span>
+    <span id="wallet-address"></span>
   </div>
 
-  <div id="chain-selector">
-    <label>Choisir la blockchain pour l'ancrage :</label>
-    <div class="chains">
-      <button class="chain-btn active" data-chain="polygon" onclick="selectChain('polygon',this)">🟣 Polygon <span class="fee">~0.001€</span></button>
-      <button class="chain-btn" data-chain="base" onclick="selectChain('base',this)">🔵 Base <span class="fee">~0.01€</span></button>
-      <button class="chain-btn" data-chain="arbitrum" onclick="selectChain('arbitrum',this)">🔷 Arbitrum <span class="fee">~0.05€</span></button>
-      <button class="chain-btn" data-chain="bnb" onclick="selectChain('bnb',this)">🟡 BNB Chain <span class="fee">~0.05€</span></button>
-      <button class="chain-btn" data-chain="ethereum" onclick="selectChain('ethereum',this)">⬡ Ethereum <span class="fee">~1-2€</span></button>
-    </div>
-  </div>
+  <input type="url" id="urlInput" placeholder="https://exemple.com/article" />
+  <br/>
+  <button class="primary" id="archiveBtn" onclick="submitArchive()">Publier sur IPFS</button>
 
-  <input type="url" id="urlInput" placeholder="https://exemple.com/article" style="margin-bottom:12px"/>
-  <button class="btn-primary" id="archiveBtn" onclick="submitArchive()">Publier sur IPFS</button>
-
+  <!-- Résultat archivage IPFS -->
   <div id="result">
     <h2>✅ Archivé sur IPFS</h2>
-    <p style="font-size:0.82rem;color:var(--mut);margin-bottom:8px" id="resultUrl"></p>
+    <p style="font-size:0.85rem; color:#8b949e; margin-bottom:8px;" id="resultUrl"></p>
     <div class="cid-row">
       <span id="cidValue"></span>
       <button class="btn-copy" onclick="copyText(document.getElementById('cidValue').textContent)">Copier CID</button>
     </div>
-    <a id="ipfsLink" href="#" target="_blank" style="color:#58a6ff;font-size:0.83rem">Voir sur IPFS ↗</a>
+    <p style="margin-top:10px;">
+      <a id="ipfsLink" href="#" target="_blank" rel="noopener" style="color:#58a6ff; font-size:0.85rem;">Voir sur IPFS ↗</a>
+    </p>
+
+    <!-- Section ancrage blockchain -->
     <div id="anchor-section">
       <h3>⛓️ Ancrer sur la blockchain</h3>
-      <p id="anchor-desc">Grave l'empreinte de cette archive dans la blockchain pour une preuve permanente et vérifiable.</p>
-      <button class="btn-sec" id="anchorBtn" onclick="anchorOnChain()">Ancrer sur <span id="chain-label">Polygon</span></button>
-      <div id="anchor-status"></div>
+      <p>Grave l'empreinte de cette archive dans la blockchain pour une preuve permanente.</p>
+      <div class="chain-buttons">
+        <button class="chain-btn" onclick="anchorOnChain('polygon')">Ancrer sur Polygon</button>
+        <button class="chain-btn" onclick="anchorOnChain('base')">Ancrer sur Base</button>
+        <button class="chain-btn" onclick="anchorOnChain('arbitrum')">Ancrer sur Arbitrum</button>
+        <button class="chain-btn" onclick="anchorOnChain('bnb')">Ancrer sur BNB</button>
+        <button class="chain-btn" onclick="anchorOnChain('eth')">Ancrer sur Ethereum</button>
+      </div>
+      <div id="anchor-result"></div>
     </div>
   </div>
 
+  <!-- Historique -->
   <div id="history-section">
-    <h2>Archives de cette session</h2>
+    <h2>📋 Archives de cette session</h2>
     <div id="history-list">
       <p id="empty-history">Aucune archive pour l'instant.</p>
     </div>
   </div>
-</div>
 
-<div id="toast"></div>
+  <div id="toast"></div>
 
-<script>
-  const WORKER_URL = "https://workers-playground-mute-haze-0834.karimkondua.workers.dev";
-  const GATEWAY = "https://gateway.pinata.cloud/ipfs/";
+  <script>
+    const WORKER_URL = "https://workers-playground-mute-haze-0834.karimkondua.workers.dev";
 
-  const CHAINS = {
-    polygon:  { name:"Polygon",   chainId:"0x89",   rpc:"https://polygon-rpc.com",             explorer:"https://polygonscan.com/tx/",  symbol:"MATIC" },
-    base:     { name:"Base",      chainId:"0x2105",  rpc:"https://mainnet.base.org",            explorer:"https://basescan.org/tx/",     symbol:"ETH" },
-    arbitrum: { name:"Arbitrum",  chainId:"0xa4b1",  rpc:"https://arb1.arbitrum.io/rpc",        explorer:"https://arbiscan.io/tx/",      symbol:"ETH" },
-    bnb:      { name:"BNB Chain", chainId:"0x38",    rpc:"https://bsc-dataseed.binance.org",    explorer:"https://bscscan.com/tx/",      symbol:"BNB" },
-    ethereum: { name:"Ethereum",  chainId:"0x1",     rpc:"https://cloudflare-eth.com",          explorer:"https://etherscan.io/tx/",     symbol:"ETH" },
-  };
+    // ─── Configurations des chaînes EVM ───────────────────────────────────────
+    const CHAINS = {
+      polygon: {
+        name: "Polygon",
+        chainId: "0x89",          // 137
+        rpcUrls: ["https://polygon-rpc.com"],
+        nativeCurrency: { name: "MATIC", symbol: "MATIC", decimals: 18 },
+        blockExplorerUrls: ["https://polygonscan.com"],
+        explorer: "https://polygonscan.com/tx/",
+        badge: "badge-polygon"
+      },
+      base: {
+        name: "Base",
+        chainId: "0x2105",        // 8453
+        rpcUrls: ["https://mainnet.base.org"],
+        nativeCurrency: { name: "Ether", symbol: "ETH", decimals: 18 },
+        blockExplorerUrls: ["https://basescan.org"],
+        explorer: "https://basescan.org/tx/",
+        badge: "badge-base"
+      },
+      arbitrum: {
+        name: "Arbitrum",
+        chainId: "0xa4b1",        // 42161
+        rpcUrls: ["https://arb1.arbitrum.io/rpc"],
+        nativeCurrency: { name: "Ether", symbol: "ETH", decimals: 18 },
+        blockExplorerUrls: ["https://arbiscan.io"],
+        explorer: "https://arbiscan.io/tx/",
+        badge: "badge-arbitrum"
+      },
+      bnb: {
+        name: "BNB Chain",
+        chainId: "0x38",          // 56
+        rpcUrls: ["https://bsc-dataseed.binance.org"],
+        nativeCurrency: { name: "BNB", symbol: "BNB", decimals: 18 },
+        blockExplorerUrls: ["https://bscscan.com"],
+        explorer: "https://bscscan.com/tx/",
+        badge: "badge-bnb"
+      },
+      eth: {
+        name: "Ethereum",
+        chainId: "0x1",           // 1
+        rpcUrls: ["https://cloudflare-eth.com"],
+        nativeCurrency: { name: "Ether", symbol: "ETH", decimals: 18 },
+        blockExplorerUrls: ["https://etherscan.io"],
+        explorer: "https://etherscan.io/tx/",
+        badge: "badge-eth"
+      }
+    };
 
-  const CHAIN_CONFIGS = {
-    polygon:  { chainName:"Polygon Mainnet",  nativeCurrency:{name:"MATIC",symbol:"MATIC",decimals:18}, rpcUrls:["https://polygon-rpc.com"],          blockExplorerUrls:["https://polygonscan.com"] },
-    base:     { chainName:"Base",             nativeCurrency:{name:"Ethereum",symbol:"ETH",decimals:18}, rpcUrls:["https://mainnet.base.org"],          blockExplorerUrls:["https://basescan.org"] },
-    arbitrum: { chainName:"Arbitrum One",     nativeCurrency:{name:"Ethereum",symbol:"ETH",decimals:18}, rpcUrls:["https://arb1.arbitrum.io/rpc"],      blockExplorerUrls:["https://arbiscan.io"] },
-    bnb:      { chainName:"BNB Smart Chain",  nativeCurrency:{name:"BNB",symbol:"BNB",decimals:18},      rpcUrls:["https://bsc-dataseed.binance.org"],  blockExplorerUrls:["https://bscscan.com"] },
-  };
+    // ─── État global ──────────────────────────────────────────────────────────
+    let connectedAccount = null;
+    let currentCid = null;
+    const archives = [];
 
-  let walletAddress = null;
-  let currentChain = "polygon";
-  let currentCID = null;
-
-  function toast(msg, type) {
-    const t = document.getElementById("toast");
-    t.textContent = msg;
-    t.style.display = "block";
-    t.style.background = type === "err" ? "#2a1010" : "#1a2e18";
-    t.style.color = type === "err" ? "#f87171" : "#a8e6a3";
-    t.style.borderColor = type === "err" ? "#7f1d1d" : "#2a4a28";
-    setTimeout(() => { t.style.display = "none"; }, 4000);
-  }
-
-  function copyText(text) {
-    navigator.clipboard.writeText(text).then(() => toast("Copié !", "ok"));
-  }
-
-  function selectChain(chain, btn) {
-    currentChain = chain;
-    document.querySelectorAll('.chain-btn').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
-    document.getElementById("chain-label").textContent = CHAINS[chain].name;
-  }
-
-  async function connectWallet() {
-    if (typeof window.ethereum === 'undefined') {
-      toast("MetaMask non détecté. Installe MetaMask !", "err");
-      window.open("https://metamask.io/download/", "_blank");
-      return;
-    }
-    try {
-      await window.ethereum.request({
-        method: "wallet_requestPermissions",
-        params: [{ eth_accounts: {} }]
-      });
-      const accounts = await window.ethereum.request({ method: "eth_accounts" });
-      if (!accounts || accounts.length === 0) throw new Error("Aucun compte sélectionné");
-      walletAddress = accounts[0];
-      const short = walletAddress.slice(0,6) + "..." + walletAddress.slice(-4);
-      document.getElementById("wallet-status").textContent = "✅ Wallet connecté";
-      document.getElementById("wallet-status").className = "connected";
-      document.getElementById("wallet-addr").textContent = short;
-      document.getElementById("connect-btn").textContent = "Déconnecter";
-      document.getElementById("connect-btn").onclick = disconnectWallet;
-      document.getElementById("chain-selector").style.display = "block";
-      if (currentCID) document.getElementById("anchorBtn").disabled = false;
-      toast("Wallet connecté : " + short, "ok");
-    } catch(e) {
-      if (e.code === 4001) {
-        toast("Connexion refusée", "err");
-      } else {
-        toast("Erreur : " + (e.message || "inconnue"), "err");
+    // ─── Wallet ───────────────────────────────────────────────────────────────
+    async function connectWallet() {
+      if (!window.ethereum) {
+        toast("MetaMask non détecté. Installe l'extension.", "err");
+        return;
+      }
+      try {
+        const accounts = await window.ethereum.request({ method: "eth_requestAccounts" });
+        connectedAccount = accounts[0];
+        updateWalletUI();
+        document.getElementById("anchor-section").style.display =
+          currentCid ? "block" : "none";
+        toast("Wallet connecté !", "ok");
+      } catch (e) {
+        toast("Connexion annulée.", "err");
       }
     }
-  }
 
-  function disconnectWallet() {
-    walletAddress = null;
-    document.getElementById("wallet-status").textContent = "⬡ Wallet non connecté";
-    document.getElementById("wallet-status").className = "";
-    document.getElementById("wallet-addr").textContent = "";
-    document.getElementById("connect-btn").textContent = "Connecter un wallet";
-    document.getElementById("connect-btn").onclick = connectWallet;
-    document.getElementById("chain-selector").style.display = "none";
-  }
-
-  async function switchToChain(chainKey) {
-    const chain = CHAINS[chainKey];
-    try {
-      await window.ethereum.request({ method:"wallet_switchEthereumChain", params:[{ chainId:chain.chainId }] });
-    } catch(e) {
-      if (e.code === 4902 && CHAIN_CONFIGS[chainKey]) {
-        await window.ethereum.request({ method:"wallet_addEthereumChain", params:[{ chainId:chain.chainId, ...CHAIN_CONFIGS[chainKey] }] });
-      } else { throw e; }
+    function updateWalletUI() {
+      if (connectedAccount) {
+        const short = connectedAccount.slice(0, 6) + "..." + connectedAccount.slice(-4);
+        document.getElementById("wallet-status").textContent = "✅ Connecté :";
+        document.getElementById("wallet-address").textContent = short;
+        document.getElementById("connectBtn").textContent = "🔄 Reconnecter";
+      }
     }
-  }
 
-  async function anchorOnChain() {
-    if (!walletAddress) { toast("Connecte d'abord un wallet", "err"); return; }
-    if (!currentCID) { toast("Archive d'abord une URL", "err"); return; }
-    const btn = document.getElementById("anchorBtn");
-    const status = document.getElementById("anchor-status");
-    btn.disabled = true;
-    status.style.display = "block";
-    status.className = "pending";
-    status.textContent = "⏳ Changement de réseau...";
-    try {
-      await switchToChain(currentChain);
-      status.textContent = "⏳ En attente de signature...";
-      const data = "0x" + Array.from(new TextEncoder().encode("bloc-zero:" + currentCID))
-        .map(b => b.toString(16).padStart(2,'0')).join('');
-      const txHash = await window.ethereum.request({
-        method: "eth_sendTransaction",
-        params: [{ from:walletAddress, to:walletAddress, value:"0x0", data }]
-      });
-      const chain = CHAINS[currentChain];
-      const explorerUrl = chain.explorer + txHash;
-      status.className = "success";
-      status.innerHTML = `✅ Ancré sur ${chain.name} !<br>
-        <a href="${explorerUrl}" target="_blank" style="color:#58a6ff;font-family:var(--m);font-size:0.78rem">Voir la transaction ↗</a><br>
-        <span style="font-family:var(--m);font-size:0.72rem;color:var(--fnt);word-break:break-all">TX: ${txHash}</span>`;
-      toast("CID ancré sur " + chain.name + " !", "ok");
-      document.querySelectorAll('.history-item').forEach(item => {
-        if (item.dataset.cid === currentCID) {
-          const badge = item.querySelector('.chain-badge');
-          if (badge) { badge.className = "chain-badge anchored"; badge.textContent = "⛓️ Ancré sur " + chain.name; }
+    // Détecte si déjà connecté au chargement
+    window.addEventListener("load", async () => {
+      if (window.ethereum) {
+        const accounts = await window.ethereum.request({ method: "eth_accounts" });
+        if (accounts.length > 0) {
+          connectedAccount = accounts[0];
+          updateWalletUI();
         }
-      });
-    } catch(e) {
-      status.className = "error";
-      status.textContent = "❌ " + (e.message || "Transaction annulée");
-    } finally {
-      btn.disabled = false;
-      btn.textContent = "Ancrer sur " + CHAINS[currentChain].name;
-    }
-  }
+        window.ethereum.on("accountsChanged", (accs) => {
+          connectedAccount = accs[0] || null;
+          updateWalletUI();
+        });
+      }
+    });
 
-  async function submitArchive() {
-    const url = document.getElementById("urlInput").value.trim();
-    if (!url) { toast("Entre une URL", "err"); return; }
-    const btn = document.getElementById("archiveBtn");
-    btn.disabled = true; btn.textContent = "En cours...";
-    try {
-      const res = await fetch(WORKER_URL, { method:"POST", headers:{"Content-Type":"application/json"}, body:JSON.stringify({url}) });
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.error || "Erreur upload");
-      const cid = data.IpfsHash;
-      currentCID = cid;
-      const ipfsUrl = GATEWAY + cid;
-      document.getElementById("result").style.display = "block";
-      document.getElementById("resultUrl").textContent = url;
-      document.getElementById("cidValue").textContent = cid;
-      document.getElementById("ipfsLink").href = ipfsUrl;
-      document.getElementById("ipfsLink").textContent = "gateway.pinata.cloud/ipfs/" + cid;
-      document.getElementById("anchor-section").style.display = "block";
-      document.getElementById("anchor-status").style.display = "none";
-      document.getElementById("anchorBtn").disabled = !walletAddress;
-      document.getElementById("anchor-desc").textContent = walletAddress
-        ? "Grave l'empreinte de cette archive dans la blockchain pour une preuve permanente."
-        : "Connecte un wallet pour ancrer cette archive dans la blockchain.";
-      addToHistory(url, cid, ipfsUrl);
-      toast("Archive publiée sur IPFS !", "ok");
-      document.getElementById("urlInput").value = "";
-    } catch(e) {
-      toast("Erreur : " + e.message, "err");
-    } finally {
-      btn.disabled = false; btn.textContent = "Publier sur IPFS";
+    // ─── Ancrage blockchain ───────────────────────────────────────────────────
+    async function switchToChain(chain) {
+      try {
+        await window.ethereum.request({
+          method: "wallet_switchEthereumChain",
+          params: [{ chainId: chain.chainId }]
+        });
+      } catch (err) {
+        // Chaîne inconnue de MetaMask → on l'ajoute
+        if (err.code === 4902) {
+          await window.ethereum.request({
+            method: "wallet_addEthereumChain",
+            params: [{
+              chainId: chain.chainId,
+              chainName: chain.name,
+              rpcUrls: chain.rpcUrls,
+              nativeCurrency: chain.nativeCurrency,
+              blockExplorerUrls: chain.blockExplorerUrls
+            }]
+          });
+        } else {
+          throw err;
+        }
+      }
     }
-  }
 
-  function addToHistory(url, cid, ipfsUrl) {
-    const now = new Date();
-    const list = document.getElementById("history-list");
-    document.getElementById("empty-history")?.remove();
-    const item = document.createElement("div");
-    item.className = "history-item";
-    item.dataset.cid = cid;
-    item.innerHTML = `
-      <div class="orig">🔗 ${url}</div>
-      <div class="cid-text">${cid}</div>
-      <span class="chain-badge">⬡ Non ancré</span>
-      <div class="acts">
-        <a href="${ipfsUrl}" target="_blank">Voir IPFS ↗</a>
-        <button onclick="copyText('${cid}')">Copier CID</button>
-        <button onclick="copyText('${ipfsUrl}')">Copier lien</button>
-      </div>
-      <div class="date">Archivé à ${now.toLocaleTimeString("fr-FR",{hour:"2-digit",minute:"2-digit"})}</div>
-    `;
-    list.prepend(item);
-  }
-</script>
+    async function anchorOnChain(chainKey) {
+      if (!connectedAccount) {
+        toast("Connecte d'abord ton wallet !", "err");
+        return;
+      }
+      if (!currentCid) {
+        toast("Archive une page d'abord.", "err");
+        return;
+      }
+
+      const chain = CHAINS[chainKey];
+      const btns = document.querySelectorAll(".chain-btn");
+      btns.forEach(b => b.disabled = true);
+
+      const resultEl = document.getElementById("anchor-result");
+      resultEl.className = "";
+      resultEl.style.display = "block";
+      resultEl.textContent = `⏳ Passage sur ${chain.name}…`;
+
+      try {
+        // 1. Changer de réseau
+        await switchToChain(chain);
+
+        // 2. Encoder le CID en hex (méthode sans data vers compte externe)
+        //    On utilise une adresse zéro = 0x000...000 comme contrat récepteur
+        //    Cela fonctionne sur toutes les chaînes EVM sans déployer de contrat.
+        const ZERO_CONTRACT = "0x0000000000000000000000000000000000000000";
+        const hexData = "0x" + Array.from(new TextEncoder().encode(currentCid))
+          .map(b => b.toString(16).padStart(2, "0")).join("");
+
+        resultEl.textContent = `⏳ Confirmation MetaMask en attente…`;
+
+        // 3. Envoyer la transaction vers l'adresse zéro avec 0 valeur
+        const txHash = await window.ethereum.request({
+          method: "eth_sendTransaction",
+          params: [{
+            from: connectedAccount,
+            to: ZERO_CONTRACT,
+            value: "0x0",
+            data: hexData
+          }]
+        });
+
+        // 4. Succès
+        const explorerUrl = chain.explorer + txHash;
+        resultEl.className = "success";
+        resultEl.innerHTML = `✅ Ancré sur ${chain.name} !<br>
+          <a href="${explorerUrl}" target="_blank" rel="noopener"
+             style="color:#3fb950;">Voir la transaction ↗</a><br>
+          <span style="font-family:monospace;font-size:0.75rem;color:#8b949e;">
+            ${txHash.slice(0,20)}…${txHash.slice(-8)}
+          </span>`;
+
+        // Mise à jour de l'item dans l'historique
+        updateHistoryWithTx(currentCid, chainKey, chain, txHash);
+        toast(`Ancré sur ${chain.name} !`, "ok");
+
+      } catch (e) {
+        resultEl.className = "error";
+        if (e.code === 4001) {
+          resultEl.textContent = "❌ Transaction annulée par l'utilisateur.";
+        } else {
+          resultEl.textContent = "❌ Erreur : " + (e.message || e);
+        }
+      } finally {
+        btns.forEach(b => b.disabled = false);
+      }
+    }
+
+    function updateHistoryWithTx(cid, chainKey, chain, txHash) {
+      const list = document.getElementById("history-list");
+      const items = list.querySelectorAll(".history-item");
+      for (const item of items) {
+        if (item.dataset.cid === cid) {
+          const actionsDiv = item.querySelector(".actions");
+          const badge = `<span class="chain-badge ${chain.badge}">${chain.name}</span>`;
+          const txLink = `<a href="${chain.explorer + txHash}" target="_blank"
+            rel="noopener" class="tx-link">TX ↗</a>`;
+          const div = document.createElement("div");
+          div.style.marginTop = "6px";
+          div.innerHTML = badge + " " + txLink;
+          actionsDiv.after(div);
+          break;
+        }
+      }
+    }
+
+    // ─── IPFS ─────────────────────────────────────────────────────────────────
+    function toast(msg, type) {
+      const t = document.getElementById("toast");
+      t.textContent = msg;
+      t.style.display = "block";
+      t.style.background = type === "err" ? "#7f1d1d" : "#14532d";
+      t.style.color = "#fff";
+      setTimeout(() => { t.style.display = "none"; }, 3000);
+    }
+
+    function copyText(text) {
+      navigator.clipboard.writeText(text).then(() => toast("Copié !", "ok"));
+    }
+
+    function formatDate(d) {
+      return d.toLocaleTimeString("fr-FR", { hour: "2-digit", minute: "2-digit", second: "2-digit" });
+    }
+
+    function addToHistory(url, cid) {
+      const now = new Date();
+      archives.unshift({ url, cid, time: now });
+      const list = document.getElementById("history-list");
+      document.getElementById("empty-history")?.remove();
+      const ipfsUrl = `https://gateway.pinata.cloud/ipfs/${cid}`;
+      const item = document.createElement("div");
+      item.className = "history-item";
+      item.dataset.cid = cid;
+      item.innerHTML = `
+        <div class="original-url">🔗 ${url}</div>
+        <div class="cid-row">
+          <span class="cid-text">${cid}</span>
+        </div>
+        <div class="actions">
+          <a href="${ipfsUrl}" target="_blank" rel="noopener">Voir sur IPFS ↗</a>
+          <button onclick="copyText('${cid}')">Copier CID</button>
+          <button onclick="copyText('${ipfsUrl}')">Copier lien IPFS</button>
+        </div>
+        <div class="date">Archivé à ${formatDate(now)}</div>
+      `;
+      list.prepend(item);
+    }
+
+    async function submitArchive() {
+      const url = document.getElementById("urlInput").value.trim();
+      if (!url) { toast("Entre une URL", "err"); return; }
+      const btn = document.getElementById("archiveBtn");
+      btn.disabled = true;
+      btn.textContent = "En cours...";
+      try {
+        const res = await fetch(WORKER_URL, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ url })
+        });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error || data.message || "Erreur upload");
+        const cid = data.IpfsHash;
+        currentCid = cid;
+        const ipfsUrl = `https://gateway.pinata.cloud/ipfs/${cid}`;
+        document.getElementById("result").style.display = "block";
+        document.getElementById("resultUrl").textContent = url;
+        document.getElementById("cidValue").textContent = cid;
+        document.getElementById("ipfsLink").href = ipfsUrl;
+        document.getElementById("ipfsLink").textContent = `gateway.pinata.cloud/ipfs/${cid}`;
+        // Afficher la section ancrage seulement si wallet connecté
+        document.getElementById("anchor-section").style.display =
+          connectedAccount ? "block" : "none";
+        if (!connectedAccount) {
+          toast("Archive publiée ! Connecte ton wallet pour ancrer.", "ok");
+        }
+        document.getElementById("anchor-result").style.display = "none";
+        addToHistory(url, cid);
+        toast("Archive publiée sur IPFS !", "ok");
+        document.getElementById("urlInput").value = "";
+      } catch (e) {
+        toast("Erreur : " + e.message, "err");
+      } finally {
+        btn.disabled = false;
+        btn.textContent = "Publier sur IPFS";
+      }
+    }
+  </script>
 </body>
 </html>
