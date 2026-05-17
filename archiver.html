@@ -4,154 +4,168 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Archiver – Bloc Zéro</title>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
   <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    body { font-family: sans-serif; max-width: 700px; margin: 60px auto; padding: 0 20px; background: #0d1117; color: #c9d1d9; }
-    h1 { font-size: 1.5rem; margin-bottom: 24px; }
-    input { width: 100%; padding: 10px; border-radius: 6px; border: 1px solid #30363d; background: #161b22; color: #c9d1d9; font-size: 1rem; }
-    button.primary { margin-top: 12px; padding: 10px 24px; background: #238636; color: #fff; border: none; border-radius: 6px; font-size: 1rem; cursor: pointer; }
-    button.primary:disabled { background: #444; cursor: not-allowed; }
-    button.primary:hover:not(:disabled) { background: #2ea043; }
-
-    /* Section résultat */
-    #result { display: none; margin-top: 24px; background: #161b22; border: 1px solid #30363d; border-radius: 8px; padding: 16px; }
-    #result h2 { font-size: 1rem; margin-bottom: 8px; color: #3fb950; }
-    .cid-row { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
-    #cidValue { font-family: monospace; font-size: 0.85rem; color: #58a6ff; word-break: break-all; }
-    .btn-copy { padding: 4px 10px; background: #21262d; border: 1px solid #30363d; border-radius: 4px; color: #c9d1d9; font-size: 0.8rem; cursor: pointer; }
-    .btn-copy:hover { background: #30363d; }
-
-    /* Section historique */
-    #history-section { margin-top: 40px; }
-    #history-section h2 { font-size: 1.1rem; margin-bottom: 16px; color: #8b949e; border-bottom: 1px solid #21262d; padding-bottom: 8px; }
-    #history-list { display: flex; flex-direction: column; gap: 10px; }
-    .history-item { background: #161b22; border: 1px solid #21262d; border-radius: 8px; padding: 12px 16px; }
-    .history-item .original-url { font-size: 0.8rem; color: #8b949e; margin-bottom: 6px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-    .history-item .cid-row { margin-bottom: 6px; }
-    .history-item .cid-text { font-family: monospace; font-size: 0.8rem; color: #58a6ff; word-break: break-all; }
-    .history-item .actions { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 8px; }
-    .history-item .actions a { padding: 4px 10px; background: #21262d; border: 1px solid #30363d; border-radius: 4px; color: #58a6ff; font-size: 0.8rem; text-decoration: none; }
-    .history-item .actions a:hover { background: #30363d; }
-    .history-item .actions button { padding: 4px 10px; background: #21262d; border: 1px solid #30363d; border-radius: 4px; color: #c9d1d9; font-size: 0.8rem; cursor: pointer; }
-    .history-item .actions button:hover { background: #30363d; }
-    .history-item .date { font-size: 0.75rem; color: #484f58; margin-top: 6px; }
-    #empty-history { color: #484f58; font-size: 0.9rem; font-style: italic; }
-
-    /* Toast */
-    #toast { display: none; position: fixed; bottom: 24px; right: 24px; padding: 12px 20px; border-radius: 8px; font-size: 0.9rem; z-index: 999; }
+    *{box-sizing:border-box;margin:0;padding:0}
+    :root{
+      --bg:#0d0d0b;--sur:#161614;--brd:#2a2a25;
+      --txt:#e8e6e0;--mut:#888880;--fnt:#444440;
+      --grn:#a8e6a3;--gbg:#1a2e18;
+      --r:8px;--rl:12px;
+      --f:"Space Grotesk",sans-serif;
+      --m:"Space Mono",monospace;
+    }
+    body{font-family:var(--f);background:var(--bg);color:var(--txt);min-height:100vh;font-size:16px;line-height:1.6}
+    nav{position:sticky;top:0;z-index:100;background:var(--bg);border-bottom:1px solid var(--brd);padding:0 24px;height:56px;display:flex;align-items:center;justify-content:space-between;gap:16px}
+    .logo{font-family:var(--m);font-size:14px;font-weight:700;text-decoration:none;display:flex;align-items:center;gap:10px;color:var(--txt)}
+    .nl{display:flex;align-items:center;gap:4px}
+    .nl a{background:none;border:none;font-family:var(--f);font-size:14px;color:var(--mut);cursor:pointer;padding:6px 12px;border-radius:var(--r);transition:all .15s;text-decoration:none;display:inline-block}
+    .nl a:hover{background:#1e1e1a;color:var(--txt)}
+    .nl a.on{background:var(--gbg);color:var(--grn)}
+    .cta{background:var(--grn);color:#0d0d0b;font-family:var(--f);font-size:13px;font-weight:700;padding:7px 14px;border-radius:var(--r);text-decoration:none;display:inline-block}
+    .cta:hover{background:#c5f0c0}
+    input{width:100%;padding:12px 16px;border-radius:var(--r);border:1px solid var(--brd);background:var(--sur);color:var(--txt);font-size:1rem;font-family:var(--f)}
+    input:focus{outline:none;border-color:var(--grn)}
+    button.primary{margin-top:12px;padding:12px 24px;background:var(--grn);color:#0d0d0b;border:none;border-radius:var(--r);font-size:1rem;font-weight:700;cursor:pointer;font-family:var(--f)}
+    button.primary:disabled{background:#333;color:var(--mut);cursor:not-allowed}
+    button.primary:hover:not(:disabled){background:#c5f0c0}
+    #result{display:none;margin-top:24px;background:var(--sur);border:1px solid var(--brd);border-radius:var(--rl);padding:20px}
+    #result h2{font-size:1rem;margin-bottom:10px;color:var(--grn)}
+    .cid-row{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+    #cidValue{font-family:var(--m);font-size:0.82rem;color:#58a6ff;word-break:break-all}
+    .btn-copy{padding:4px 10px;background:#1e1e1a;border:1px solid var(--brd);border-radius:4px;color:var(--txt);font-size:0.8rem;cursor:pointer;font-family:var(--f)}
+    .btn-copy:hover{background:var(--brd)}
+    #history-section{margin-top:48px}
+    #history-section h2{font-size:1rem;font-family:var(--m);color:var(--mut);text-transform:uppercase;letter-spacing:.1em;margin-bottom:16px;padding-bottom:10px;border-bottom:1px solid var(--brd)}
+    #history-list{display:flex;flex-direction:column;gap:10px}
+    .history-item{background:var(--sur);border:1px solid var(--brd);border-radius:var(--rl);padding:14px 18px}
+    .history-item .original-url{font-size:0.8rem;color:var(--mut);margin-bottom:6px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .history-item .cid-text{font-family:var(--m);font-size:0.78rem;color:#58a6ff;word-break:break-all}
+    .history-item .actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+    .history-item .actions a,.history-item .actions button{padding:5px 12px;background:#1e1e1a;border:1px solid var(--brd);border-radius:6px;color:var(--txt);font-size:0.8rem;text-decoration:none;cursor:pointer;font-family:var(--f)}
+    .history-item .actions a{color:#58a6ff}
+    .history-item .actions a:hover,.history-item .actions button:hover{background:var(--brd)}
+    .history-item .date{font-size:0.75rem;color:var(--fnt);margin-top:8px;font-family:var(--m)}
+    #empty-history{color:var(--fnt);font-size:0.9rem;font-style:italic}
+    #toast{display:none;position:fixed;bottom:24px;right:24px;padding:12px 20px;border-radius:var(--r);font-size:0.9rem;z-index:999}
+    @media(max-width:560px){.nl{display:none}}
   </style>
 </head>
 <body>
+<nav>
+  <a class="logo" href="index.html">BLOC ZERO</a>
+  <div class="nl">
+    <a href="index.html">Accueil</a>
+    <a href="archiver.html" class="on">Archiver</a>
+    <a href="explorer.html">Explorer</a>
+    <a href="participer.html">Participer</a>
+  </div>
+  <a class="cta" href="archiver.html">+ Archiver</a>
+</nav>
 
-  <h1>🗃️ Archiver une page sur IPFS</h1>
+<div style="max-width:700px;margin:0 auto;padding:60px 24px">
+  <p style="font-family:var(--m);font-size:11px;color:var(--fnt);text-transform:uppercase;letter-spacing:.12em;margin-bottom:16px">Archiver une page</p>
+  <h1 style="font-size:clamp(1.5rem,3vw,2rem);font-weight:700;letter-spacing:-.02em;margin-bottom:8px">Publier sur IPFS</h1>
+  <p style="color:var(--mut);font-size:0.9rem;margin-bottom:32px">Entre l'URL d'une page web. Elle sera archivée de façon permanente et décentralisée.</p>
+
   <input type="url" id="urlInput" placeholder="https://exemple.com/article" />
   <br/>
   <button class="primary" id="archiveBtn" onclick="submitArchive()">Publier sur IPFS</button>
 
   <div id="result">
     <h2>✅ Archivé avec succès</h2>
-    <p style="font-size:0.85rem; color:#8b949e; margin-bottom:8px;" id="resultUrl"></p>
+    <p style="font-size:0.82rem;color:var(--mut);margin-bottom:8px" id="resultUrl"></p>
     <div class="cid-row">
       <span id="cidValue"></span>
       <button class="btn-copy" onclick="copyText(document.getElementById('cidValue').textContent)">Copier CID</button>
     </div>
-    <p style="margin-top:10px;">
-      <a id="ipfsLink" href="#" target="_blank" style="color:#58a6ff; font-size:0.85rem;">Voir sur IPFS ↗</a>
+    <p style="margin-top:10px">
+      <a id="ipfsLink" href="#" target="_blank" style="color:#58a6ff;font-size:0.85rem">Voir sur IPFS ↗</a>
     </p>
   </div>
 
   <div id="history-section">
-    <h2>📋 Archives de cette session</h2>
+    <h2>Archives de cette session</h2>
     <div id="history-list">
       <p id="empty-history">Aucune archive pour l'instant.</p>
     </div>
   </div>
+</div>
 
-  <div id="toast"></div>
+<div id="toast"></div>
 
-  <script>
-    const WORKER_URL = "https://workers-playground-mute-haze-0834.karimkondua.workers.dev";
-    const archives = [];
+<script>
+  const WORKER_URL = "https://workers-playground-mute-haze-0834.karimkondua.workers.dev";
 
-    function toast(msg, type) {
-      const t = document.getElementById("toast");
-      t.textContent = msg;
-      t.style.display = "block";
-      t.style.background = type === "err" ? "#7f1d1d" : "#14532d";
-      t.style.color = "#fff";
-      setTimeout(() => { t.style.display = "none"; }, 3000);
-    }
+  function toast(msg, type) {
+    const t = document.getElementById("toast");
+    t.textContent = msg;
+    t.style.display = "block";
+    t.style.background = type === "err" ? "#4a1010" : "#1a2e18";
+    t.style.color = type === "err" ? "#f87171" : "#a8e6a3";
+    t.style.border = "1px solid " + (type === "err" ? "#7f1d1d" : "#2a4a28");
+    setTimeout(() => { t.style.display = "none"; }, 3000);
+  }
 
-    function copyText(text) {
-      navigator.clipboard.writeText(text).then(() => toast("Copié !", "ok"));
-    }
+  function copyText(text) {
+    navigator.clipboard.writeText(text).then(() => toast("Copié !", "ok"));
+  }
 
-    function formatDate(d) {
-      return d.toLocaleTimeString("fr-FR", { hour: "2-digit", minute: "2-digit", second: "2-digit" });
-    }
+  function formatDate(d) {
+    return d.toLocaleTimeString("fr-FR", { hour: "2-digit", minute: "2-digit", second: "2-digit" });
+  }
 
-    function addToHistory(url, cid) {
-      const now = new Date();
-      archives.unshift({ url, cid, time: now });
+  function addToHistory(url, cid) {
+    const now = new Date();
+    const list = document.getElementById("history-list");
+    document.getElementById("empty-history")?.remove();
+    const ipfsUrl = `https://gateway.pinata.cloud/ipfs/${cid}`;
+    const item = document.createElement("div");
+    item.className = "history-item";
+    item.innerHTML = `
+      <div class="original-url">🔗 ${url}</div>
+      <div class="cid-text">${cid}</div>
+      <div class="actions">
+        <a href="${ipfsUrl}" target="_blank">Voir sur IPFS ↗</a>
+        <button onclick="copyText('${cid}')">Copier CID</button>
+        <button onclick="copyText('${ipfsUrl}')">Copier lien</button>
+      </div>
+      <div class="date">Archivé à ${formatDate(now)}</div>
+    `;
+    list.prepend(item);
+  }
 
-      const list = document.getElementById("history-list");
-      document.getElementById("empty-history")?.remove();
-
+  async function submitArchive() {
+    const url = document.getElementById("urlInput").value.trim();
+    if (!url) { toast("Entre une URL", "err"); return; }
+    const btn = document.getElementById("archiveBtn");
+    btn.disabled = true;
+    btn.textContent = "En cours...";
+    try {
+      const res = await fetch(WORKER_URL, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ url })
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || data.message || "Erreur upload");
+      const cid = data.IpfsHash;
       const ipfsUrl = `https://gateway.pinata.cloud/ipfs/${cid}`;
-      const item = document.createElement("div");
-      item.className = "history-item";
-      item.innerHTML = `
-        <div class="original-url">🔗 ${url}</div>
-        <div class="cid-row">
-          <span class="cid-text">${cid}</span>
-        </div>
-        <div class="actions">
-          <a href="${ipfsUrl}" target="_blank">Voir sur IPFS ↗</a>
-          <button onclick="copyText('${cid}')">Copier CID</button>
-          <button onclick="copyText('${ipfsUrl}')">Copier lien IPFS</button>
-        </div>
-        <div class="date">Archivé à ${formatDate(now)}</div>
-      `;
-      list.prepend(item);
+      document.getElementById("result").style.display = "block";
+      document.getElementById("resultUrl").textContent = url;
+      document.getElementById("cidValue").textContent = cid;
+      document.getElementById("ipfsLink").href = ipfsUrl;
+      document.getElementById("ipfsLink").textContent = `gateway.pinata.cloud/ipfs/${cid}`;
+      addToHistory(url, cid);
+      toast("Archive publiée sur IPFS !", "ok");
+      document.getElementById("urlInput").value = "";
+    } catch (e) {
+      toast("Erreur : " + e.message, "err");
+    } finally {
+      btn.disabled = false;
+      btn.textContent = "Publier sur IPFS";
     }
-
-    async function submitArchive() {
-      const url = document.getElementById("urlInput").value.trim();
-      if (!url) { toast("Entre une URL", "err"); return; }
-
-      const btn = document.getElementById("archiveBtn");
-      btn.disabled = true;
-      btn.textContent = "En cours...";
-
-      try {
-        const res = await fetch(WORKER_URL, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ url })
-        });
-
-        const data = await res.json();
-        if (!res.ok) throw new Error(data.error || data.message || "Erreur upload");
-
-        const cid = data.IpfsHash;
-        const ipfsUrl = `https://gateway.pinata.cloud/ipfs/${cid}`;
-
-        document.getElementById("result").style.display = "block";
-        document.getElementById("resultUrl").textContent = url;
-        document.getElementById("cidValue").textContent = cid;
-        document.getElementById("ipfsLink").href = ipfsUrl;
-        document.getElementById("ipfsLink").textContent = `gateway.pinata.cloud/ipfs/${cid}`;
-
-        addToHistory(url, cid);
-        toast("Archive publiée sur IPFS !", "ok");
-        document.getElementById("urlInput").value = "";
-      } catch (e) {
-        toast("Erreur : " + e.message, "err");
-      } finally {
-        btn.disabled = false;
-        btn.textContent = "Publier sur IPFS";
-      }
-    }
-  </script>
+  }
+</script>
 </body>
 </html>
