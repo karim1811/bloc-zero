@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8" />
+  <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Archiver – Bloc Zéro</title>
   <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
@@ -17,37 +17,77 @@
     }
     body{font-family:var(--f);background:var(--bg);color:var(--txt);min-height:100vh;font-size:16px;line-height:1.6}
     nav{position:sticky;top:0;z-index:100;background:var(--bg);border-bottom:1px solid var(--brd);padding:0 24px;height:56px;display:flex;align-items:center;justify-content:space-between;gap:16px}
-    .logo{font-family:var(--m);font-size:14px;font-weight:700;text-decoration:none;display:flex;align-items:center;gap:10px;color:var(--txt)}
+    .logo{font-family:var(--m);font-size:14px;font-weight:700;text-decoration:none;color:var(--txt)}
     .nl{display:flex;align-items:center;gap:4px}
-    .nl a{background:none;border:none;font-family:var(--f);font-size:14px;color:var(--mut);cursor:pointer;padding:6px 12px;border-radius:var(--r);transition:all .15s;text-decoration:none;display:inline-block}
+    .nl a{font-size:14px;color:var(--mut);padding:6px 12px;border-radius:var(--r);transition:all .15s;text-decoration:none}
     .nl a:hover{background:#1e1e1a;color:var(--txt)}
     .nl a.on{background:var(--gbg);color:var(--grn)}
-    .cta{background:var(--grn);color:#0d0d0b;font-family:var(--f);font-size:13px;font-weight:700;padding:7px 14px;border-radius:var(--r);text-decoration:none;display:inline-block}
+    .cta{background:var(--grn);color:#0d0d0b;font-size:13px;font-weight:700;padding:7px 14px;border-radius:var(--r);text-decoration:none}
     .cta:hover{background:#c5f0c0}
-    input{width:100%;padding:12px 16px;border-radius:var(--r);border:1px solid var(--brd);background:var(--sur);color:var(--txt);font-size:1rem;font-family:var(--f)}
-    input:focus{outline:none;border-color:var(--grn)}
-    button.primary{margin-top:12px;padding:12px 24px;background:var(--grn);color:#0d0d0b;border:none;border-radius:var(--r);font-size:1rem;font-weight:700;cursor:pointer;font-family:var(--f)}
-    button.primary:disabled{background:#333;color:var(--mut);cursor:not-allowed}
-    button.primary:hover:not(:disabled){background:#c5f0c0}
+    .container{max-width:780px;margin:0 auto;padding:60px 24px}
+    input[type=url]{width:100%;padding:12px 16px;border-radius:var(--r);border:1px solid var(--brd);background:var(--sur);color:var(--txt);font-size:1rem;font-family:var(--f)}
+    input[type=url]:focus{outline:none;border-color:var(--grn)}
+    .btn-primary{padding:12px 24px;background:var(--grn);color:#0d0d0b;border:none;border-radius:var(--r);font-size:1rem;font-weight:700;cursor:pointer;font-family:var(--f);transition:background .15s}
+    .btn-primary:disabled{background:#333;color:var(--mut);cursor:not-allowed}
+    .btn-primary:hover:not(:disabled){background:#c5f0c0}
+    .btn-sec{padding:10px 20px;background:#1e1e1a;color:var(--txt);border:1px solid var(--brd);border-radius:var(--r);font-size:0.9rem;font-weight:600;cursor:pointer;font-family:var(--f);transition:all .15s}
+    .btn-sec:hover:not(:disabled){background:var(--brd)}
+    .btn-sec:disabled{opacity:0.4;cursor:not-allowed}
+
+    /* Wallet bar */
+    #wallet-bar{background:var(--sur);border:1px solid var(--brd);border-radius:var(--rl);padding:16px 20px;margin-bottom:32px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px}
+    #wallet-bar .left{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+    #wallet-status{font-size:0.85rem;color:var(--mut)}
+    #wallet-status.connected{color:var(--grn)}
+    #wallet-addr{font-family:var(--m);font-size:0.78rem;color:var(--fnt)}
+    #connect-btn{padding:8px 16px;background:var(--gbg);border:1px solid var(--grn);border-radius:var(--r);color:var(--grn);font-size:0.85rem;font-weight:600;cursor:pointer;font-family:var(--f)}
+    #connect-btn:hover{background:#243d22}
+
+    /* Chain selector */
+    #chain-selector{display:none;margin-bottom:0}
+    #chain-selector label{font-size:0.8rem;color:var(--mut);margin-bottom:8px;display:block}
+    .chains{display:flex;gap:8px;flex-wrap:wrap}
+    .chain-btn{padding:6px 14px;border-radius:999px;border:1px solid var(--brd);background:none;color:var(--mut);font-size:0.8rem;cursor:pointer;font-family:var(--m);transition:all .15s;display:flex;align-items:center;gap:6px}
+    .chain-btn:hover{background:#1e1e1a;color:var(--txt)}
+    .chain-btn.active{background:var(--gbg);border-color:var(--grn);color:var(--grn)}
+    .chain-btn .fee{font-size:0.7rem;color:var(--fnt)}
+    .chain-btn.active .fee{color:#6dbf6a}
+
+    /* IPFS result */
     #result{display:none;margin-top:24px;background:var(--sur);border:1px solid var(--brd);border-radius:var(--rl);padding:20px}
     #result h2{font-size:1rem;margin-bottom:10px;color:var(--grn)}
-    .cid-row{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
-    #cidValue{font-family:var(--m);font-size:0.82rem;color:#58a6ff;word-break:break-all}
-    .btn-copy{padding:4px 10px;background:#1e1e1a;border:1px solid var(--brd);border-radius:4px;color:var(--txt);font-size:0.8rem;cursor:pointer;font-family:var(--f)}
+    .cid-row{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:12px}
+    #cidValue{font-family:var(--m);font-size:0.8rem;color:#58a6ff;word-break:break-all}
+    .btn-copy{padding:4px 10px;background:#1e1e1a;border:1px solid var(--brd);border-radius:4px;color:var(--txt);font-size:0.78rem;cursor:pointer;font-family:var(--f)}
     .btn-copy:hover{background:var(--brd)}
+
+    /* Blockchain anchor */
+    #anchor-section{display:none;margin-top:20px;border-top:1px solid var(--brd);padding-top:20px}
+    #anchor-section h3{font-size:0.95rem;font-weight:700;margin-bottom:6px}
+    #anchor-section p{font-size:0.83rem;color:var(--mut);margin-bottom:16px}
+    #anchor-status{display:none;margin-top:12px;padding:12px 16px;border-radius:var(--r);font-size:0.85rem}
+    #anchor-status.success{background:var(--gbg);border:1px solid var(--grn);color:var(--grn)}
+    #anchor-status.error{background:#2a1010;border:1px solid #7f1d1d;color:#f87171}
+    #anchor-status.pending{background:#1a1a10;border:1px solid #555;color:var(--mut)}
+    #tx-link{color:#58a6ff;text-decoration:none;font-family:var(--m);font-size:0.78rem}
+    #tx-link:hover{text-decoration:underline}
+
+    /* History */
     #history-section{margin-top:48px}
-    #history-section h2{font-size:1rem;font-family:var(--m);color:var(--mut);text-transform:uppercase;letter-spacing:.1em;margin-bottom:16px;padding-bottom:10px;border-bottom:1px solid var(--brd)}
+    #history-section h2{font-size:0.95rem;font-family:var(--m);color:var(--mut);text-transform:uppercase;letter-spacing:.1em;margin-bottom:16px;padding-bottom:10px;border-bottom:1px solid var(--brd)}
     #history-list{display:flex;flex-direction:column;gap:10px}
     .history-item{background:var(--sur);border:1px solid var(--brd);border-radius:var(--rl);padding:14px 18px}
-    .history-item .original-url{font-size:0.8rem;color:var(--mut);margin-bottom:6px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .history-item .orig{font-size:0.8rem;color:var(--mut);margin-bottom:6px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
     .history-item .cid-text{font-family:var(--m);font-size:0.78rem;color:#58a6ff;word-break:break-all}
-    .history-item .actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
-    .history-item .actions a,.history-item .actions button{padding:5px 12px;background:#1e1e1a;border:1px solid var(--brd);border-radius:6px;color:var(--txt);font-size:0.8rem;text-decoration:none;cursor:pointer;font-family:var(--f)}
-    .history-item .actions a{color:#58a6ff}
-    .history-item .actions a:hover,.history-item .actions button:hover{background:var(--brd)}
-    .history-item .date{font-size:0.75rem;color:var(--fnt);margin-top:8px;font-family:var(--m)}
+    .history-item .chain-badge{display:inline-flex;align-items:center;gap:4px;font-family:var(--m);font-size:10px;padding:2px 8px;border-radius:999px;border:1px solid var(--brd);color:var(--mut);margin-top:6px}
+    .history-item .chain-badge.anchored{border-color:var(--grn);color:var(--grn)}
+    .history-item .acts{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+    .history-item .acts a,.history-item .acts button{padding:4px 12px;border-radius:6px;border:1px solid var(--brd);background:#1e1e1a;color:var(--txt);font-size:0.78rem;text-decoration:none;cursor:pointer;font-family:var(--f)}
+    .history-item .acts a{color:#58a6ff}
+    .history-item .acts a:hover,.history-item .acts button:hover{background:var(--brd)}
+    .history-item .date{font-size:0.72rem;color:var(--fnt);margin-top:8px;font-family:var(--m)}
     #empty-history{color:var(--fnt);font-size:0.9rem;font-style:italic}
-    #toast{display:none;position:fixed;bottom:24px;right:24px;padding:12px 20px;border-radius:var(--r);font-size:0.9rem;z-index:999}
+    #toast{display:none;position:fixed;bottom:24px;right:24px;padding:12px 20px;border-radius:var(--r);font-size:0.9rem;z-index:999;border:1px solid}
     @media(max-width:560px){.nl{display:none}}
   </style>
 </head>
@@ -63,27 +103,66 @@
   <a class="cta" href="archiver.html">+ Archiver</a>
 </nav>
 
-<div style="max-width:700px;margin:0 auto;padding:60px 24px">
+<div class="container">
   <p style="font-family:var(--m);font-size:11px;color:var(--fnt);text-transform:uppercase;letter-spacing:.12em;margin-bottom:16px">Archiver une page</p>
-  <h1 style="font-size:clamp(1.5rem,3vw,2rem);font-weight:700;letter-spacing:-.02em;margin-bottom:8px">Publier sur IPFS</h1>
-  <p style="color:var(--mut);font-size:0.9rem;margin-bottom:32px">Entre l'URL d'une page web. Elle sera archivée de façon permanente et décentralisée.</p>
+  <h1 style="font-size:clamp(1.5rem,3vw,2rem);font-weight:700;letter-spacing:-.02em;margin-bottom:8px">Publier sur IPFS + Blockchain</h1>
+  <p style="color:var(--mut);font-size:0.9rem;margin-bottom:32px">Archive une page web sur IPFS, puis ancre son empreinte cryptographique dans la blockchain pour une preuve permanente.</p>
 
-  <input type="url" id="urlInput" placeholder="https://exemple.com/article" />
-  <br/>
-  <button class="primary" id="archiveBtn" onclick="submitArchive()">Publier sur IPFS</button>
+  <!-- Wallet Bar -->
+  <div id="wallet-bar">
+    <div class="left">
+      <span id="wallet-status">⬡ Wallet non connecté</span>
+      <span id="wallet-addr"></span>
+    </div>
+    <button id="connect-btn" onclick="connectWallet()">Connecter un wallet</button>
+  </div>
 
+  <!-- Chain Selector (visible après connexion) -->
+  <div id="chain-selector" style="background:var(--sur);border:1px solid var(--brd);border-radius:var(--rl);padding:16px 20px;margin-bottom:24px">
+    <label>Choisir la blockchain pour l'ancrage :</label>
+    <div class="chains">
+      <button class="chain-btn active" data-chain="polygon" onclick="selectChain('polygon',this)">
+        🟣 Polygon <span class="fee">~0.001€</span>
+      </button>
+      <button class="chain-btn" data-chain="base" onclick="selectChain('base',this)">
+        🔵 Base <span class="fee">~0.01€</span>
+      </button>
+      <button class="chain-btn" data-chain="arbitrum" onclick="selectChain('arbitrum',this)">
+        🔷 Arbitrum <span class="fee">~0.05€</span>
+      </button>
+      <button class="chain-btn" data-chain="bnb" onclick="selectChain('bnb',this)">
+        🟡 BNB Chain <span class="fee">~0.05€</span>
+      </button>
+      <button class="chain-btn" data-chain="ethereum" onclick="selectChain('ethereum',this)">
+        ⬡ Ethereum <span class="fee">~1-2€</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- URL Input -->
+  <input type="url" id="urlInput" placeholder="https://exemple.com/article" style="margin-bottom:12px"/>
+  <button class="btn-primary" id="archiveBtn" onclick="submitArchive()">Publier sur IPFS</button>
+
+  <!-- IPFS Result -->
   <div id="result">
-    <h2>✅ Archivé avec succès</h2>
+    <h2>✅ Archivé sur IPFS</h2>
     <p style="font-size:0.82rem;color:var(--mut);margin-bottom:8px" id="resultUrl"></p>
     <div class="cid-row">
       <span id="cidValue"></span>
       <button class="btn-copy" onclick="copyText(document.getElementById('cidValue').textContent)">Copier CID</button>
     </div>
-    <p style="margin-top:10px">
-      <a id="ipfsLink" href="#" target="_blank" style="color:#58a6ff;font-size:0.85rem">Voir sur IPFS ↗</a>
-    </p>
+    <a id="ipfsLink" href="#" target="_blank" style="color:#58a6ff;font-size:0.83rem">Voir sur IPFS ↗</a>
+
+    <!-- Blockchain Anchor -->
+    <div id="anchor-section">
+      <h3>⛓️ Ancrer sur la blockchain</h3>
+      <p id="anchor-desc">Grave l'empreinte de cette archive dans la blockchain pour une preuve permanente et vérifiable.</p>
+      <button class="btn-sec" id="anchorBtn" onclick="anchorOnChain()">Ancrer sur <span id="chain-label">Polygon</span></button>
+      <div id="anchor-status"></div>
+    </div>
   </div>
 
+  <!-- History -->
   <div id="history-section">
     <h2>Archives de cette session</h2>
     <div id="history-list">
@@ -96,43 +175,161 @@
 
 <script>
   const WORKER_URL = "https://workers-playground-mute-haze-0834.karimkondua.workers.dev";
+  const GATEWAY = "https://gateway.pinata.cloud/ipfs/";
+
+  const CHAINS = {
+    polygon:  { name:"Polygon",  chainId:"0x89",   rpc:"https://polygon-rpc.com", explorer:"https://polygonscan.com/tx/", symbol:"MATIC" },
+    base:     { name:"Base",     chainId:"0x2105",  rpc:"https://mainnet.base.org", explorer:"https://basescan.org/tx/", symbol:"ETH" },
+    arbitrum: { name:"Arbitrum", chainId:"0xa4b1",  rpc:"https://arb1.arbitrum.io/rpc", explorer:"https://arbiscan.io/tx/", symbol:"ETH" },
+    bnb:      { name:"BNB Chain",chainId:"0x38",    rpc:"https://bsc-dataseed.binance.org", explorer:"https://bscscan.com/tx/", symbol:"BNB" },
+    ethereum: { name:"Ethereum", chainId:"0x1",     rpc:"https://cloudflare-eth.com", explorer:"https://etherscan.io/tx/", symbol:"ETH" },
+  };
+
+  let walletAddress = null;
+  let currentChain = "polygon";
+  let currentCID = null;
+  let currentArchiveUrl = null;
 
   function toast(msg, type) {
     const t = document.getElementById("toast");
     t.textContent = msg;
     t.style.display = "block";
-    t.style.background = type === "err" ? "#4a1010" : "#1a2e18";
+    t.style.background = type === "err" ? "#2a1010" : "#1a2e18";
     t.style.color = type === "err" ? "#f87171" : "#a8e6a3";
-    t.style.border = "1px solid " + (type === "err" ? "#7f1d1d" : "#2a4a28");
-    setTimeout(() => { t.style.display = "none"; }, 3000);
+    t.style.borderColor = type === "err" ? "#7f1d1d" : "#2a4a28";
+    setTimeout(() => { t.style.display = "none"; }, 4000);
   }
 
   function copyText(text) {
     navigator.clipboard.writeText(text).then(() => toast("Copié !", "ok"));
   }
 
-  function formatDate(d) {
-    return d.toLocaleTimeString("fr-FR", { hour: "2-digit", minute: "2-digit", second: "2-digit" });
+  function selectChain(chain, btn) {
+    currentChain = chain;
+    document.querySelectorAll('.chain-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById("chain-label").textContent = CHAINS[chain].name;
   }
 
-  function addToHistory(url, cid) {
-    const now = new Date();
-    const list = document.getElementById("history-list");
-    document.getElementById("empty-history")?.remove();
-    const ipfsUrl = `https://gateway.pinata.cloud/ipfs/${cid}`;
-    const item = document.createElement("div");
-    item.className = "history-item";
-    item.innerHTML = `
-      <div class="original-url">🔗 ${url}</div>
-      <div class="cid-text">${cid}</div>
-      <div class="actions">
-        <a href="${ipfsUrl}" target="_blank">Voir sur IPFS ↗</a>
-        <button onclick="copyText('${cid}')">Copier CID</button>
-        <button onclick="copyText('${ipfsUrl}')">Copier lien</button>
-      </div>
-      <div class="date">Archivé à ${formatDate(now)}</div>
-    `;
-    list.prepend(item);
+  async function connectWallet() {
+    if (!window.ethereum) {
+      toast("Aucun wallet détecté. Installe MetaMask !", "err");
+      window.open("https://metamask.io/download/", "_blank");
+      return;
+    }
+    try {
+      const accounts = await window.ethereum.request({ method: "eth_requestAccounts" });
+      walletAddress = accounts[0];
+      const short = walletAddress.slice(0,6) + "..." + walletAddress.slice(-4);
+      document.getElementById("wallet-status").textContent = "✅ Wallet connecté";
+      document.getElementById("wallet-status").className = "connected";
+      document.getElementById("wallet-addr").textContent = short;
+      document.getElementById("connect-btn").textContent = "Déconnecter";
+      document.getElementById("connect-btn").onclick = disconnectWallet;
+      document.getElementById("chain-selector").style.display = "block";
+      toast("Wallet connecté : " + short, "ok");
+    } catch(e) {
+      toast("Connexion annulée", "err");
+    }
+  }
+
+  function disconnectWallet() {
+    walletAddress = null;
+    document.getElementById("wallet-status").textContent = "⬡ Wallet non connecté";
+    document.getElementById("wallet-status").className = "";
+    document.getElementById("wallet-addr").textContent = "";
+    document.getElementById("connect-btn").textContent = "Connecter un wallet";
+    document.getElementById("connect-btn").onclick = connectWallet;
+    document.getElementById("chain-selector").style.display = "none";
+  }
+
+  async function switchToChain(chainKey) {
+    const chain = CHAINS[chainKey];
+    try {
+      await window.ethereum.request({
+        method: "wallet_switchEthereumChain",
+        params: [{ chainId: chain.chainId }]
+      });
+    } catch(e) {
+      if (e.code === 4902) {
+        const chainConfigs = {
+          polygon:  { chainName:"Polygon Mainnet", nativeCurrency:{name:"MATIC",symbol:"MATIC",decimals:18}, rpcUrls:["https://polygon-rpc.com"], blockExplorerUrls:["https://polygonscan.com"] },
+          base:     { chainName:"Base", nativeCurrency:{name:"Ethereum",symbol:"ETH",decimals:18}, rpcUrls:["https://mainnet.base.org"], blockExplorerUrls:["https://basescan.org"] },
+          arbitrum: { chainName:"Arbitrum One", nativeCurrency:{name:"Ethereum",symbol:"ETH",decimals:18}, rpcUrls:["https://arb1.arbitrum.io/rpc"], blockExplorerUrls:["https://arbiscan.io"] },
+          bnb:      { chainName:"BNB Smart Chain", nativeCurrency:{name:"BNB",symbol:"BNB",decimals:18}, rpcUrls:["https://bsc-dataseed.binance.org"], blockExplorerUrls:["https://bscscan.com"] },
+        };
+        if (chainConfigs[chainKey]) {
+          await window.ethereum.request({
+            method: "wallet_addEthereumChain",
+            params: [{ chainId: chain.chainId, ...chainConfigs[chainKey] }]
+          });
+        }
+      } else {
+        throw e;
+      }
+    }
+  }
+
+  async function anchorOnChain() {
+    if (!walletAddress) { toast("Connecte d'abord un wallet", "err"); return; }
+    if (!currentCID) { toast("Archive d'abord une URL", "err"); return; }
+
+    const btn = document.getElementById("anchorBtn");
+    const status = document.getElementById("anchor-status");
+    btn.disabled = true;
+    btn.textContent = "En cours...";
+    status.style.display = "block";
+    status.className = "pending";
+    status.textContent = "⏳ Changement de réseau...";
+
+    try {
+      await switchToChain(currentChain);
+      status.textContent = "⏳ En attente de signature dans le wallet...";
+
+      const data = "0x" + Array.from(new TextEncoder().encode("bloc-zero:" + currentCID))
+        .map(b => b.toString(16).padStart(2,'0')).join('');
+
+      const txHash = await window.ethereum.request({
+        method: "eth_sendTransaction",
+        params: [{
+          from: walletAddress,
+          to: walletAddress,
+          value: "0x0",
+           data,
+        }]
+      });
+
+      const chain = CHAINS[currentChain];
+      const explorerUrl = chain.explorer + txHash;
+
+      status.className = "success";
+      status.innerHTML = `✅ Ancré sur ${chain.name} !<br>
+        <a id="tx-link" href="${explorerUrl}" target="_blank">Voir la transaction ↗</a><br>
+        <span style="font-family:var(--m);font-size:0.75rem;color:var(--fnt);word-break:break-all">TX: ${txHash}</span>`;
+
+      toast("CID ancré sur " + chain.name + " !", "ok");
+      updateHistoryWithAnchor(currentCID, txHash, chain);
+
+    } catch(e) {
+      status.className = "error";
+      status.textContent = "❌ " + (e.message || "Transaction annulée");
+    } finally {
+      btn.disabled = false;
+      btn.textContent = "Ancrer sur " + CHAINS[currentChain].name;
+    }
+  }
+
+  function updateHistoryWithAnchor(cid, txHash, chain) {
+    const items = document.querySelectorAll('.history-item');
+    items.forEach(item => {
+      if (item.dataset.cid === cid) {
+        const badge = item.querySelector('.chain-badge');
+        if (badge) {
+          badge.className = "chain-badge anchored";
+          badge.textContent = "⛓️ Ancré sur " + chain.name;
+        }
+      }
+    });
   }
 
   async function submitArchive() {
@@ -148,23 +345,60 @@
         body: JSON.stringify({ url })
       });
       const data = await res.json();
-      if (!res.ok) throw new Error(data.error || data.message || "Erreur upload");
+      if (!res.ok) throw new Error(data.error || "Erreur upload");
       const cid = data.IpfsHash;
-      const ipfsUrl = `https://gateway.pinata.cloud/ipfs/${cid}`;
+      const ipfsUrl = GATEWAY + cid;
+      currentCID = cid;
+      currentArchiveUrl = url;
+
       document.getElementById("result").style.display = "block";
       document.getElementById("resultUrl").textContent = url;
       document.getElementById("cidValue").textContent = cid;
       document.getElementById("ipfsLink").href = ipfsUrl;
-      document.getElementById("ipfsLink").textContent = `gateway.pinata.cloud/ipfs/${cid}`;
-      addToHistory(url, cid);
+      document.getElementById("ipfsLink").textContent = "gateway.pinata.cloud/ipfs/" + cid;
+
+      // Montrer ancrage seulement si wallet connecté
+      const anchorSection = document.getElementById("anchor-section");
+      anchorSection.style.display = "block";
+      if (!walletAddress) {
+        document.getElementById("anchor-desc").textContent = "Connecte un wallet pour ancrer cette archive dans la blockchain.";
+        document.getElementById("anchorBtn").disabled = true;
+      } else {
+        document.getElementById("anchor-desc").textContent = "Grave l'empreinte de cette archive dans la blockchain pour une preuve permanente.";
+        document.getElementById("anchorBtn").disabled = false;
+      }
+      document.getElementById("anchor-status").style.display = "none";
+
+      addToHistory(url, cid, ipfsUrl);
       toast("Archive publiée sur IPFS !", "ok");
       document.getElementById("urlInput").value = "";
-    } catch (e) {
+    } catch(e) {
       toast("Erreur : " + e.message, "err");
     } finally {
       btn.disabled = false;
       btn.textContent = "Publier sur IPFS";
     }
+  }
+
+  function addToHistory(url, cid, ipfsUrl) {
+    const now = new Date();
+    const list = document.getElementById("history-list");
+    document.getElementById("empty-history")?.remove();
+    const item = document.createElement("div");
+    item.className = "history-item";
+    item.dataset.cid = cid;
+    item.innerHTML = `
+      <div class="orig">🔗 ${url}</div>
+      <div class="cid-text">${cid}</div>
+      <span class="chain-badge">⬡ Non ancré</span>
+      <div class="acts">
+        <a href="${ipfsUrl}" target="_blank">Voir IPFS ↗</a>
+        <button onclick="copyText('${cid}')">Copier CID</button>
+        <button onclick="copyText('${ipfsUrl}')">Copier lien</button>
+      </div>
+      <div class="date">Archivé à ${now.toLocaleTimeString("fr-FR",{hour:"2-digit",minute:"2-digit"})}</div>
+    `;
+    list.prepend(item);
   }
 </script>
 </body>
