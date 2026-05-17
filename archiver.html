@@ -5,35 +5,73 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Archiver – Bloc Zéro</title>
   <style>
-    body { font-family: sans-serif; max-width: 600px; margin: 60px auto; padding: 0 20px; background: #0d1117; color: #c9d1d9; }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: sans-serif; max-width: 700px; margin: 60px auto; padding: 0 20px; background: #0d1117; color: #c9d1d9; }
     h1 { font-size: 1.5rem; margin-bottom: 24px; }
-    input { width: 100%; padding: 10px; border-radius: 6px; border: 1px solid #30363d; background: #161b22; color: #c9d1d9; font-size: 1rem; box-sizing: border-box; }
-    button { margin-top: 12px; padding: 10px 24px; background: #238636; color: #fff; border: none; border-radius: 6px; font-size: 1rem; cursor: pointer; }
-    button:disabled { background: #444; cursor: not-allowed; }
+    input { width: 100%; padding: 10px; border-radius: 6px; border: 1px solid #30363d; background: #161b22; color: #c9d1d9; font-size: 1rem; }
+    button.primary { margin-top: 12px; padding: 10px 24px; background: #238636; color: #fff; border: none; border-radius: 6px; font-size: 1rem; cursor: pointer; }
+    button.primary:disabled { background: #444; cursor: not-allowed; }
+    button.primary:hover:not(:disabled) { background: #2ea043; }
+
+    /* Section résultat */
     #result { display: none; margin-top: 24px; background: #161b22; border: 1px solid #30363d; border-radius: 8px; padding: 16px; }
-    #result h2 { font-size: 1rem; margin-bottom: 8px; }
-    #cidValue { font-family: monospace; word-break: break-all; font-size: 0.85rem; color: #58a6ff; }
-    a { color: #58a6ff; }
+    #result h2 { font-size: 1rem; margin-bottom: 8px; color: #3fb950; }
+    .cid-row { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+    #cidValue { font-family: monospace; font-size: 0.85rem; color: #58a6ff; word-break: break-all; }
+    .btn-copy { padding: 4px 10px; background: #21262d; border: 1px solid #30363d; border-radius: 4px; color: #c9d1d9; font-size: 0.8rem; cursor: pointer; }
+    .btn-copy:hover { background: #30363d; }
+
+    /* Section historique */
+    #history-section { margin-top: 40px; }
+    #history-section h2 { font-size: 1.1rem; margin-bottom: 16px; color: #8b949e; border-bottom: 1px solid #21262d; padding-bottom: 8px; }
+    #history-list { display: flex; flex-direction: column; gap: 10px; }
+    .history-item { background: #161b22; border: 1px solid #21262d; border-radius: 8px; padding: 12px 16px; }
+    .history-item .original-url { font-size: 0.8rem; color: #8b949e; margin-bottom: 6px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .history-item .cid-row { margin-bottom: 6px; }
+    .history-item .cid-text { font-family: monospace; font-size: 0.8rem; color: #58a6ff; word-break: break-all; }
+    .history-item .actions { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 8px; }
+    .history-item .actions a { padding: 4px 10px; background: #21262d; border: 1px solid #30363d; border-radius: 4px; color: #58a6ff; font-size: 0.8rem; text-decoration: none; }
+    .history-item .actions a:hover { background: #30363d; }
+    .history-item .actions button { padding: 4px 10px; background: #21262d; border: 1px solid #30363d; border-radius: 4px; color: #c9d1d9; font-size: 0.8rem; cursor: pointer; }
+    .history-item .actions button:hover { background: #30363d; }
+    .history-item .date { font-size: 0.75rem; color: #484f58; margin-top: 6px; }
+    #empty-history { color: #484f58; font-size: 0.9rem; font-style: italic; }
+
+    /* Toast */
     #toast { display: none; position: fixed; bottom: 24px; right: 24px; padding: 12px 20px; border-radius: 8px; font-size: 0.9rem; z-index: 999; }
   </style>
 </head>
 <body>
+
   <h1>🗃️ Archiver une page sur IPFS</h1>
   <input type="url" id="urlInput" placeholder="https://exemple.com/article" />
   <br/>
-  <button id="archiveBtn" onclick="submitArchive()">Publier sur IPFS</button>
+  <button class="primary" id="archiveBtn" onclick="submitArchive()">Publier sur IPFS</button>
 
   <div id="result">
     <h2>✅ Archivé avec succès</h2>
-    <p>CID : <span id="cidValue"></span></p>
-    <p><a id="ipfsLink" href="#" target="_blank">Voir sur IPFS</a></p>
+    <p style="font-size:0.85rem; color:#8b949e; margin-bottom:8px;" id="resultUrl"></p>
+    <div class="cid-row">
+      <span id="cidValue"></span>
+      <button class="btn-copy" onclick="copyText(document.getElementById('cidValue').textContent)">Copier CID</button>
+    </div>
+    <p style="margin-top:10px;">
+      <a id="ipfsLink" href="#" target="_blank" style="color:#58a6ff; font-size:0.85rem;">Voir sur IPFS ↗</a>
+    </p>
+  </div>
+
+  <div id="history-section">
+    <h2>📋 Archives de cette session</h2>
+    <div id="history-list">
+      <p id="empty-history">Aucune archive pour l'instant.</p>
+    </div>
   </div>
 
   <div id="toast"></div>
 
   <script>
     const WORKER_URL = "https://workers-playground-mute-haze-0834.karimkondua.workers.dev";
-    let lastCid = null;
+    const archives = [];
 
     function toast(msg, type) {
       const t = document.getElementById("toast");
@@ -42,6 +80,39 @@
       t.style.background = type === "err" ? "#7f1d1d" : "#14532d";
       t.style.color = "#fff";
       setTimeout(() => { t.style.display = "none"; }, 3000);
+    }
+
+    function copyText(text) {
+      navigator.clipboard.writeText(text).then(() => toast("Copié !", "ok"));
+    }
+
+    function formatDate(d) {
+      return d.toLocaleTimeString("fr-FR", { hour: "2-digit", minute: "2-digit", second: "2-digit" });
+    }
+
+    function addToHistory(url, cid) {
+      const now = new Date();
+      archives.unshift({ url, cid, time: now });
+
+      const list = document.getElementById("history-list");
+      document.getElementById("empty-history")?.remove();
+
+      const ipfsUrl = `https://gateway.pinata.cloud/ipfs/${cid}`;
+      const item = document.createElement("div");
+      item.className = "history-item";
+      item.innerHTML = `
+        <div class="original-url">🔗 ${url}</div>
+        <div class="cid-row">
+          <span class="cid-text">${cid}</span>
+        </div>
+        <div class="actions">
+          <a href="${ipfsUrl}" target="_blank">Voir sur IPFS ↗</a>
+          <button onclick="copyText('${cid}')">Copier CID</button>
+          <button onclick="copyText('${ipfsUrl}')">Copier lien IPFS</button>
+        </div>
+        <div class="date">Archivé à ${formatDate(now)}</div>
+      `;
+      list.prepend(item);
     }
 
     async function submitArchive() {
@@ -63,12 +134,17 @@
         if (!res.ok) throw new Error(data.error || data.message || "Erreur upload");
 
         const cid = data.IpfsHash;
-        lastCid = cid;
+        const ipfsUrl = `https://gateway.pinata.cloud/ipfs/${cid}`;
+
         document.getElementById("result").style.display = "block";
+        document.getElementById("resultUrl").textContent = url;
         document.getElementById("cidValue").textContent = cid;
-        document.getElementById("ipfsLink").href = `https://gateway.pinata.cloud/ipfs/${cid}`;
+        document.getElementById("ipfsLink").href = ipfsUrl;
         document.getElementById("ipfsLink").textContent = `gateway.pinata.cloud/ipfs/${cid}`;
+
+        addToHistory(url, cid);
         toast("Archive publiée sur IPFS !", "ok");
+        document.getElementById("urlInput").value = "";
       } catch (e) {
         toast("Erreur : " + e.message, "err");
       } finally {
